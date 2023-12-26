@@ -12,8 +12,8 @@ require('awful.hotkeys_popup.keys')
 --- Error handling.
 -- Notification library.
 local naughty = require('naughty')
--- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config).
+-- Check if awesome encountered an error during startup and fell back to another config 
+-- (This code will only ever execute for the fallback config).
 naughty.connect_signal('request::display_error', function(message, startup)
    naughty.notification({
       urgency = 'critical',
@@ -22,12 +22,11 @@ naughty.connect_signal('request::display_error', function(message, startup)
    })
 end)
 
--- Load the theme. In other words, defines the variables within the `beautiful`
--- table.
+-- Load the theme. In other words, defines the variables within the `beautiful` table.
 require('theme')
 
--- Treat all signals. Bear in mind this implies creating all tags, attaching
--- their layouts, setting client behavior and loading UI.
+-- Treat all signals. Bear in mind this implies creating all tags, attaching their 
+-- layouts, setting client behavior and loading UI.
 require('signal')
 
 -- Set all keybinds.
@@ -35,3 +34,6 @@ require('binds')
 
 -- Load all client rules.
 require('config.rules')
+
+-- Run startup commands.
+require('config.auto')

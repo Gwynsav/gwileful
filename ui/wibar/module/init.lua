@@ -5,5 +5,6 @@ return {
    taglist   = require(... .. '.taglist'),
    tasklist  = require(... .. '.tasklist'),
    layoutbox = require(... .. '.layoutbox'),
-   clock     = require(... .. '.clock')
+   clock     = require(... .. '.clock'),
+   systray   = require(... .. '.systray')
 }

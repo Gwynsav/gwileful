@@ -5,6 +5,7 @@ local modkey = mod.modkey
 
 local apps    = require('config.apps')
 local widgets = require('ui')
+local shooter = require('script.shooter')
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({
@@ -133,5 +134,11 @@ awful.keyboard.append_global_keybindings({
             t.layout = t.layouts[index] or t.layout
          end
       end
-   })
+   }),
+
+   -- Miscelaneous.
+   awful.key({        }, 'Print', function() shooter.selection() end,
+      { description = 'select a region to screenshot', group = 'misc' }),
+   awful.key({ modkey }, 'Print', function() shooter.screen() end,
+      { description = 'select the whole screen to screenshot', group = 'misc' })
 })

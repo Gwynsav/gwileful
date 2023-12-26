@@ -23,11 +23,11 @@ return function()
          })
       }
    })
-   widget:connect_signal('mouse::enter', function()
-      widget.bg = color.bg4 .. '56'
+   widget:connect_signal('mouse::enter', function(self)
+      self.bg = color.bg4 .. '56'
    end)
-   widget:connect_signal('mouse::leave', function()
-      widget.bg = color.bg1
+   widget:connect_signal('mouse::leave', function(self)
+      self.bg = color.bg1
    end)
 
    return widget

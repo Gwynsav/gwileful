@@ -1,6 +1,7 @@
 local awful = require('awful')
-
 local dpi = require('beautiful.xresources').apply_dpi
+
+local HOME = os.getenv('HOME') .. '/'
 
 -- Specify user preferences for Awesome's behavior.
 return {
@@ -40,5 +41,8 @@ return {
    style = 'dark',
 
    -- Wallpaper
-   wallpaper = os.getenv('HOME') .. '/Pictures/walls/rose-pine/CozyReading.png'
+   wallpaper = HOME .. 'Pictures/walls/rose-pine/CozyReading.png',
+
+   -- Screenshots
+   screenshot_path = HOME .. 'Pictures/screenshots/'
 }

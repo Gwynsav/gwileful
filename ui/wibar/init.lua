@@ -32,9 +32,10 @@ return function(s)
             module.tasklist(s),
             -- Right widgets.
             {
-               layout = wibox.layout.fixed.vertical,
+               layout  = wibox.layout.fixed.vertical,
+               spacing = dpi(6),
+               module.systray(),
                awful.widget.keyboardlayout(), -- Keyboard map indicator and switcher.
-               wibox.widget.systray(),
                module.clock(),
                module.layoutbox(s)
             }

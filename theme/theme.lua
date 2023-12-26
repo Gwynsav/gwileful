@@ -9,6 +9,8 @@ local color = require('theme.color')
 local colorscheme = color.palette
 local icon        = gfs.get_configuration_dir() .. 'theme/assets/'
 
+-- NOTE: try to keep all usages of `gears.color.recolor_image` within this file to prevent
+-- it from being executed multiple times. It will burn through your RAM at alarming speed.
 local _T = {}
 
 -- Return the path to the file to avoid having to:
@@ -41,13 +43,33 @@ _T.border_color = colorscheme.bg1
 _T.fullscreen_hide_border = true
 _T.maximized_hide_border  = false
 
--- Titlebars. Recoloring these on the fly is gonna burn through your RAM at alarming
--- speeds.
+-- Widgets
+----------
+-- Titlebars.
 _T.titlebar_close_focus  = gc.recolor_image(icon .. 'title/close.svg', colorscheme.fg0)
 _T.titlebar_close_normal = gc.recolor_image(icon .. 'title/close.svg', colorscheme.fg1)
 _T.titlebar_max_focus    = gc.recolor_image(icon .. 'title/max.svg',   colorscheme.fg0)
 _T.titlebar_max_normal   = gc.recolor_image(icon .. 'title/max.svg',   colorscheme.fg1)
 _T.titlebar_min_focus    = gc.recolor_image(icon .. 'title/min.svg',   colorscheme.fg0)
 _T.titlebar_min_normal   = gc.recolor_image(icon .. 'title/min.svg',   colorscheme.fg1)
+
+-- Notifications.
+-- TODO
+-- _T.notification_default  = gc.recolor_image(icon .. 'notif/default.svg', colorscheme.fg0)
+_T.notification_default  = _T.awesome_icon
+-- _T.notification_cancel   = gc.recolor_image(icon .. 'notif/cancel.svg',  colorscheme.red)
+_T.notification_cancel   = gc.recolor_image(icon .. 'awesome.svg',  colorscheme.red)
+
+-- Wibar.
+_T.systray_arrow = gc.recolor_image(icon .. 'wibar/systray_arrow.svg', colorscheme.fg0)
+-- Layouts.
+_T.layout_tile =
+   gc.recolor_image(icon .. 'wibar/layout/tile_right.svg',  colorscheme.fg0)
+_T.layout_tileleft =
+   gc.recolor_image(icon .. 'wibar/layout/tile_left.svg',   colorscheme.fg0)
+_T.layout_tilebottom =
+   gc.recolor_image(icon .. 'wibar/layout/tile_bottom.svg', colorscheme.fg0)
+_T.layout_floating =
+   gc.recolor_image(icon .. 'wibar/layout/float.svg',       colorscheme.fg0)
 
 return _T
