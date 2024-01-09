@@ -41,7 +41,7 @@ return {
    style = 'dark',
 
    -- Wallpaper
-   wallpaper = HOME .. 'Pictures/walls/rose-pine/CozyReading.png',
+   wallpaper = HOME .. 'Pictures/walls/rose-pine/AutumnLandscape.png',
 
    -- Screenshots
    screenshot_path = HOME .. 'Pictures/screenshots/'

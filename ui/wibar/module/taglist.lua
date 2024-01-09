@@ -14,7 +14,10 @@ return function(s)
       bg     = color.bg1,
       {
          widget  = wibox.container.margin,
-         margins = dpi(16),
+         margins = {
+            top = dpi(16), bottom = dpi(16),
+            left = dpi(8), right = dpi(8)
+         },
          awful.widget.taglist({
             screen  = s,
             filter  = awful.widget.taglist.filter.all,
@@ -54,10 +57,16 @@ return function(s)
             -- The fun stuff.
             widget_template = {
                -- Create the tag icon as an empty textbox.
-               widget = wibox.container.background,
-               id = 'background_role',
-               forced_width = dpi(2),
-               wibox.widget.textbox(),
+               widget  = wibox.container.margin,
+               margins = {
+                  left = dpi(8), right = dpi(8)
+               },
+               {
+                  widget = wibox.container.background,
+                  id = 'background_role',
+                  forced_width = dpi(2),
+                  wibox.widget.textbox()
+               },
                -- Create a callback to change its size with an animation depending
                -- on focus and occupation.
                create_callback = function(self, tag)

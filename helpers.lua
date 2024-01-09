@@ -39,11 +39,12 @@ local icon_cache = {}
 -- Define a default icon.
 _H.DEFAULT_ICON = '/usr/share/icons/Papirus-Dark/128x128/apps/application-default-icon.svg'
 function _H.get_icon(theme, client, program_string, class_string)
+   theme = theme or 'Papirus'
    client = client or nil
    program_string = program_string or nil
    class_string = class_string or nil
 
-   if theme and (client or program_string or class_string) then
+   if client or program_string or class_string then
       local clientName
       if client then
          if client.class then

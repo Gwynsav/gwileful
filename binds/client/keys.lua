@@ -12,7 +12,7 @@ client.connect_signal('request::default_keybindings', function()
             c.fullscreen = not c.fullscreen
             c:raise()
          end, { description = 'toggle fullscreen', group = 'client' }),
-      awful.key({ modkey, mod.shift }, 'c', function(c) c:kill() end,
+      awful.key({ modkey, mod.shift }, 'q', function(c) c:kill() end,
          { description = 'close', group = 'client' }),
       awful.key({ modkey, mod.ctrl  }, 'space', awful.client.floating.toggle,
          { description = 'toggle floating', group = 'client' }),

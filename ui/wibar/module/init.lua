@@ -6,5 +6,6 @@ return {
    tasklist  = require(... .. '.tasklist'),
    layoutbox = require(... .. '.layoutbox'),
    clock     = require(... .. '.clock'),
-   systray   = require(... .. '.systray')
+   systray   = require(... .. '.systray'),
+   status    = require(... .. '.status')
 }

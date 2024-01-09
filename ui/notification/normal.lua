@@ -22,8 +22,8 @@ function _N.title(n)
       speed = 50,
       {
          widget = wibox.widget.textbox,
-         font   = beautiful.font_bitm .. dpi(9),
-         markup = '<i>' .. (n.title or 'Notification') .. '</i>'
+         font   = beautiful.font_sans .. dpi(9),
+         markup = '<i><b>' .. (n.title or 'Notification') .. '</b></i>'
       }
    })
 end
@@ -36,7 +36,7 @@ function _N.body(n)
          widget = wibox.container.scroll.vertical,
          {
             widget = wibox.widget.textbox,
-            font   = beautiful.font_bitm .. dpi(9),
+            font   = beautiful.font_sans .. dpi(9),
             markup = n.message
          }
       }
@@ -60,10 +60,10 @@ function _N.timeout(n)
       min_value = 0,
       max_value = 100,
       value     = 0,
-      thickness = dpi(2),
+      thickness = dpi(3),
       paddings  = dpi(4),
-      bg        = color.bg0,
-      colors    = { color.accent },
+      bg        = color.bg1,
+      colors    = { color.fg1 },
       _N.icon(n)
    })
 end
@@ -83,7 +83,7 @@ function _N.actions(n)
       },
       widget_template = {
          widget = wibox.container.background,
-         bg     = color.bg1,
+         bg     = color.bg4 .. '20',
          {
             widget  = wibox.container.margin,
             margins = dpi(3),
@@ -112,12 +112,12 @@ return function(n)
    -- Contains the timeout bar and icon.
    local icon_block = wibox.widget({
       widget  = wibox.container.margin,
-      margins = dpi(8),
+      margins = dpi(12),
       {
          widget   = wibox.container.constraint,
          strategy = 'max',
-         height   = dpi(48),
-         width    = dpi(48),
+         height   = dpi(64),
+         width    = dpi(64),
          timeout_bar
       }
    })
@@ -132,10 +132,10 @@ return function(n)
          width    = dpi(120),
          {
             widget = wibox.container.background,
-            bg     = color.bg0,
+            bg     = color.bg1,
             {
                widget  = wibox.container.margin,
-               margins = dpi(16),
+               margins = dpi(18),
                {
                   widget = wibox.container.place,
                   halign = 'left',
@@ -172,10 +172,10 @@ return function(n)
          {
             widget   = wibox.container.constraint,
             strategy = 'max',
-            width    = dpi(320),
+            width    = dpi(360),
             {
                widget = wibox.container.background,
-               bg     = color.bg1,
+               bg     = color.bg0,
                {
                   layout = wibox.layout.fixed.horizontal,
                   icon_block,

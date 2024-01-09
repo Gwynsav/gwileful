@@ -35,8 +35,9 @@ return function(s)
                layout  = wibox.layout.fixed.vertical,
                spacing = dpi(6),
                module.systray(),
-               awful.widget.keyboardlayout(), -- Keyboard map indicator and switcher.
+               -- awful.widget.keyboardlayout(), -- Keyboard map indicator and switcher.
                module.clock(),
+               module.status(),
                module.layoutbox(s)
             }
          }
