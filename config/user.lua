@@ -34,14 +34,16 @@ return {
 
    -- Sizes
    gaps = dpi(3),
-   border_size = dpi(2),
+
+   -- Widgets
+   bar_style = "horizontal",
 
    -- Colors
-   colorscheme = 'rose-pine',
+   colorscheme = 'oxocarbon',
    style = 'dark',
 
    -- Wallpaper
-   wallpaper = HOME .. 'Pictures/walls/rose-pine/AutumnLandscape.png',
+   wallpaper = HOME .. 'Pictures/walls/carbon/NightTrain.jpg',
 
    -- Screenshots
    screenshot_path = HOME .. 'Pictures/screenshots/'

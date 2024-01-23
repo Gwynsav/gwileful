@@ -8,19 +8,19 @@
    stroke-width="1"
    stroke-linecap="round"
    stroke-linejoin="round"
-   class="feather feather-x"
+   class="feather feather-minimize-2"
    version="1.1"
-   id="svg2"
-   sodipodi:docname="close.svg"
+   id="svg3"
+   sodipodi:docname="minimize.svg"
    inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2" />
+     id="defs3" />
   <sodipodi:namedview
-     id="namedview2"
+     id="namedview3"
      pagecolor="#505050"
      bordercolor="#ffffff"
      borderopacity="1"
@@ -29,22 +29,30 @@
      inkscape:pagecheckerboard="1"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="6.6126492"
-     inkscape:cx="46.728624"
-     inkscape:cy="47.711589"
-     inkscape:current-layer="svg2" />
+     inkscape:zoom="7.8"
+     inkscape:cx="50"
+     inkscape:cy="49.935897"
+     inkscape:current-layer="svg3" />
+  <polyline
+     points="4 14 10 14 10 20"
+     id="polyline1"
+     transform="matrix(1.2544099,0,0,1.2544099,-3.0529209,-3.0529209)" />
+  <polyline
+     points="20 10 14 10 14 4"
+     id="polyline2"
+     transform="matrix(1.2544099,0,0,1.2544099,-3.0529209,-3.0529209)" />
   <line
-     x1="21.496176"
-     y1="2.5038235"
-     x2="2.5038235"
-     y2="21.496176"
-     id="line1"
-     style="stroke-width:1.58269" />
-  <line
-     x1="2.5038235"
-     y1="2.5038235"
-     x2="21.496176"
-     y2="21.496176"
+     x1="14.508821"
+     y1="9.4911785"
+     x2="23.289696"
+     y2="0.71030927"
      id="line2"
-     style="stroke-width:1.58269" />
+     style="stroke-width:1.25441" />
+  <line
+     x1="0.71030927"
+     y1="23.289696"
+     x2="9.4911785"
+     y2="14.508821"
+     id="line3"
+     style="stroke-width:1.25441" />
 </svg>

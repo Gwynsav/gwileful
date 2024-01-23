@@ -22,8 +22,8 @@ function _N.title(n)
       speed = 50,
       {
          widget = wibox.widget.textbox,
-         font   = beautiful.font_sans .. dpi(9),
-         markup = '<i><b>' .. (n.title or 'Notification') .. '</b></i>'
+         markup =
+            '<i>'..((n.title == nil or n.title == '') and 'AwesomeWM' or n.title)..'</i>'
       }
    })
 end
@@ -31,12 +31,11 @@ end
 function _N.body(n)
    return wibox.widget({
       widget = wibox.container.background,
-      fg     = color.fg0 .. 'cc',
+      fg     = color.fg1 .. 'cc',
       {
          widget = wibox.container.scroll.vertical,
          {
             widget = wibox.widget.textbox,
-            font   = beautiful.font_sans .. dpi(9),
             markup = n.message
          }
       }
@@ -50,21 +49,20 @@ function _N.icon(n)
          or beautiful.awesome_icon,
       buttons = { awful.button(nil, 1, function() n:destroy() end) },
       horizontal_fit_policy = 'fit',
-      vertical_fit_policy   = 'fit'
+      vertical_fit_policy   = 'fit',
+      forced_height = dpi(32),
+      forced_width  = dpi(32)
    })
 end
 
-function _N.timeout(n)
+function _N.timeout()
    return wibox.widget({
-      widget    = wibox.container.arcchart,
-      min_value = 0,
+      widget    = wibox.widget.progressbar,
       max_value = 100,
       value     = 0,
-      thickness = dpi(3),
-      paddings  = dpi(4),
-      bg        = color.bg1,
-      colors    = { color.fg1 },
-      _N.icon(n)
+      background_color = color.bg1,
+      color            = color.accent,
+      forced_height    = dpi(3)
    })
 end
 
@@ -106,80 +104,119 @@ return function(n)
    local timeout = n.timeout
    -- Using `math.huge` here breaks naughty :P.
    n.timeout = 999999
-   local timeout_bar = _N.timeout(n)
+   local timeout_bar = _N.timeout()
 
-   -- Sections, divided into blocks because to avoid YandereDev levels of indentation.
-   -- Contains the timeout bar and icon.
-   local icon_block = wibox.widget({
-      widget  = wibox.container.margin,
-      margins = dpi(12),
+   -- Sections, divided into blocks to avoid YandereDev levels of indentation.
+   local titlebox = wibox.widget({
+      widget = wibox.container.background,
+      bg     = color.bg3,
       {
-         widget   = wibox.container.constraint,
-         strategy = 'max',
-         height   = dpi(64),
-         width    = dpi(64),
-         timeout_bar
-      }
-   })
-
-   -- Contains the title, body, and action buttons.
-   local text_block = wibox.widget({
-      widget  = wibox.container.margin,
-      margins = dpi(2),
-      {
-         widget   = wibox.container.constraint,
-         strategy = 'min',
-         width    = dpi(120),
+         widget  = wibox.container.margin,
+         margins = { bottom = dpi(1) },
          {
             widget = wibox.container.background,
             bg     = color.bg1,
             {
                widget  = wibox.container.margin,
-               margins = dpi(18),
+               margins = {
+                  top = dpi(8), bottom = dpi(8),
+                  left = dpi(12), right = dpi(12)
+               },
                {
                   widget = wibox.container.place,
-                  halign = 'left',
-                  valign = 'center',
-                  {
-                     layout  = wibox.layout.fixed.vertical,
-                     spacing = dpi(4),
-                     _N.title(n),
-                     _N.body(n),
-                     {
-                        -- Add extra spacing to avoid having it look weird.
-                        widget  = wibox.container.margin,
-                        margins = { top = dpi(4) },
-                        -- This, however, makes you have to hide the spacing itself.
-                        visible = #n.actions > 0,
-                        _N.actions(n)
-                     }
-                  }
+                  halign = 'center',
+                  _N.title(n)
                }
             }
          }
       }
    })
 
+   local contentbox = wibox.widget({
+      widget = wibox.container.background,
+      bg     = color.bg0,
+      {
+         layout = wibox.layout.align.vertical,
+         {
+            widget  = wibox.container.margin,
+            margins = dpi(12),
+            {
+               widget  = wibox.layout.fixed.vertical,
+               spacing = dpi(8),
+               {
+                  layout = wibox.layout.align.horizontal,
+                  {
+                     layout = wibox.layout.fixed.horizontal,
+                     {
+                        widget   = wibox.container.constraint,
+                        strategy = 'max',
+                        width    = dpi(280),
+                        height   = dpi(250),
+                        {
+                           layout = wibox.layout.fixed.vertical,
+                           _N.body(n),
+                           {
+                              -- Add extra spacing to avoid having it look weird.
+                              widget  = wibox.container.margin,
+                              margins = { top = dpi(4) },
+                              -- This, however, makes you have to hide the spacing itself.
+                              visible = #n.actions > 0,
+                              _N.actions(n)
+                           }
+                        }
+                     },
+                     {
+                        widget = wibox.widget.separator,
+                        color  = color.transparent,
+                        forced_height = 1,
+                        forced_width  = dpi(12)
+                     }
+                  },
+                  nil,
+                  {
+                     layout = wibox.layout.align.vertical,
+                     _N.icon(n),
+                     nil, nil
+                  }
+               }
+            }
+         },
+         nil,
+         {
+            -- Today I learnt setting a constraint on a progress bar makes it use its
+            -- minimum required size. The number you input into width doesn't matter.
+            widget   = wibox.container.constraint,
+            strategy = 'max',
+            width    = 0,
+            timeout_bar
+         }
+      }
+   })
+
    local layout = naughty.layout.box({
       notification = n,
-      -- position     = 'top_left',
       cursor       = 'hand2',
       border_width = 0,
       widget_template = {
          widget   = wibox.container.constraint,
          strategy = 'max',
          height   = dpi(320),
+         width    = dpi(360),
          {
             widget   = wibox.container.constraint,
-            strategy = 'max',
-            width    = dpi(360),
+            strategy = 'min',
+            width    = dpi(120),
             {
                widget = wibox.container.background,
-               bg     = color.bg0,
+               bg     = color.bg3,
                {
-                  layout = wibox.layout.fixed.horizontal,
-                  icon_block,
-                  text_block
+                  widget  = wibox.container.margin,
+                  margins = dpi(1),
+                  {
+                     layout = wibox.layout.fixed.vertical,
+                     titlebox,
+                     contentbox
+                  }
                }
             }
          }

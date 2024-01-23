@@ -33,7 +33,8 @@ menu.main = awful.menu({
       height = dpi(32),
       bg_normal = color.bg0,
       bg_focus  = color.bg1,
-      border_width = 0
+      border_width = dpi(1),
+      border_color = color.bg3
    },
    items = {
       { 'Terminal', apps.terminal },
@@ -58,6 +59,8 @@ awful.menu.old_new = awful.menu.new
 function awful.menu.new(...)
    local submenu    = awful.menu.old_new(...)
    submenu.wibox.bg = color.bg0
+   submenu.wibox.border_width = dpi(1)
+   submenu.wibox.border_color = color.bg3
    submenu.wibox:set_widget(wibox.widget({
       widget = wibox.container.background,
       bg     = color.bg0,

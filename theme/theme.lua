@@ -25,7 +25,7 @@ _T.font_mono = 'IBM Plex Mono '
 _T.font_bitm = 'Fairfax '
 
 -- A few defaults.
-_T.font = _T.font_sans .. dpi(9)
+_T.font = _T.font_bitm .. dpi(9)
 _T.bg_normal = colorscheme.bg0
 _T.fg_normal = colorscheme.fg0
 
@@ -38,20 +38,19 @@ _T.useless_gap  = user.gaps or dpi(6)
 _T.master_width_factor = 0.58
 
 -- Borders.
-_T.border_width = user.border_size or dpi(1)
-_T.border_color = colorscheme.bg1
-_T.fullscreen_hide_border = true
-_T.maximized_hide_border  = false
+_T.border_width = 0
 
 -- Widgets
 ----------
 -- Titlebars.
-_T.titlebar_close_focus  = gc.recolor_image(icon .. 'title/close.svg', colorscheme.fg0)
-_T.titlebar_close_normal = gc.recolor_image(icon .. 'title/close.svg', colorscheme.fg1)
-_T.titlebar_max_focus    = gc.recolor_image(icon .. 'title/max.svg',   colorscheme.fg0)
-_T.titlebar_max_normal   = gc.recolor_image(icon .. 'title/max.svg',   colorscheme.fg1)
-_T.titlebar_min_focus    = gc.recolor_image(icon .. 'title/min.svg',   colorscheme.fg0)
-_T.titlebar_min_normal   = gc.recolor_image(icon .. 'title/min.svg',   colorscheme.fg1)
+_T.titlebar_close_focus  = gc.recolor_image(icon .. 'title/close.svg',    colorscheme.fg0)
+_T.titlebar_close_normal = gc.recolor_image(icon .. 'title/close.svg',    colorscheme.fg1)
+_T.titlebar_max_focus    = gc.recolor_image(icon .. 'title/maximize.svg', colorscheme.fg0)
+_T.titlebar_max_normal   = gc.recolor_image(icon .. 'title/maximize.svg', colorscheme.fg1)
+_T.titlebar_min_focus    = gc.recolor_image(icon .. 'title/minimize.svg', colorscheme.fg0)
+_T.titlebar_min_normal   = gc.recolor_image(icon .. 'title/minimize.svg', colorscheme.fg1)
+_T.titlebar_pin_focus    = gc.recolor_image(icon .. 'title/command.svg',  colorscheme.fg0)
+_T.titlebar_pin_normal   = gc.recolor_image(icon .. 'title/command.svg',  colorscheme.fg1)
 
 -- Notifications.
 -- TODO
@@ -62,14 +61,16 @@ _T.notification_cancel   = gc.recolor_image(icon .. 'awesome.svg',  colorscheme.
 
 -- Wibar.
 _T.systray_arrow = gc.recolor_image(icon .. 'wibar/systray_arrow.svg', colorscheme.fg0)
--- Layouts.
-_T.layout_tile =
-   gc.recolor_image(icon .. 'wibar/layout/tile_right.svg',  colorscheme.fg0)
-_T.layout_tileleft =
-   gc.recolor_image(icon .. 'wibar/layout/tile_left.svg',   colorscheme.fg0)
-_T.layout_tilebottom =
-   gc.recolor_image(icon .. 'wibar/layout/tile_bottom.svg', colorscheme.fg0)
-_T.layout_floating =
-   gc.recolor_image(icon .. 'wibar/layout/float.svg',       colorscheme.fg0)
+-- Layouts. Text is preferred for the horizontal version.
+if user.bar_style == 'vertical' then
+   _T.layout_tile =
+      gc.recolor_image(icon .. 'wibar/layout/tile_right.svg',  colorscheme.fg0)
+   _T.layout_tileleft =
+      gc.recolor_image(icon .. 'wibar/layout/tile_left.svg',   colorscheme.fg0)
+   _T.layout_tilebottom =
+      gc.recolor_image(icon .. 'wibar/layout/tile_bottom.svg', colorscheme.fg0)
+   _T.layout_floating =
+      gc.recolor_image(icon .. 'wibar/layout/float.svg',       colorscheme.fg0)
+end
 
 return _T
