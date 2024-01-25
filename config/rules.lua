@@ -67,5 +67,5 @@ ruled.client.connect_signal('request::rules', function()
    })
 end)
 
--- Floating windows are `always on top` by default.
-client.connect_signal("property::floating", function(c) c.ontop = c.floating end)
+-- Floating windows are `always on top` by default. Breaks fullscreen for some reason??
+-- client.connect_signal("property::floating", function(c) c.ontop = c.floating end)

@@ -70,6 +70,7 @@ local function take_screenshot(cmd)
 end
 
 return {
-   screen    = function() take_screenshot('maim')    end,
-   selection = function() take_screenshot('maim -s') end
+   screen    = function() take_screenshot('maim')          end,
+   selection = function() take_screenshot('maim -s')       end,
+   delayed   = function() take_screenshot('sleep 3; maim') end
 }

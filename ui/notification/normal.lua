@@ -133,63 +133,59 @@ return function(n)
    })
 
    local contentbox = wibox.widget({
-      widget = wibox.container.background,
-      bg     = color.bg0,
+      layout = wibox.layout.align.vertical,
       {
-         layout = wibox.layout.align.vertical,
+         widget  = wibox.container.margin,
+         margins = dpi(12),
          {
-            widget  = wibox.container.margin,
-            margins = dpi(12),
+            widget  = wibox.layout.fixed.vertical,
+            spacing = dpi(8),
             {
-               widget  = wibox.layout.fixed.vertical,
-               spacing = dpi(8),
+               layout = wibox.layout.align.horizontal,
                {
-                  layout = wibox.layout.align.horizontal,
+                  layout = wibox.layout.fixed.horizontal,
                   {
-                     layout = wibox.layout.fixed.horizontal,
+                     widget   = wibox.container.constraint,
+                     strategy = 'max',
+                     width    = dpi(280),
+                     height   = dpi(250),
                      {
-                        widget   = wibox.container.constraint,
-                        strategy = 'max',
-                        width    = dpi(280),
-                        height   = dpi(250),
+                        layout = wibox.layout.fixed.vertical,
+                        _N.body(n),
                         {
-                           layout = wibox.layout.fixed.vertical,
-                           _N.body(n),
-                           {
-                              -- Add extra spacing to avoid having it look weird.
-                              widget  = wibox.container.margin,
-                              margins = { top = dpi(4) },
-                              -- This, however, makes you have to hide the spacing itself.
-                              visible = #n.actions > 0,
-                              _N.actions(n)
-                           }
+                           -- Add extra spacing to avoid having it look weird.
+                           widget  = wibox.container.margin,
+                           margins = { top = dpi(4) },
+                           -- This, however, makes you have to hide the spacing itself.
+                           visible = #n.actions > 0,
+                           _N.actions(n)
                         }
-                     },
-                     {
-                        widget = wibox.widget.separator,
-                        color  = color.transparent,
-                        forced_height = 1,
-                        forced_width  = dpi(12)
                      }
                   },
-                  nil,
                   {
-                     layout = wibox.layout.align.vertical,
-                     _N.icon(n),
-                     nil, nil
+                     widget = wibox.widget.separator,
+                     color  = color.transparent,
+                     forced_height = 1,
+                     forced_width  = dpi(12)
                   }
+               },
+               nil,
+               {
+                  layout = wibox.layout.align.vertical,
+                  _N.icon(n),
+                  nil, nil
                }
             }
-         },
-         nil,
-         {
-            -- Today I learnt setting a constraint on a progress bar makes it use its
-            -- minimum required size. The number you input into width doesn't matter.
-            widget   = wibox.container.constraint,
-            strategy = 'max',
-            width    = 0,
-            timeout_bar
          }
+      },
+      nil,
+      {
+         -- Today I learnt setting a constraint on a progress bar makes it use its minimum
+         -- required size. The number you input into width doesn't matter.
+         widget   = wibox.container.constraint,
+         strategy = 'max',
+         width    = 0,
+         timeout_bar
       }
    })
 
@@ -208,22 +204,20 @@ return function(n)
             width    = dpi(120),
             {
                widget = wibox.container.background,
-               bg     = color.bg3,
+               bg     = color.bg0,
+               border_width = dpi(1),
+               border_color = color.bg3,
                {
-                  widget  = wibox.container.margin,
-                  margins = dpi(1),
-                  {
-                     layout = wibox.layout.fixed.vertical,
-                     titlebox,
-                     contentbox
-                  }
+                  layout = wibox.layout.fixed.vertical,
+                  titlebox,
+                  contentbox
                }
             }
          }
       }
    })
-   -- For some reason, doing this inside the `layout` declaration just doesn't work.
-   -- You have to do it imperatively or it'll literally just get ignored.
+   -- For some reason, doing this inside the `layout` declaration just doesn't work. You
+   -- have to do it imperatively or it'll literally just get ignored.
    layout.buttons = {}
 
    -- Create an animation for the timeout.
@@ -234,6 +228,7 @@ return function(n)
          timeout_bar.value = pos
          if time == timeout then
             n:destroy()
+            -- Call it twice because Lua.
             collectgarbage('collect')
             collectgarbage('collect')
          end

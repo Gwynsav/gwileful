@@ -137,8 +137,10 @@ awful.keyboard.append_global_keybindings({
    }),
 
    -- Miscelaneous.
-   awful.key({        }, 'Print', function() shooter.selection() end,
+   awful.key({          }, 'Print', function() shooter.selection() end,
       { description = 'select a region to screenshot', group = 'misc' }),
-   awful.key({ modkey }, 'Print', function() shooter.screen() end,
+   awful.key({ modkey   }, 'Print', function() shooter.screen() end,
+      { description = 'select the whole screen to screenshot', group = 'misc' }),
+   awful.key({ mod.ctrl }, 'Print', function() shooter.delayed() end,
       { description = 'select the whole screen to screenshot', group = 'misc' })
 })

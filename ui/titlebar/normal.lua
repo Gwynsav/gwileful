@@ -12,7 +12,7 @@ return function(c)
    -- Padding on the sides for the buttons.
    local edge = wibox.widget({
       widget = wibox.container.margin,
-      margins = { left = dpi(5), right = dpi(6) }
+      margins = { left = dpi(7), right = dpi(8) }
    })
 
    -- Forgive me father for I have sinned.
@@ -26,8 +26,8 @@ return function(c)
             margins = {
                top    = dpi(margin),
                bottom = dpi(margin),
-               left   = dpi(left_edge > 0 and 6 or 4),
-               right  = dpi(right_edge > 0 and 6 or 4)
+               left   = dpi(4),
+               right  = dpi(4)
             },
             id      = 'margin_role',
             {
@@ -50,9 +50,9 @@ return function(c)
       -- focus loss.
       client.connect_signal('property::active', function()
          if c.active then
-            widget.image  = focus
+            widget.image = focus
          else
-            widget.image  = normal
+            widget.image = normal
          end
       end)
 
@@ -64,22 +64,24 @@ return function(c)
 
          if left_edge > 0 or right_edge > 0 then
             edge.margins = {
-               left  = dpi(5 - left_edge),
-               right = dpi(6 - right_edge)
+               left  = dpi(left_edge  > 0 and 0 or 7),
+               right = dpi(right_edge > 0 and 0 or 8)
             }
          end
       end)
       widget:connect_signal('mouse::leave', function(self)
          self.bg = color.transparent
          self.margins = {
-            top = dpi(margin), left = dpi(6),
-            bottom = dpi(margin), right = dpi(6)
+            top    = dpi(margin),
+            bottom = dpi(margin),
+            left   = dpi(4),
+            right  = dpi(4)
          }
 
          if left_edge > 0 or right_edge > 0 then
             edge.margins = {
-               left  = dpi(5),
-               right = dpi(6)
+               left  = dpi(7),
+               right = dpi(8)
             }
          end
       end)
@@ -127,7 +129,7 @@ return function(c)
                   c:raise()
                end),
                button(beautiful.titlebar_close_focus, beautiful.titlebar_close_normal,
-                  color.red .. '6f', 12, 0, 6, function()
+                  color.red .. '6f', 12, 0, 8, function()
                   c:kill()
                end)
             }
