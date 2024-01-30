@@ -73,4 +73,9 @@ if user.bar_style == 'vertical' then
       gc.recolor_image(icon .. 'wibar/layout/float.svg',       colorscheme.fg0)
 end
 
+-- Bling
+--------
+-- Tabbar.
+_T.tabbar_disable = true
+
 return _T

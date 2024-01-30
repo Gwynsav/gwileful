@@ -2,6 +2,7 @@ local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
+local hotkeys = require('awful.hotkeys_popup')
 local dpi = beautiful.xresources.apply_dpi
 
 local apps = require('config.apps')
@@ -12,7 +13,7 @@ local menu = {}
 local section = {}
 
 section.awesome = {
-   { 'Hotkeys',       require('awful.hotkeys_popup').show_help },
+   { 'Hotkeys',       function() hotkeys.show_help(nil, awful.screen.focused()) end },
    { 'Documentation', apps.browser .. ' https://awesomewm.org/apidoc' },
    { 'Configuration', apps.editor_cmd .. ' ' .. awesome.conffile },
    { 'Reload',        awesome.restart }

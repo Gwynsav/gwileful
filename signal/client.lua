@@ -1,9 +1,9 @@
-local awful = require('awful')
-
 -- Add a titlebar if titlebars_enabled is set to true for the client in `config/rules.lua`.
 client.connect_signal('request::titlebars', function(c)
    -- Some clients don't actually want to have a titlebar.
-   if c.requests_no_titlebar then return end
+   if c.requests_no_titlebar and c.class ~= 'com.github.taiko2k.tauonmb' then
+      return
+   end
 
    require('ui.titlebar').normal(c)
 end)

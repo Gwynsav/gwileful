@@ -2,16 +2,16 @@ local awful = require('awful')
 
 local mod    = require('binds.mod')
 local modkey = mod.modkey
+local tabbed = require('module.bling').module.tabbed
 
 --- Client keybindings.
 client.connect_signal('request::default_keybindings', function()
    awful.keyboard.append_client_keybindings({
       -- Client state management.
-      awful.key({ modkey,           }, 'f',
-         function(c)
-            c.fullscreen = not c.fullscreen
-            c:raise()
-         end, { description = 'toggle fullscreen', group = 'client' }),
+      awful.key({ modkey,           }, 'f', function(c)
+         c.fullscreen = not c.fullscreen
+         c:raise()
+      end, { description = 'toggle fullscreen', group = 'client' }),
       awful.key({ modkey, mod.shift }, 'q', function(c) c:kill() end,
          { description = 'close', group = 'client' }),
       awful.key({ modkey, mod.ctrl  }, 'space', awful.client.floating.toggle,
@@ -41,11 +41,24 @@ client.connect_signal('request::default_keybindings', function()
          end, { description = '(un)maximize horizontally', group = 'client' }),
 
       -- Client position in tiling management.
-      awful.key({ modkey, mod.ctrl  }, 'Return', function(c) c:swap(awful.client.getmaster()) end,
-         { description = 'move to master', group = 'client' }),
+      awful.key({ modkey, mod.ctrl  }, 'Return', function(c)
+         c:swap(awful.client.getmaster())
+      end, { description = 'move to master', group = 'client' }),
       awful.key({ modkey,           }, 'o', function(c) c:move_to_screen() end,
          { description = 'move to screen', group = 'client' }),
       awful.key({ modkey,           }, 't', function(c) c.ontop = not c.ontop end,
-         { description = 'toggle keep on top', group = 'client' })
+         { description = 'toggle keep on top', group = 'client' }),
+
+      -- Bling Tabbed management.
+      awful.key({ modkey, mod.shift }, 'h', function()
+         tabbed.pick_by_direction('up')
+      end, { description = 'add client above focused to group', group = 'tabbing' }),
+      awful.key({ modkey, mod.shift }, 'l', function()
+         tabbed.pick_by_direction('down')
+      end, { description = 'add client below focused to group', group = 'tabbing' }),
+      awful.key({ modkey }, 'Escape', function() tabbed.pop() end,
+         { description = 'remove client from tabbed group', group = 'tabbing' }),
+      awful.key({ modkey }, 'Tab', function() tabbed.iter() end,
+         { description = 'cycle tabbed client focus', group = 'tabbing' })
    })
 end)

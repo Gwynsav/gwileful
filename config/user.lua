@@ -5,6 +5,8 @@ local HOME = os.getenv('HOME') .. '/'
 
 -- Specify user preferences for Awesome's behavior.
 return {
+   -- Basics
+   ---------
    -- Default modkey.
    -- Usually, Mod4 is the key with a logo between Control and Alt. If you do not like 
    -- this or do not have such a key, I suggest you to remap Mod4 to another key using 
@@ -32,19 +34,26 @@ return {
       awful.layout.suit.floating
    },
 
-   -- Sizes
-   gaps = dpi(3),
+   -- Bling
+   --------
+   -- Sizes.
+   gaps = dpi(2),
+   tag_padding = dpi(6),
 
-   -- Widgets
+   -- Widgets.
    bar_style = "horizontal",
 
-   -- Colors
+   -- Colors.
+   -- Available DARK colorschemes:
+   --   oxocarbon, rose-pine.
+   -- Available LIGHT colorschemes:
+   --   none.
    colorscheme = 'oxocarbon',
    style = 'dark',
 
-   -- Wallpaper
+   -- Wallpaper.
    wallpaper = HOME .. 'Pictures/walls/carbon/NightTrain.jpg',
 
-   -- Screenshots
+   -- Screenshots.
    screenshot_path = HOME .. 'Pictures/screenshots/'
 }

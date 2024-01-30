@@ -18,7 +18,7 @@ screen.connect_signal('request::desktop_decoration', function(s)
    awful.tag.add(user.tags, { screen = s, layout = awful.layout.suit.floating })
 
    -- Add padding to the screens themselves.
-   s.padding = dpi(beautiful.useless_gap * 3)
+   s.padding = dpi(user.tag_padding)
 
    -- Attach a wibar to each screen.
    widgets.wibar(s)

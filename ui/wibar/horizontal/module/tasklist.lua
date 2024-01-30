@@ -33,7 +33,7 @@ return function(s)
       style = {
          -- Colors.
          fg_minimize = color.bg4,
-         fg_normal   = color.bg4,
+         fg_normal   = color.fg2,
          fg_focus    = color.fg0,
          fg_urgent   = color.red,
          -- Styling.
