@@ -1,7 +1,6 @@
-# Welcome!
-
-To this humble [AwesomeWM](https://awesomewm.org/) configuration that I made off my
-[modularized default rc.lua](https://github.com/Gwynsav/modular-awm-default), focused
+![Welcome!](assets/banner.png)
+Welcome to this humble [AwesomeWM](https://awesomewm.org/) configuration that I made off
+my [modularized default rc.lua](https://github.com/Gwynsav/modular-awm-default), focused
 on being clean, simple and fast to use.
 
 # Gallery
@@ -12,3 +11,4 @@ on being clean, simple and fast to use.
 - Again, my [modularized default rc.lua](https://github.com/Gwynsav/modular-awm-default).
 - All projects used as submodules of this one.
 - [Feather Icons](https://feathericons.com/).
+- [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/).
