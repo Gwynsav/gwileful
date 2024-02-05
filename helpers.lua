@@ -3,6 +3,7 @@ local cairo = require('lgi').cairo
 
 local _H = {}
 
+-- TODO: remove, as new AWM versions have merged this and I'm still on an older build.
 -- Blyaticon's image cropping function, uses a cairo surface which it crops to a ratio.
 -- https://git.gemia.net/paul.s/homedots/-/blob/main/awesome/helpers.lua#L133
 function _H.crop_surface(ratio, surf)

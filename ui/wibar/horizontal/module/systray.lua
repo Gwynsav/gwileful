@@ -10,12 +10,9 @@ return function()
    -- The systray itself.
    local systray = wibox.widget({
       widget  = wibox.container.margin,
-      margins = dpi(6),
+      margins = dpi(3),
       visible = false,
-      {
-         widget     = wibox.widget.systray,
-         horizontal = false
-      }
+      wibox.widget.systray()
    })
 
    -- The arrow image.

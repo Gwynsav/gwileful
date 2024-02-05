@@ -6,27 +6,50 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 
 return function()
-   return wibox.widget {
+   -- I feel like YanDev saying "I wish there was a better way to do this"...
+   local function get_suffix(day)
+      if day > 3 and day < 21 then
+         return 'th'
+      end
+
+      if day % 10 == 1 then
+         return 'st'
+      elseif day % 10 == 2 then
+         return 'nd'
+      elseif day % 10 == 3 then
+         return 'rd'
+      else
+         return 'th'
+      end
+   end
+
+   -- A simple widget that shows the correct suffix for the current date.
+   local day_suffix = wibox.widget({ widget = wibox.widget.textbox })
+   require('gears').timer({
+      timeout   = 60,
+      call_now  = true,
+      autostart = true,
+      callback  = function()
+         local day = tonumber(os.date('%d'))
+         day_suffix.markup = '<i>' .. os.date('%B ') .. day .. get_suffix(day) .. '</i>'
+      end
+   })
+
+   return wibox.widget({
       layout  = wibox.layout.fixed.horizontal,
-      spacing = dpi(8),
+      spacing = dpi(10),
       {
          widget = wibox.widget.textclock,
-         format = '%H:%M',
-         font   = beautiful.font_bitm .. dpi(9)
+         format = '%H:%M'
       },
       {
          widget = wibox.container.background,
          fg     = color.fg2 .. '7f',
          {
             widget = wibox.widget.textbox,
-            text   = '//',
-            font   = beautiful.font_bitm .. dpi(9)
+            text   = '|'
          }
       },
-      {
-         widget = wibox.widget.textclock,
-         format = '<i>%B %d</i>',
-         font   = beautiful.font_bitm .. dpi(9)
-      }
-   }
+      day_suffix
+   })
 end
