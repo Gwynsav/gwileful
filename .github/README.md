@@ -23,7 +23,12 @@ defined correctly.
 
 ## References and Acknowledgements
 
+Groups/projects:
 - Again, my [modularized default rc.lua](https://github.com/Gwynsav/modular-awm-default).
 - All projects used as submodules of this one.
 - [Feather Icons](https://feathericons.com/).
 - [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/).
+
+Individuals:
+- [Crylia](https://github.com/Crylia/crylia-theme/), use their application icon function
+and reference for some stuff.

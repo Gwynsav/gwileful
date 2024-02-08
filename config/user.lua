@@ -47,12 +47,12 @@ return {
    -- Available DARK colorschemes:
    --   oxocarbon, rose-pine.
    -- Available LIGHT colorschemes:
-   --   none.
+   --   oxocarbon.
    colorscheme = 'oxocarbon',
    style = 'dark',
 
    -- Wallpaper.
-   wallpaper = HOME .. 'Pictures/walls/carbon/NightTrain.jpg',
+   wallpaper = HOME .. 'Pictures/walls/carbon/NierAutomata2B.jpg',
 
    -- Screenshots.
    screenshot_path = HOME .. 'Pictures/screenshots/'

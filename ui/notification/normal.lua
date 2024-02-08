@@ -9,7 +9,6 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local helpers = require('helpers')
 local color   = require(beautiful.colorscheme)
 
 local _N = {}
@@ -45,8 +44,10 @@ end
 function _N.icon(n)
    return wibox.widget({
       widget = wibox.widget.imagebox,
-      image  = n.icon and helpers.crop_surface(1, gears.surface.load_uncached(n.icon))
-         or beautiful.awesome_icon,
+      image  = n.icon and gears.surface.crop_surface({
+         ratio   = 1,
+         surface = gears.surface.load_uncached(n.icon)
+      }) or beautiful.awesome_icon,
       buttons = { awful.button(nil, 1, function() n:destroy() end) },
       horizontal_fit_policy = 'fit',
       vertical_fit_policy   = 'fit',
