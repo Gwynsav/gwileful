@@ -32,3 +32,4 @@ Groups/projects:
 Individuals:
 - [Crylia](https://github.com/Crylia/crylia-theme/), use their application icon function
 and reference for some stuff.
+- [rxyhn](https://github.com/rxyhn/yoru), used calendar and some ideas.

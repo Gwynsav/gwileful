@@ -1,3 +1,4 @@
+local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
@@ -35,21 +36,38 @@ return function()
       end
    })
 
-   return wibox.widget({
-      layout  = wibox.layout.fixed.horizontal,
-      spacing = dpi(10),
+   local clock = wibox.widget({
+      widget = wibox.container.background,
+      fg     = color.fg0,
       {
-         widget = wibox.widget.textclock,
-         format = '%H:%M'
-      },
-      {
-         widget = wibox.container.background,
-         fg     = color.fg2 .. '7f',
+         layout  = wibox.layout.fixed.horizontal,
+         spacing = dpi(10),
          {
-            widget = wibox.widget.textbox,
-            text   = '|'
-         }
+            widget = wibox.widget.textclock,
+            format = '%H:%M'
+         },
+         {
+            widget = wibox.container.background,
+            fg     = color.fg2 .. '7f',
+            {
+               widget = wibox.widget.textbox,
+               text   = '|'
+            }
+         },
+         day_suffix
       },
-      day_suffix
+      buttons = {
+         awful.button(nil, 1, function()
+            require('ui.time'):show()
+         end)
+      }
    })
+   clock:connect_signal('mouse::enter', function(self)
+      self.fg = color.accent
+   end)
+   clock:connect_signal('mouse::leave', function(self)
+      self.fg = color.fg0
+   end)
+
+   return clock
 end

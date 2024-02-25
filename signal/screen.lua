@@ -21,7 +21,7 @@ screen.connect_signal('request::desktop_decoration', function(s)
    s.padding = dpi(user.tag_padding)
 
    -- Attach a wibar to each screen.
-   widgets.wibar(s)
+   s.bar = widgets.wibar(s)
 end)
 
 --- Wallpaper.

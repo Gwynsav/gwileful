@@ -60,7 +60,8 @@ _T.notification_default  = _T.awesome_icon
 _T.notification_cancel   = gc.recolor_image(icon .. 'awesome.svg',  colorscheme.red)
 
 -- Wibar.
-_T.systray_arrow = gc.recolor_image(icon .. 'wibar/systray_arrow.svg', colorscheme.fg0)
+_T.systray_arrow    = gc.recolor_image(icon .. 'wibar/systray_arrow.svg', colorscheme.fg0)
+_T.systray_arrow_ng = gc.recolor_image(icon .. 'wibar/systray_arrow.svg', colorscheme.bg0)
 -- Layouts. Text is preferred for the horizontal version.
 if user.bar_style == 'vertical' then
    _T.layout_tile =
@@ -72,6 +73,12 @@ if user.bar_style == 'vertical' then
    _T.layout_floating =
       gc.recolor_image(icon .. 'wibar/layout/float.svg',       colorscheme.fg0)
 end
+
+-- Tooltips.
+_T.tooltip_border_color = colorscheme.bg3
+_T.tooltip_border_width = dpi(1)
+_T.tooltip_bg           = colorscheme.bg0
+_T.tooltip_fg           = colorscheme.fg0
 
 -- Bling
 --------

@@ -43,16 +43,15 @@ return {
    -- Widgets.
    bar_style = "horizontal",
 
-   -- Colors.
-   -- Available DARK colorschemes:
-   --   oxocarbon, rose-pine.
-   -- Available LIGHT colorschemes:
-   --   oxocarbon.
-   colorscheme = 'oxocarbon',
+   -- Colors. Available options:
+   --   lite-xl, oxocarbon, rose-pine.
+   colorscheme = 'lite-xl',
    style = 'dark',
 
    -- Wallpaper.
-   wallpaper = HOME .. 'Pictures/walls/carbon/NierAutomata2B.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/carbon/NightTrain.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/carbon/NierAutomata2B.jpg',
+   wallpaper = HOME .. 'Pictures/walls/urban/AsianTerraces.jpg',
 
    -- Screenshots.
    screenshot_path = HOME .. 'Pictures/screenshots/'
