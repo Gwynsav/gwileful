@@ -1,3 +1,4 @@
+local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
@@ -6,14 +7,17 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.time.module')
 
+local width, height, margin = 260, 293, 6
+local screen = awful.screen.focused()
+
 local panel = wibox({
    ontop    = true,
    visible  = false,
-   width    = dpi(300),
-   height   = dpi(293),
+   width    = dpi(width),
+   height   = dpi(height),
    bg       = color.bg0,
-   x        = dpi(1615),
-   y        = dpi(745),
+   x        = dpi(screen.geometry.width - width - margin),
+   y        = dpi(screen.geometry.height - height - margin - screen.bar.height),
    border_width = dpi(1),
    border_color = color.bg3,
    widget = {

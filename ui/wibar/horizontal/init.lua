@@ -9,7 +9,7 @@ local module = require(... .. '.module')
 
 return function(s)
    -- Create the wibox
-   s.mywibox = awful.wibar({
+   return awful.wibar({
       position = 'bottom',
       height   = dpi(36),
       screen   = s,

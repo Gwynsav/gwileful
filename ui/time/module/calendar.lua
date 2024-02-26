@@ -40,7 +40,7 @@ local function day_widget(date, is_current, other_month)
       {
          widget  = wibox.container.margin,
          margins = {
-            left = dpi(8), right = dpi(8),
+            left = dpi(6), right = dpi(6),
             top = dpi(8), bottom = dpi(8)
          },
          {
