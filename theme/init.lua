@@ -8,3 +8,6 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. 'theme/theme.lua')
 
 -- Set the tym colorscheme.
 require('script.tym-themer')()
+
+-- Merge the Xresources settings.
+require('script.xresources')()

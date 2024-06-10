@@ -51,8 +51,9 @@ function _N.icon(n)
       buttons = { awful.button(nil, 1, function() n:destroy() end) },
       horizontal_fit_policy = 'fit',
       vertical_fit_policy   = 'fit',
-      forced_height = dpi(32),
-      forced_width  = dpi(32)
+      scaling_quality = (n.icon == nil) and 'nearest',
+      forced_height = dpi(27),
+      forced_width  = dpi(27)
    })
 end
 

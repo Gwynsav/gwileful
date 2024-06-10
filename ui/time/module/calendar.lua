@@ -17,10 +17,7 @@ local function weekday_widget(name)
       {
          widget  = wibox.container.margin,
          margins = { left = dpi(8) },
-         {
-            widget = wibox.widget.textbox,
-            text   = name
-         }
+         wibox.widget.textbox(name)
       }
    })
 end
@@ -40,7 +37,7 @@ local function day_widget(date, is_current, other_month)
       {
          widget  = wibox.container.margin,
          margins = {
-            left = dpi(8), right = dpi(8),
+            left = dpi(6), right = dpi(6),
             top = dpi(8), bottom = dpi(8)
          },
          {
@@ -125,16 +122,16 @@ local function new()
          {
             widget = wibox.container.margin,
             margins = {
-               left = dpi(6), right = dpi(6),
-               top = dpi(9), bottom = dpi(9)
+               left = dpi(8), right = dpi(8),
+               top = dpi(6), bottom = dpi(6)
             },
             {
                widget = wibox.widget.imagebox,
-               image  = beautiful.systray_arrow,
+               image  = beautiful.arrow,
                halign = 'center',
                valign = 'center',
-               forced_height = dpi(6),
-               forced_width  = dpi(6),
+               forced_height = dpi(9),
+               forced_width  = dpi(9),
                scaling_quality = 'nearest',
                id = 'image_role'
             }
@@ -146,11 +143,11 @@ local function new()
       })
       widget:connect_signal('mouse::enter', function(self)
          self.bg    = color.accent
-         self.image = beautiful.systray_arrow_ng
+         self.image = beautiful.arrow_ng
       end)
       widget:connect_signal('mouse::leave', function(self)
          self.bg    = color.bg0 .. '60'
-         self.image = beautiful.systray_arrow
+         self.image = beautiful.arrow
       end)
       return widget
    end

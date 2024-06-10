@@ -8,41 +8,32 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local tabbed = require('module.bling').widget.tabbed_misc
 
+local _SIZE = dpi(9)
+local _MARGIN = dpi(4)
+local _EDGE = dpi(11) - _MARGIN
+
 --- The titlebar to be used on normal clients.
 return function(c)
-   -- Padding on the sides for the buttons.
-   local edge = wibox.widget({
-      widget = wibox.container.margin,
-      margins = { left = dpi(7), right = dpi(8) }
-   })
-
-   -- Forgive me father for I have sinned.
-   local function button(focus, normal, hover_color, margin, leftmost, rightmost, action)
+   local function button(regular, hover, action)
       local widget = wibox.widget({
          widget = wibox.container.background,
          bg     = color.transparent,
          {
-            widget  = wibox.container.margin,
-            margins = {
-               top    = dpi(margin),
-               bottom = dpi(margin),
-               left   = dpi(4),
-               right  = dpi(4)
-            },
-            id = 'margin_role',
+            widget = wibox.container.margin,
+            margins = { left = _MARGIN, right = _MARGIN },
             {
                widget = wibox.widget.imagebox,
-               image  = normal,
+               image  = regular,
                id     = 'image_role',
+               valign = 'center',
+               forced_height   = _SIZE,
+               forced_width    = _SIZE,
                scaling_quality = 'nearest'
             }
          },
          buttons = { awful.button(nil, 1, action) },
          set_image = function(self, image)
             self:get_children_by_id('image_role')[1].image = image
-         end,
-         set_margins = function(self, margins)
-            self:get_children_by_id('margin_role')[1].margins = margins
          end
       })
 
@@ -50,69 +41,46 @@ return function(c)
       -- focus loss.
       client.connect_signal('property::active', function()
          if c.active then
-            widget.image = focus
+            widget.opacity = 1
          else
-            widget.image = normal
+            widget.opacity = 0.66
          end
       end)
 
-      -- Adjust paddings and colors when hovering. The paddings for the titlebar only
-      -- change is either edge is larger than 0.
+      -- Adjust colors when hovering.
       widget:connect_signal('mouse::enter', function(self)
-         self.bg = hover_color
-         self.margins = dpi(margin)
-
-         if leftmost or rightmost then
-            edge.margins = {
-               left  = leftmost  and 0 or dpi(7),
-               right = rightmost and 0 or dpi(8)
-            }
-         end
+         self.image = hover
       end)
       widget:connect_signal('mouse::leave', function(self)
-         self.bg = color.transparent
-         self.margins = {
-            top    = dpi(margin),
-            bottom = dpi(margin),
-            left   = dpi(4),
-            right  = dpi(4)
-         }
-
-         if leftmost or rightmost then
-            edge.margins = {
-               left  = dpi(7),
-               right = dpi(8)
-            }
-         end
+         self.image = regular
       end)
 
       return widget
    end
 
    local tabs = tabbed.titlebar_indicator(c, {
-      layout = wibox.layout.fixed.horizontal,
-      layout_spacing = dpi(12),
+      bg_color       = color.bg2,
+      bg_color_focus = color.bg2 .. '80',
+      fg_color       = color.fg0 .. 'AB',
+      fg_color_focus = color.accent,
+      layout = wibox.layout.flex.horizontal,
+      layout_spacing = 0,
       widget_template = {
          widget = wibox.container.background,
+         id     = 'bg_role',
          {
-            widget   = wibox.container.constraint,
-            strategy = 'max',
-            width    = dpi(120),
+            widget = wibox.container.margin,
+            margins = {
+               left = _SIZE+2, right = _SIZE+2,
+               top = _SIZE+2, bottom = _SIZE+2
+            },
             {
-               widget = wibox.container.margin,
-               margins = { top = dpi(10), bottom = dpi(10) },
-               {
-                  widget = wibox.widget.textbox,
-                  id     = 'text_role'
-               }
+               widget = wibox.widget.textbox,
+               valign = 'center',
+               id     = 'text_role'
             }
          },
-         create_callback = function(self, client, group)
-            if client == group.clients[group.focused_idx] then
-               self.fg = color.fg0
-            else
-               self.fg = color.fg2 .. 'cc'
-            end
+         create_callback = function(self, client, _)
             self.text = client.name
          end,
          update_callback = function(self, client, group)
@@ -135,40 +103,52 @@ return function(c)
          end)
       },
       {
-         widget = edge,
+         layout = wibox.layout.align.horizontal,
+         expand = 'outer',
+         -- Left
          {
-            layout = wibox.layout.align.horizontal,
-            expand = 'none',
-            -- Left
+            layout  = wibox.layout.fixed.horizontal,
             {
-               layout  = wibox.layout.fixed.horizontal,
-               spacing = dpi(10),
-               button(beautiful.titlebar_pin_focus, beautiful.titlebar_pin_normal,
-                  color.bg4 .. '6f', 11, true, false, function()
-                  c.sticky = not c.sticky
-               end),
-               tabs
+               widget  = wibox.container.margin,
+               margins = {
+                  left   = _EDGE+1,
+                  right  = _EDGE+1
+               },
+               button(beautiful.titlebar_pin_focus, beautiful.titlebar_pin_hover,
+                  function()
+                     c.sticky = not c.sticky
+                  end
+               )
             },
-            -- Middle
-            nil,
-            -- Right
+            tabs
+         },
+         -- Middle
+         nil,
+         -- Right
+         {
+            widget  = wibox.container.margin,
+            margins = {
+               left   = _EDGE+1,
+               right  = _EDGE+1
+            },
             {
                layout  = wibox.layout.fixed.horizontal,
-               button(beautiful.titlebar_min_focus, beautiful.titlebar_min_normal,
-                  color.bg4 .. '6f', 12, false, false, function()
-                  gears.timer.delayed_call(function()
-                     c.minimized = not c.minimized
-                  end)
-               end),
-               button(beautiful.titlebar_max_focus, beautiful.titlebar_max_normal,
-                  color.bg4 .. '6f', 12, false, false, function()
-                  c.maximized = not c.maximized
-                  c:raise()
-               end),
-               button(beautiful.titlebar_close_focus, beautiful.titlebar_close_normal,
-                  color.red .. '6f', 12, false, true, function()
-                  c:kill()
-               end)
+               spacing = dpi(1),
+               button(beautiful.titlebar_min_focus, beautiful.titlebar_min_hover,
+                  function()
+                     gears.timer.delayed_call(function()
+                        c.minimized = not c.minimized
+                     end)
+                  end
+               ),
+               button(beautiful.titlebar_max_focus, beautiful.titlebar_max_hover,
+                  function()
+                     c.maximized = not c.maximized
+                     c:raise()
+                  end
+               ),
+               button(beautiful.titlebar_close_focus, beautiful.titlebar_close_hover,
+                  function() c:kill() end)
             }
          }
       }
@@ -179,7 +159,7 @@ return function(c)
       bg     = color.bg3
    })
 
-   awful.titlebar(c, { position = 'top',    size = dpi(34) }).widget = top
+   awful.titlebar(c, { position = 'top',    size = dpi(33) }).widget = top
    awful.titlebar(c, { position = 'bottom', size = dpi(1)  }).widget = empty
    awful.titlebar(c, { position = 'left',   size = dpi(1)  }).widget = empty
    awful.titlebar(c, { position = 'right',  size = dpi(1)  }).widget = empty

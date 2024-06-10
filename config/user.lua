@@ -40,18 +40,17 @@ return {
    gaps = dpi(2),
    tag_padding = dpi(6),
 
-   -- Widgets.
-   bar_style = "horizontal",
-
    -- Colors. Available options:
    --   lite-xl, oxocarbon, rose-pine.
-   colorscheme = 'lite-xl',
+   colorscheme = 'oxocarbon',
    style = 'dark',
 
+   -- Profile Picture.
+   pfp = HOME .. 'Pictures/avatars/misuta-o-saru/dragonZOOM.jpg',
+
    -- Wallpaper.
-   -- wallpaper = HOME .. 'Pictures/walls/carbon/NightTrain.jpg',
-   -- wallpaper = HOME .. 'Pictures/walls/carbon/NierAutomata2B.jpg',
-   wallpaper = HOME .. 'Pictures/walls/urban/AsianTerraces.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/anime/custom/TiledGirlInverted.jpg',
+   wallpaper = HOME .. 'Pictures/walls/pixelart/PokemonWaterfall.png',
 
    -- Screenshots.
    screenshot_path = HOME .. 'Pictures/screenshots/'

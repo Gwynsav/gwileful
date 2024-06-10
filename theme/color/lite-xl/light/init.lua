@@ -17,6 +17,7 @@ _C.magenta = '#aa2782'
 _C.cyan    = '#1c7c9c'
 
 _C.accent = _C.blue
+_C.bccent = _C.magenta
 
 return _C
 

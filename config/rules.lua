@@ -9,7 +9,7 @@ ruled.client.connect_signal('request::rules', function()
    -- All clients will match this rule.
    ruled.client.append_rule({
       id         = 'global',
-      rule       = { },
+      rule       = nil,
       properties = {
          focus     = awful.client.focus.filter,
          raise     = true,
@@ -57,13 +57,16 @@ ruled.client.connect_signal('request::rules', function()
       rule_any = {
          class = { 'Steam', 'Heroic' }
       },
-      properties = { screen = 1, tag = tostring(user.tags) }
+      properties = {
+         tag      = user.tags,
+         floating = true
+      }
    })
    ruled.client.append_rule({
       rule_any = {
          class = { 'Discord', 'vesktop' }
       },
-      properties = { screen = 1, tag = tostring(user.tags - 1) }
+      properties = { screen = 1, tag = user.tags - 1 }
    })
 end)
 

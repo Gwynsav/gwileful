@@ -4,11 +4,13 @@ local mod    = require('binds.mod')
 local modkey = mod.modkey
 
 local apps    = require('config.apps')
-local widgets = require('ui')
+local audio   = require('signal.system.audio')
 local shooter = require('script.shooter')
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({
+   -- AwesomeWM
+   ------------
    -- General Awesome keys.
    awful.key({ modkey,           }, 's', require('awful.hotkeys_popup').show_help,
       { description = 'show help', group = 'awesome' }),
@@ -107,11 +109,21 @@ awful.keyboard.append_global_keybindings({
       end
    }),
 
-   -- Miscelaneous.
+   -- Miscelaneous
+   ---------------
+   -- Screenshot.
    awful.key({          }, 'Print', function() shooter.selection() end,
       { description = 'select a region to screenshot', group = 'screenshot' }),
    awful.key({ modkey   }, 'Print', function() shooter.screen() end,
       { description = 'select the whole screen to screenshot', group = 'screenshot' }),
    awful.key({ mod.ctrl }, 'Print', function() shooter.delayed() end,
-      { description = 'select the whole screen to screenshot', group = 'screenshot' })
+      { description = 'select the whole screen to screenshot', group = 'screenshot' }),
+
+   -- Audio.
+   awful.key({          }, 'XF86AudioRaiseVolume', function() audio:set_sink_volume('+2') end,
+      { description = 'raises default audio device volume', group = 'audio' }),
+   awful.key({          }, 'XF86AudioLowerVolume', function() audio:set_sink_volume('-2') end,
+      { description = 'lowers default audio device volume', group = 'audio' }),
+   awful.key({          }, 'XF86AudioMute', function() audio:toggle_sink_mute() end,
+      { description = 'toggles default audio device mute', group = 'audio' })
 })

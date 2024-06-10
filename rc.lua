@@ -6,7 +6,7 @@ pcall(require, 'luarocks.loader')
 -- Allow Awesome to automatically focus a client upon changing tags or loading.
 require('awful.autofocus')
 -- Enable hotkeys help widget for VIM and other apps when client with a matching 
--- name is opened:
+-- name is opened.
 require('awful.hotkeys_popup.keys')
 
 --- Error handling.
@@ -21,6 +21,14 @@ naughty.connect_signal('request::display_error', function(message, startup)
       message = message
    })
 end)
+
+-- Create auxiliary directories for user state.
+local awful = require('awful')
+awful.spawn('mkdir -p ' .. os.getenv('HOME') .. '/.local/data/awesome')
+
+-- Start system status polls.
+-- TODO: make it all async using LGI C/dbus bindings.
+-- require('signal.system.polls')
 
 -- Load the theme. In other words, defines the variables within the `beautiful` table.
 require('theme')
