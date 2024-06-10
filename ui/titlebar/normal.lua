@@ -59,8 +59,8 @@ return function(c)
    end
 
    local tabs = tabbed.titlebar_indicator(c, {
-      bg_color       = color.bg2,
-      bg_color_focus = color.bg2 .. '80',
+      bg_color       = color.bg0 .. '80',
+      bg_color_focus = color.bg0,
       fg_color       = color.fg0 .. 'AB',
       fg_color_focus = color.accent,
       layout = wibox.layout.flex.horizontal,
