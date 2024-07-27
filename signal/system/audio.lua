@@ -67,10 +67,7 @@ local function new()
   self:connect_signal('sink::volume_changed', function()
     aspawn.easy_async_with_shell([[LC_ALL=C pactl get-sink-mute @DEFAULT_SINK@]], function(stdout)
       if stdout == '' or stdout == nil then return end
-      local muted = false
-      if stdout:match('yes') then
-        muted = true
-      end
+      local muted = stdout:match('yes') ~= nil
       aspawn.easy_async_with_shell([[LC_ALL=C pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}']], function(stdout2)
         if stdout == '' or stdout == nil then return end
         self:emit_signal('sink::get', muted, stdout2:gsub('%%', ''):gsub('\n', '') or 0)
@@ -96,6 +93,13 @@ local function new()
   self:emit_signal('source::volume_changed')
   self:emit_signal('sink::device_changed')
   self:emit_signal('source::device_changed')
+
+  aspawn.easy_async_with_shell([[LC_ALL=C pactl get-default-sink]], function(stdout)
+    self:emit_signal('sink::name', stdout)
+  end)
+  aspawn.easy_async_with_shell([[LC_ALL=C pactl get-default-source]], function(stdout)
+    self:emit_signal('source::name', stdout)
+  end)
 
   return self
 end

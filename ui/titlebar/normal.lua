@@ -94,14 +94,6 @@ return function(c)
       bg      = color.bg1,
       border_width = dpi(1),
       border_color = color.bg3,
-      buttons = {
-         awful.button(nil, 1, function()
-            c:activate({ context = 'titlebar', action = 'mouse_move' })
-         end),
-         awful.button(nil, 3, function()
-            c:activate({ context = 'titlebar', action = 'mouse_resize' })
-         end)
-      },
       {
          layout = wibox.layout.align.horizontal,
          expand = 'outer',

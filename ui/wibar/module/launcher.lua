@@ -4,34 +4,39 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local helpers = require('helpers')
 local color = require(beautiful.colorscheme)
 
--- Create a launcher widget. Opens the Awesome menu when clicked.
-return function()
+return function(s)
    local widget = wibox.widget({
-      widget = wibox.container.background,
-      fg     = color.fg0,
+      layout  = wibox.layout.fixed.horizontal,
+      spacing = dpi(6),
       {
-         widget  = wibox.container.margin,
-         margins = {
-            bottom = dpi(7), top = dpi(7),
-            left = dpi(4), right = dpi(4)
-         },
-         {
-            widget = wibox.widget.textbox,
-            font   = beautiful.font_bitm .. dpi(9),
-            text   = 'menu'
-         }
+         widget = wibox.widget.imagebox,
+         image  = beautiful.search,
+         valign = 'center',
+         id     = 'image_role',
+         scaling_quality = 'nearest',
+         forced_height   = dpi(9),
+         forced_width    = dpi(9)
+      },
+      {
+         widget = helpers.ctext('Search', beautiful.font_bitm .. dpi(9), color.fg0),
+         id     = 'text_role'
       },
       buttons = {
-         awful.button(nil, 1, function() require('ui.dash'):show() end)
-      }
+         awful.button(nil, 1, function() s.launcher:open() end)
+      },
+      set_fg = function(self, col, icon)
+         self:get_children_by_id('text_role')[1].fg = col
+         self:get_children_by_id('image_role')[1].image = icon
+      end
    })
    widget:connect_signal('mouse::enter', function(self)
-      self.fg = color.accent
+      self.set_fg(self, color.accent, beautiful.search_hl)
    end)
    widget:connect_signal('mouse::leave', function(self)
-      self.fg = color.fg0
+      self.set_fg(self, color.fg0, beautiful.search)
    end)
 
    return widget

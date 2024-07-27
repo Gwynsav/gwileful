@@ -14,9 +14,9 @@ Sometimes these ideas make the WM very slow or unstable, so please beware my inc
 does NOT mean that this setup only works with `pulseaudio`, you can also use `pipewire`
 by using `pipewire-pulse`.
 - `playerctl` (also usually `playerctl-{dev/devel}`) for music playback widgets and
-keybinds (currently TODO).
-- *Network Manager* for network widgets, still TODO.
-- `bluez` for bluetooth widgets, still TODO.
+keybinds.
+<!-- - `NetworkManager` for network widgets, still TODO. -->
+<!-- - `bluez` for bluetooth widgets, still TODO. -->
 
 As of right now, this is only the AwesomeWM configuration, so to install it just:
 ```
@@ -32,17 +32,20 @@ defined correctly.
 
 ## References and Acknowledgements
 
+All instances of me using others' code have a link to the original at the top of the file.
+
 Groups/projects:
 - Again, my [modularized default rc.lua](https://github.com/Gwynsav/modular-awm-default).
-- All projects used as submodules of this one.
+- All projects used as submodules of this one, see `module/`.
 - [Feather Icons](https://feathericons.com/). Actually, I've moved away from these and
 made my own icons for everything here. But still, I used them in the past and as
 reference making my own icons, so I think they're still worth a mention.
-- [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/).
+- [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/), the beautiful font
+from KreativeKorp used for UI as well as terminal.
 
 Individuals:
-- [Crylia](https://github.com/Crylia/crylia-theme/), used some of their code, all
-instances of this have a link to the original at the top of the file.
+- [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.
+- [Crylia](https://github.com/Crylia/crylia-theme/), used some of their code. 
 - [rxyhn](https://github.com/rxyhn/yoru), used calendar and some ideas.
 - The beautiful artwork I often display in the screenshots is by
 [みすたーおさる](https://www.pixiv.net/en/users/10770935) ("Mister Monkey" in english).

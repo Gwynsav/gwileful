@@ -16,31 +16,52 @@ local panel = wibox({
    width    = dpi(width),
    height   = dpi(height),
    bg       = color.bg0,
-   x        = dpi(margin),
-   y        = dpi(screen.geometry.height - height - margin - screen.bar.height),
+   x        = dpi(screen.geometry.width - width - margin),
+   y        = dpi(margin + screen.bar.height),
    border_width = dpi(1),
    border_color = color.bg3,
    widget = {
-      widget  = wibox.container.margin,
-      margins = dpi(16),
+      layout = wibox.layout.align.vertical,
       {
-         layout = wibox.layout.align.vertical,
+         layout = wibox.layout.fixed.vertical,
+         mods.user(),
          {
-            layout = wibox.layout.fixed.vertical,
-            mods.user(),
+            widget = wibox.container.background,
+            forced_height = dpi(1),
+            bg = color.bg3
+         }
+      },
+      {
+         widget  = wibox.container.margin,
+         margins = dpi(16),
+         {
+            layout  = wibox.layout.fixed.vertical,
+            spacing = dpi(16),
+            mods.grid(),
             {
                widget = wibox.container.background,
-               forced_height = dpi(1),
-               bg = color.bg3
-            }
-         },
-         {
-            widget  = wibox.container.margin,
-            margins = dpi(16),
+               bg     = color.bg3,
+               forced_height = dpi(1)
+            },
+            mods.player(),
+            mods.slider(),
             {
-               layout = wibox.layout.fixed.vertical,
-               mods.slider()
+               widget = wibox.container.background,
+               bg     = color.bg3,
+               forced_height = dpi(1)
+            },
+            {
+               widget = wibox.widget.textbox,
+               text   = 'Every ray of light is an invitation to death.',
+               halign = 'center'
             }
+         }
+      },
+      {
+         widget  = wibox.container.margin,
+         margins = {
+            left = dpi(16), right = dpi(16),
+            bottom = dpi(16)
          },
          mods.title()
       }

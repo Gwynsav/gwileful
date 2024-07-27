@@ -10,60 +10,61 @@ local module = require(... .. '.module')
 return function(s)
    -- Create the wibox
    return awful.wibar({
-      position = 'bottom',
-      height   = dpi(36),
+      position = 'top',
+      height   = dpi(35),
       screen   = s,
       widget   = {
          widget = wibox.container.background,
-         bg     = color.bg3,
+         bg     = color.bg0,
          {
             widget  = wibox.container.margin,
-            margins = { top = dpi(1) },
+            margins = {
+               left = dpi(16), right = dpi(16)
+            },
             {
-               widget = wibox.container.background,
-               bg     = color.bg0,
+               layout = wibox.layout.align.horizontal,
+               expand = 'none',
+               -- Left widgets.
                {
-                  widget  = wibox.container.margin,
-                  margins = {
-                     left = dpi(24), right = dpi(24)
-                  },
+                  layout  = wibox.layout.fixed.horizontal,
+                  spacing = dpi(16),
+                  module.clock(),
                   {
-                     layout = wibox.layout.align.horizontal,
-                     expand = 'none',
-                     -- Left widgets.
-                     {
-                        widget  = wibox.container.margin,
-                        margins = {
-                           top = dpi(6), bottom = dpi(6)
-                        },
-                        {
-                           layout  = wibox.layout.fixed.horizontal,
-                           spacing = dpi(16),
-                           module.launcher(),
-                           module.taglist(s),
-                           module.layoutbox(s)
-                        }
+                     widget   = wibox.container.constraint,
+                     strategy = 'exact',
+                     width    = dpi(awful.screen.focused().geometry.width * 0.3),
+                     module.tasklist(s)
+                  }
+               },
+               -- Middle widgets.
+               {
+                  widget = wibox.container.margin,
+                  margins = {
+                     top = dpi(6), bottom = dpi(6)
+                  },
+                  module.taglist(s)
+               },
+               -- Right widgets.
+               {
+                  layout  = wibox.layout.fixed.horizontal,
+                  spacing = dpi(12),
+                  {
+                     widget  = wibox.container.margin,
+                     margins = {
+                        top = dpi(6), bottom = dpi(6)
                      },
-                     -- Middle widgets.
+                     module.systray()
+                  },
+                  module.status(),
+                  {
+                     widget  = wibox.container.margin,
+                     margins = { top = dpi(6), bottom = dpi(6) },
                      {
-                        widget   = wibox.container.constraint,
-                        strategy = 'exact',
-                        width    = dpi(awful.screen.focused().geometry.width * (4/9)),
-                        module.tasklist(s)
-                     },
-                     -- Right widgets.
-                     {
-                        widget  = wibox.container.margin,
-                        margins = {
-                           top = dpi(6), bottom = dpi(6)
-                        },
-                        {
-                           layout  = wibox.layout.fixed.horizontal,
-                           spacing = dpi(12),
-                           module.systray(),
-                           module.status(),
-                           module.clock()
-                        }
+                        layout  = wibox.layout.fixed.horizontal,
+                        spacing = dpi(12),
+                        module.launcher(s),
+                        module.layoutbox(s),
+                        module.dash(s)
                      }
                   }
                }

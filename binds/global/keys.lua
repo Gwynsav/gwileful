@@ -6,6 +6,7 @@ local modkey = mod.modkey
 local apps    = require('config.apps')
 local audio   = require('signal.system.audio')
 local shooter = require('script.shooter')
+local pctl    = require('module.bling').signal.playerctl.lib()
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({
@@ -18,8 +19,8 @@ awful.keyboard.append_global_keybindings({
       { description = 'reload awesome', group = 'awesome' }),
    awful.key({ modkey,           }, 'Return', function() awful.spawn(apps.terminal) end,
       { description = 'open a terminal', group = 'launcher' }),
-   awful.key({ modkey            }, 'p', function() require('menubar').show() end,
-      { description = 'show the menubar', group = 'launcher' }),
+   awful.key({ modkey,           }, 'p', function() awful.screen.focused().launcher:open() end,
+      { description = 'show the launcher', group = 'launcher' }),
 
    -- Focus related keybindings.
    awful.key({ modkey,           }, 'j', function() awful.client.focus.byidx( 1) end,
@@ -116,8 +117,8 @@ awful.keyboard.append_global_keybindings({
       { description = 'select a region to screenshot', group = 'screenshot' }),
    awful.key({ modkey   }, 'Print', function() shooter.screen() end,
       { description = 'select the whole screen to screenshot', group = 'screenshot' }),
-   awful.key({ mod.ctrl }, 'Print', function() shooter.delayed() end,
-      { description = 'select the whole screen to screenshot', group = 'screenshot' }),
+   awful.key({ mod.ctrl }, 'Print', function() shooter.delayed(5) end,
+      { description = 'take a delayed fullscreen screenshot', group = 'screenshot' }),
 
    -- Audio.
    awful.key({          }, 'XF86AudioRaiseVolume', function() audio:set_sink_volume('+2') end,
@@ -125,5 +126,13 @@ awful.keyboard.append_global_keybindings({
    awful.key({          }, 'XF86AudioLowerVolume', function() audio:set_sink_volume('-2') end,
       { description = 'lowers default audio device volume', group = 'audio' }),
    awful.key({          }, 'XF86AudioMute', function() audio:toggle_sink_mute() end,
-      { description = 'toggles default audio device mute', group = 'audio' })
+      { description = 'toggles default audio device mute', group = 'audio' }),
+
+   -- Music.
+   awful.key({          }, 'XF86AudioPlay', function() pctl:play_pause() end,
+      { description = 'toggles music playback', group = 'music' }),
+   awful.key({          }, 'XF86AudioPrev', function() pctl:previous() end,
+      { description = 'rewinds to previous song', group = 'music' }),
+   awful.key({          }, 'XF86AudioNext', function() pctl:next() end,
+      { description = 'skips to next song', group = 'music' })
 })

@@ -47,13 +47,9 @@ function _N.icon(n)
       image  = n.icon and gears.surface.crop_surface({
          ratio   = 1,
          surface = gears.surface.load_uncached(n.icon)
-      }) or beautiful.awesome_icon,
+      }) or beautiful.notification_default,
       buttons = { awful.button(nil, 1, function() n:destroy() end) },
-      horizontal_fit_policy = 'fit',
-      vertical_fit_policy   = 'fit',
-      scaling_quality = (n.icon == nil) and 'nearest',
-      forced_height = dpi(27),
-      forced_width  = dpi(27)
+      scaling_quality = 'nearest'
    })
 end
 
@@ -140,54 +136,52 @@ return function(n)
          widget  = wibox.container.margin,
          margins = dpi(12),
          {
-            widget  = wibox.layout.fixed.vertical,
-            spacing = dpi(8),
+            widget   = wibox.container.constraint,
+            strategy = 'max',
+            width    = dpi(280),
+            height   = dpi(250),
             {
-               layout = wibox.layout.align.horizontal,
+               layout = wibox.layout.fixed.vertical,
+               _N.body(n),
                {
-                  layout = wibox.layout.fixed.horizontal,
-                  {
-                     widget   = wibox.container.constraint,
-                     strategy = 'max',
-                     width    = dpi(280),
-                     height   = dpi(250),
-                     {
-                        layout = wibox.layout.fixed.vertical,
-                        _N.body(n),
-                        {
-                           -- Add extra spacing to avoid having it look weird.
-                           widget  = wibox.container.margin,
-                           margins = { top = dpi(4) },
-                           -- This, however, makes you have to hide the spacing itself.
-                           visible = #n.actions > 0,
-                           _N.actions(n)
-                        }
-                     }
-                  },
-                  {
-                     widget = wibox.widget.separator,
-                     color  = color.transparent,
-                     forced_height = 1,
-                     forced_width  = dpi(12)
-                  }
-               },
-               nil,
-               {
-                  layout = wibox.layout.align.vertical,
-                  _N.icon(n),
-                  nil, nil
+                  -- Add extra spacing to avoid having it look weird.
+                  widget  = wibox.container.margin,
+                  margins = { top = dpi(4) },
+                  -- This, however, makes you have to hide the spacing itself.
+                  visible = #n.actions > 0,
+                  _N.actions(n)
                }
             }
          }
       },
       nil,
       {
-         -- Today I learnt setting a constraint on a progress bar makes it use its minimum
-         -- required size. The number you input into width doesn't matter.
+         layout = wibox.layout.fixed.vertical,
+         {
+            widget = wibox.container.background,
+            bg     = color.bg3,
+            forced_height = dpi(1)
+         },
+         {
+            -- Today I learnt setting a constraint on a progress bar makes it use its minimum
+            -- required size. The number you input into width doesn't matter.
+            widget   = wibox.container.constraint,
+            strategy = 'max',
+            width    = 0,
+            timeout_bar
+         }
+      }
+   })
+
+   local iconbox = wibox.widget({
+      widget  = wibox.container.margin,
+      margins = dpi(8),
+      {
          widget   = wibox.container.constraint,
-         strategy = 'max',
-         width    = 0,
-         timeout_bar
+         strategy = 'exact',
+         width    = dpi(45),
+         height   = dpi(45),
+         _N.icon(n)
       }
    })
 
@@ -210,9 +204,18 @@ return function(n)
                border_width = dpi(1),
                border_color = color.bg3,
                {
-                  layout = wibox.layout.fixed.vertical,
-                  titlebox,
-                  contentbox
+                  layout = wibox.layout.fixed.horizontal,
+                  iconbox,
+                  {
+                     widget = wibox.container.background,
+                     bg     = color.bg3,
+                     forced_width = dpi(1)
+                  },
+                  {
+                     layout = wibox.layout.fixed.vertical,
+                     titlebox,
+                     contentbox
+                  }
                }
             }
          }
@@ -230,8 +233,6 @@ return function(n)
          timeout_bar.value = pos
          if time == timeout then
             n:destroy()
-            -- Call it twice because Lua.
-            collectgarbage('collect')
             collectgarbage('collect')
          end
       end
@@ -243,3 +244,5 @@ return function(n)
 
    return layout
 end
+
+

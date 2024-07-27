@@ -66,13 +66,13 @@ return function(s)
             self.update = function()
                if tag.selected then
                   -- If the tag is focused:
-                  bar.forced_width = dpi(38)
+                  bar.forced_width = dpi(64)
                elseif #tag:clients() > 0 then
                   -- If the tag is occupied:
-                  bar.forced_width = dpi(28)
+                  bar.forced_width = dpi(48)
                else
                   -- If the tag is unoccupied and unfocused:
-                  bar.forced_width = dpi(18)
+                  bar.forced_width = dpi(24)
                end
             end
             -- Generate the bar sizes once.

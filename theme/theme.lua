@@ -53,11 +53,9 @@ _T.titlebar_pin_hover    = gc.recolor_image(icon .. 'title/command.png',  colors
 _T.titlebar_pin_focus    = gc.recolor_image(icon .. 'title/command.png',  colorscheme.fg0)
 
 -- Notifications.
--- TODO
--- _T.notification_default  = gc.recolor_image(icon .. 'notif/default.svg', colorscheme.fg0)
-_T.notification_default  = _T.awesome_icon
--- _T.notification_cancel   = gc.recolor_image(icon .. 'notif/cancel.svg',  colorscheme.red)
-_T.notification_cancel   = gc.recolor_image(icon .. 'util/awesome.png',  colorscheme.red)
+_T.notification_spacing  = _T.useless_gap * 2
+_T.notification_default  = gc.recolor_image(icon .. 'notif/default.png', colorscheme.fg0)
+_T.notification_cancel   = gc.recolor_image(icon .. 'notif/cancel.png',  colorscheme.red)
 
 -- Tooltips.
 _T.tooltip_border_color = colorscheme.bg3
@@ -68,17 +66,49 @@ _T.tooltip_fg           = colorscheme.fg0
 -- Icons
 --------
 _T.def_pfp     = icon .. 'default/pfp.png'
+_T.hamburger   = gc.recolor_image(icon .. 'util/hamburger.png',     colorscheme.fg0)
+_T.search      = gc.recolor_image(icon .. 'util/search.png',        colorscheme.fg0)
+_T.search_hl   = gc.recolor_image(icon .. 'util/search.png',        colorscheme.accent)
 -- These are actually just arrows, the naming has become outdated and I'm too lazy to go around
 -- the whole code correcting it. They're used for more than just the systray.
-_T.arrow       = gc.recolor_image(icon .. 'util/arrow.png',     colorscheme.fg0)
-_T.arrow_ng    = gc.recolor_image(icon .. 'util/arrow.png',     colorscheme.bg0)
+_T.arrow       = gc.recolor_image(icon .. 'util/arrow.png',         colorscheme.fg0)
+_T.arrow_ng    = gc.recolor_image(icon .. 'util/arrow.png',         colorscheme.bg0)
 -- Power icons.
-_T.shutdown    = gc.recolor_image(icon .. 'power/shutdown.png', colorscheme.fg0)
-_T.shutdown_ng = gc.recolor_image(icon .. 'power/shutdown.png', colorscheme.bg0)
-_T.reboot      = gc.recolor_image(icon .. 'power/reboot.png',   colorscheme.fg0)
-_T.reboot_ng   = gc.recolor_image(icon .. 'power/reboot.png',   colorscheme.bg0)
-_T.logoff      = gc.recolor_image(icon .. 'power/logoff.png',   colorscheme.fg0)
-_T.logoff_ng   = gc.recolor_image(icon .. 'power/logoff.png',   colorscheme.bg0)
+_T.shutdown    = gc.recolor_image(icon .. 'power/shutdown.png',     colorscheme.fg0)
+_T.shutdown_hl = gc.recolor_image(icon .. 'power/shutdown.png',     colorscheme.red)
+_T.reboot      = gc.recolor_image(icon .. 'power/reboot.png',       colorscheme.fg0)
+_T.reboot_hl   = gc.recolor_image(icon .. 'power/reboot.png',       colorscheme.red)
+_T.suspend     = gc.recolor_image(icon .. 'power/suspend.png',      colorscheme.fg0)
+_T.suspend_hl  = gc.recolor_image(icon .. 'power/suspend.png',      colorscheme.red)
+_T.logoff      = gc.recolor_image(icon .. 'power/logoff.png',       colorscheme.fg0)
+_T.logoff_hl   = gc.recolor_image(icon .. 'power/logoff.png',       colorscheme.red)
+-- Audio.
+_T.vol_up      = gc.recolor_image(icon .. 'status/volume/up.png',   colorscheme.fg0)
+_T.vol_up_hl   = gc.recolor_image(icon .. 'status/volume/up.png',   colorscheme.accent)
+_T.vol_down    = gc.recolor_image(icon .. 'status/volume/down.png', colorscheme.fg0)
+_T.vol_off     = gc.recolor_image(icon .. 'status/volume/off.png',  colorscheme.red)
+_T.mic_up      = gc.recolor_image(icon .. 'status/mic/up.png',      colorscheme.fg0)
+_T.mic_up_hl   = gc.recolor_image(icon .. 'status/mic/up.png',      colorscheme.accent)
+_T.mic_down    = gc.recolor_image(icon .. 'status/mic/down.png',    colorscheme.fg0)
+_T.mic_off     = gc.recolor_image(icon .. 'status/mic/off.png',     colorscheme.red)
+-- Music.
+_T.song        = gc.recolor_image(icon .. 'player/song.png',        colorscheme.fg1)
+_T.play        = gc.recolor_image(icon .. 'player/play.png',        colorscheme.fg0)
+_T.play_hl     = gc.recolor_image(icon .. 'player/play.png',        colorscheme.accent)
+_T.back        = gc.recolor_image(icon .. 'player/back.png',        colorscheme.fg0)
+_T.back_hl     = gc.recolor_image(icon .. 'player/back.png',        colorscheme.accent)
+_T.forward     = gc.recolor_image(icon .. 'player/forward.png',     colorscheme.fg0)
+_T.forward_hl  = gc.recolor_image(icon .. 'player/forward.png',     colorscheme.accent)
+_T.shuffle     = gc.recolor_image(icon .. 'player/shuffle.png',     colorscheme.fg0)
+_T.shuffle_hl  = gc.recolor_image(icon .. 'player/shuffle.png',     colorscheme.accent)
+_T.loop        = gc.recolor_image(icon .. 'power/reboot.png',       colorscheme.fg0)
+_T.loop_hl     = gc.recolor_image(icon .. 'power/reboot.png',       colorscheme.accent)
+-- Network.
+_T.network     = gc.recolor_image(icon .. 'net/up.png',             colorscheme.fg0)
+_T.network_hl  = gc.recolor_image(icon .. 'net/up.png',             colorscheme.accent)
+-- Bluetooth.
+_T.bluetooth    = gc.recolor_image(icon .. 'bluetooth/up.png',      colorscheme.fg0)
+_T.bluetooth_hl = gc.recolor_image(icon .. 'bluetooth/up.png',      colorscheme.accent)
 -- Layouts.
 _T.layout_tile =
    gc.recolor_image(icon .. 'wibar/layout/tile_right.png',  colorscheme.fg0)

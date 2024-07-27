@@ -1,3 +1,5 @@
+local wibox = require('wibox')
+
 local _H = {}
 
 -- Crylia's app icon fetching function. Scans `/usr/share/icons` for application
@@ -76,6 +78,58 @@ function _H.get_icon(theme, client, program_string, class_string)
       if client then
          return _H.DEFAULT_ICON
       end
+   end
+end
+
+-- Makes a colored textbox.
+function _H.ctext(text, font, color)
+   return wibox.widget({
+      widget = wibox.container.background,
+      fg     = color,
+      {
+         widget = wibox.widget.textbox,
+         text   = text,
+         font   = font,
+         id     = 'text_role'
+      },
+      set_text = function(self, new_text)
+         self:get_children_by_id('text_role')[1].text = new_text
+      end
+   })
+end
+
+-- Makes a scrolling text container.
+function _H.stext(text, font, color)
+   return wibox.widget({
+      widget = wibox.container.scroll.horizontal,
+      step_function =
+         wibox.container.scroll.step_functions.waiting_nonlinear_back_and_forth,
+      speed = 100,
+      {
+         widget = _H.ctext(text, font, color),
+         id     = 'text_role'
+      },
+      set_text = function(self, new_text)
+         self:get_children_by_id('text_role')[1].text = new_text
+      end
+   })
+end
+
+-- I feel like YanDev saying "I wish there was a better way to do this"...
+-- Gets the suffix for any given day of the month.
+function _H.get_suffix(day)
+   if day > 3 and day < 21 then
+      return 'th'
+   end
+
+   if day % 10 == 1 then
+      return 'st'
+   elseif day % 10 == 2 then
+      return 'nd'
+   elseif day % 10 == 3 then
+      return 'rd'
+   else
+      return 'th'
    end
 end
 

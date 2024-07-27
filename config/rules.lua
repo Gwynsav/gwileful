@@ -55,10 +55,10 @@ ruled.client.connect_signal('request::rules', function()
    -- Map certain clients to certain workspaces.
    ruled.client.append_rule({
       rule_any = {
-         class = { 'Steam', 'Heroic' }
+         class = { 'steamwebhelper', 'steam', 'Heroic' }
       },
       properties = {
-         tag      = user.tags,
+         tag      = screen[1].tags[user.tags],
          floating = true
       }
    })
@@ -66,7 +66,7 @@ ruled.client.connect_signal('request::rules', function()
       rule_any = {
          class = { 'Discord', 'vesktop' }
       },
-      properties = { screen = 1, tag = user.tags - 1 }
+      properties = { tag = screen[1].tags[user.tags - 1] }
    })
 end)
 

@@ -151,6 +151,7 @@ local function new()
       end)
       return widget
    end
+
    local month = wibox.widget({
       widget = wibox.container.background,
       bg     = color.bg1,
@@ -190,9 +191,9 @@ local function new()
    })
 
    local widget = wibox.widget({
-      layout  = wibox.layout.align.vertical,
+      layout  = wibox.layout.fixed.vertical,
+      spacing = dpi(8),
       ret.days,
-      nil,
       month
    })
 

@@ -1,3 +1,4 @@
 return {
-   calendar = require(... .. '.calendar')
+   calendar = require(... .. '.calendar'),
+   clock    = require(... .. '.clock')
 }

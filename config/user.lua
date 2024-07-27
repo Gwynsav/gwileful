@@ -41,17 +41,27 @@ return {
    tag_padding = dpi(6),
 
    -- Colors. Available options:
-   --   lite-xl, oxocarbon, rose-pine.
-   colorscheme = 'oxocarbon',
+   --   lite-xl, mardel, oxocarbon, rose-pine.
+   colorscheme = 'mardel',
    style = 'dark',
 
    -- Profile Picture.
-   pfp = HOME .. 'Pictures/avatars/misuta-o-saru/dragonZOOM.jpg',
+   pfp = HOME .. 'Pictures/avatars/misuta-o-saru/gundamZOOM.jpg',
+   -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/squidZOOM.jpg',
 
    -- Wallpaper.
-   -- wallpaper = HOME .. 'Pictures/walls/anime/custom/TiledGirlInverted.jpg',
-   wallpaper = HOME .. 'Pictures/walls/pixelart/PokemonWaterfall.png',
+   -- wallpaper = HOME .. 'Pictures/walls/anime/MaidInTheFields.jpg',
+   wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
 
-   -- Screenshots.
-   screenshot_path = HOME .. 'Pictures/screenshots/'
+   -- Screenshots, they're only saved to this path when you select SAVE on the screenshot
+   -- notification.
+   screenshot_path = HOME .. 'Pictures/screenshots/',
+
+   -- Power
+   --------
+   -- systemd distros need not prepend anything to the {poweroff,reboot,suspend} commands,
+   -- but distros not using systemd must use a polkit or other methods to access these.
+   shutdown_cmd = 'loginctl poweroff',
+   reboot_cmd   = 'loginctl reboot',
+   suspend_cmd  = 'loginctl suspend'
 }

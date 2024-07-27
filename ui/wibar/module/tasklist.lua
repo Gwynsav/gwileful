@@ -27,7 +27,7 @@ return function(s)
          awful.button(nil, 5, function() awful.client.focus.byidx( 1) end)
       },
       layout = {
-         layout  = wibox.layout.flex.horizontal
+         layout = wibox.layout.flex.horizontal
       },
       style = {
          -- Colors.

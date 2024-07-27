@@ -32,11 +32,9 @@ local function button(icon, icon_ng, action)
       end
    })
    widget:connect_signal('mouse::enter', function(self)
-      self.bg    = color.accent
       self.image = icon_ng
    end)
    widget:connect_signal('mouse::leave', function(self)
-      self.bg    = color.bg0 .. '60'
       self.image = icon
    end)
    return widget
@@ -62,12 +60,7 @@ return function()
          nil,
          {
             layout = wibox.layout.fixed.horizontal,
-            button(beautiful.logoff, beautiful.logoff_ng,
-                     function() awful.spawn('notify-send kek') end),
-            button(beautiful.reboot, beautiful.reboot_ng,
-                     function() awful.spawn('notify-send kek') end),
-            button(beautiful.shutdown, beautiful.shutdown_ng,
-                     function() awful.spawn('notify-send kek') end)
+            button(beautiful.hamburger, beautiful.hamburger, function() end)
          }
       }
    })
