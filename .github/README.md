@@ -28,7 +28,7 @@ defined correctly.
 
 ## Gallery
 
-![How it looks as of 10/06/2024](assets/showcase.png)
+![How it looks as of 27/07/2024](assets/showcase.png)
 
 ## References and Acknowledgements
 

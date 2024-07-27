@@ -50,8 +50,8 @@ return {
    -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/squidZOOM.jpg',
 
    -- Wallpaper.
-   -- wallpaper = HOME .. 'Pictures/walls/anime/MaidInTheFields.jpg',
    wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/abstract/GeometricalShape.jpg',
 
    -- Screenshots, they're only saved to this path when you select SAVE on the screenshot
    -- notification.
