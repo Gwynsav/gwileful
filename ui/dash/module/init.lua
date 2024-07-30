@@ -3,5 +3,6 @@ return {
    user   = require(... .. '.user'),
    slider = require(... .. '.slider'),
    player = require(... .. '.player'),
-   grid   = require(... .. '.grid')
+   grid   = require(... .. '.grid'),
+   random = require(... .. '.random')
 }

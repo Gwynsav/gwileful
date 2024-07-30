@@ -5,8 +5,8 @@ local modkey = mod.modkey
 
 local apps    = require('config.apps')
 local audio   = require('signal.system.audio')
+local pctl    = require('signal.system.playerctl')
 local shooter = require('script.shooter')
-local pctl    = require('module.bling').signal.playerctl.lib()
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({

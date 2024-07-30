@@ -9,35 +9,22 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local helpers = require('helpers')
 local color   = require(beautiful.colorscheme)
 
 local _N = {}
 
 function _N.title(n)
-   return wibox.widget({
-      widget = wibox.container.scroll.horizontal,
-      step_function = wibox.container.scroll.step_functions
-         .waiting_nonlinear_back_and_forth,
-      speed = 50,
-      {
-         widget = wibox.widget.textbox,
-         markup =
-            '<i>'..((n.title == nil or n.title == '') and 'AwesomeWM' or n.title)..'</i>'
-      }
+   return helpers.stext({
+      text = '<i>'..((n.title == nil or n.title == '') and 'AwesomeWM' or n.title)..'</i>'
    })
 end
 
 function _N.body(n)
-   return wibox.widget({
-      widget = wibox.container.background,
-      fg     = color.fg1 .. 'cc',
-      {
-         widget = wibox.container.scroll.vertical,
-         {
-            widget = wibox.widget.textbox,
-            markup = n.message
-         }
-      }
+   return helpers.stext({
+      text  = n.message,
+      color = color.fg1 .. 'cc',
+      dir   = 'vertical'
    })
 end
 
@@ -88,7 +75,7 @@ function _N.actions(n)
                halign = 'center',
                {
                   widget = wibox.widget.textbox,
-                  font   = beautiful.font_bitm .. dpi(9),
+                  font   = beautiful.font,
                   id     = 'text_role'
                }
             }
@@ -244,5 +231,3 @@ return function(n)
 
    return layout
 end
-
-

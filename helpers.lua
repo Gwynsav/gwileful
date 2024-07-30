@@ -1,116 +1,79 @@
-local wibox = require('wibox')
+local beautiful = require('beautiful')
+local gears     = require('gears')
+local wibox     = require('wibox')
 
 local _H = {}
 
--- Crylia's app icon fetching function. Scans `/usr/share/icons` for application
--- icons of a set theme and application. Otherwise defaults to Papirus. Requires
--- `/usr/share/icons/Papirus-Dark` to exist to work as intended.
--- https://github.com/Crylia/crylia-theme/blob/main/awesome/src/tools/icon_handler.lua
-local icon_cache = {}
--- Define a default icon.
-_H.DEFAULT_ICON = '/usr/share/icons/Papirus-Dark/128x128/apps/application-default-icon.svg'
-function _H.get_icon(theme, client, program_string, class_string)
-   theme = theme or 'Papirus'
-   client = client or nil
-   program_string = program_string or nil
-   class_string = class_string or nil
-
-   if client or program_string or class_string then
-      local clientName
-      if client then
-         if client.class then
-            clientName = string.lower(client.class:gsub(' ', '')) .. '.svg'
-         elseif client.name then
-            clientName = string.lower(client.name:gsub(' ', '')) .. '.svg'
-         else
-            if client.icon then
-               return client.icon
-            else
-               return _H.DEFAULT_ICON
-            end
-         end
-      else
-         if program_string then
-            clientName = program_string .. '.svg'
-         else
-            clientName = class_string .. '.svg'
-         end
-      end
-
-      for _, icon in ipairs(icon_cache) do
-         if icon:match(clientName) then
-            return icon
-         end
-      end
-
-      local resolutions = {
-         -- This is the format Papirus follows.
-         '128x128', '96x96', '64x64', '48x48', '42x42', '32x32', '24x24', '16x16'
-      }
-      for _, res in ipairs(resolutions) do
-         local iconDir = '/usr/share/icons/' .. theme .. '/' .. res .. '/apps/'
-         local ioStream = io.open(iconDir .. clientName, 'r')
-         if ioStream ~= nil then
-            icon_cache[#icon_cache + 1] = iconDir .. clientName
-            return iconDir .. clientName
-         else
-            clientName = clientName:gsub('^%l', string.upper)
-            iconDir = '/usr/share/icons/' .. theme .. '/' .. res .. '/apps/'
-            ioStream = io.open(iconDir .. clientName, 'r')
-            if ioStream ~= nil then
-               icon_cache[#icon_cache + 1] = iconDir .. clientName
-               return iconDir .. clientName
-            elseif not class_string then
-               return _H.DEFAULT_ICON
-            else
-               clientName = class_string .. '.svg'
-               iconDir = '/usr/share/icons/' .. theme .. '/' .. res .. '/apps/'
-               ioStream = io.open(iconDir .. clientName, 'r')
-               if ioStream ~= nil then
-                  icon_cache[#icon_cache + 1] = iconDir .. clientName
-                  return iconDir .. clientName
-               else
-                  return _H.DEFAULT_ICON
-               end
-            end
-         end
-      end
-      if client then
-         return _H.DEFAULT_ICON
-      end
-   end
-end
-
 -- Makes a colored textbox.
-function _H.ctext(text, font, color)
+-- @param args:
+--    - text: the text to be displayed.
+--    - font: the font to be used.
+--    - color: the text color.
+--    - align: whether to align text to 'left', 'center' or 'right'.
+function _H.ctext(args)
+   local conf = gears.table.crush({
+      text  = '',
+      font  = beautiful.font,
+      color = beautiful.fg_normal,
+      align = 'left'
+   }, args, true)
+
    return wibox.widget({
       widget = wibox.container.background,
-      fg     = color,
+      fg     = conf.color,
       {
          widget = wibox.widget.textbox,
-         text   = text,
-         font   = font,
+         markup = conf.text,
+         font   = conf.font,
+         halign = conf.align,
          id     = 'text_role'
       },
       set_text = function(self, new_text)
-         self:get_children_by_id('text_role')[1].text = new_text
+         self:get_children_by_id('text_role')[1].markup = new_text
+      end,
+      set_color = function(self, new_color)
+         self.fg = new_color
       end
    })
 end
 
--- Makes a scrolling text container.
-function _H.stext(text, font, color)
+-- Makes a scrolling text container. Takes the same args table as `ctext`,
+-- plus `dir`, the direction in which the widget will scroll.
+function _H.stext(args)
+   local conf = gears.table.crush({
+      text  = '',
+      font  = beautiful.font,
+      color = beautiful.fg_normal,
+      align = 'left',
+      dir   = 'horizontal'
+   }, args, true)
+
+   local scroll
+   if conf.dir == 'horizontal' then
+      scroll = wibox.container.scroll.horizontal
+   else
+      scroll = wibox.container.scroll.vertical
+   end
+
    return wibox.widget({
-      widget = wibox.container.scroll.horizontal,
+      widget = scroll,
       step_function =
          wibox.container.scroll.step_functions.waiting_nonlinear_back_and_forth,
-      speed = 100,
+      speed = 50,
       {
-         widget = _H.ctext(text, font, color),
-         id     = 'text_role'
+         widget = _H.ctext({
+            text  = conf.text,
+            font  = conf.font,
+            color = conf.color,
+            align = conf.align
+         }),
+         id = 'text_role'
       },
       set_text = function(self, new_text)
          self:get_children_by_id('text_role')[1].text = new_text
+      end,
+      set_color = function(self, new_color)
+         self:get_children_by_id('text_role')[1].fg = new_color
       end
    })
 end

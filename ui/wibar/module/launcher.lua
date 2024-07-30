@@ -21,7 +21,7 @@ return function(s)
          forced_width    = dpi(9)
       },
       {
-         widget = helpers.ctext('Search', beautiful.font_bitm .. dpi(9), color.fg0),
+         widget = helpers.ctext({ text = 'Search' }),
          id     = 'text_role'
       },
       buttons = {

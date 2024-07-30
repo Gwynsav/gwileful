@@ -45,3 +45,4 @@ require('config.rules')
 
 -- Run startup commands.
 require('config.auto')
+

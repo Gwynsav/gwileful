@@ -12,7 +12,7 @@ local conf = require('config.user')
 local pfp_widget = wibox.widget({
    widget = wibox.widget.imagebox,
    image  = gears.surface.crop_surface({
-      surface = gears.surface.load_uncached(conf.pfp or beautiful.def_pfp),
+      surface = beautiful.pfp,
       ratio   = 7/3,
       left    = dpi(48)
    })
@@ -20,12 +20,22 @@ local pfp_widget = wibox.widget({
 
 local user_at_host = wibox.widget({
    layout = wibox.layout.fixed.horizontal,
-   hp.ctext(os.getenv('USER') or 'user', beautiful.font_bitm .. dpi(18), color.accent),
-   hp.ctext('@' .. (os.getenv('HOSTNAME') or 'host'), beautiful.font_bitm .. dpi(18), color.fg0)
+   hp.ctext({
+      text  = os.getenv('USER') or 'user',
+      font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
+      color = color.accent
+   }),
+   hp.ctext({
+      text  = '@' .. (os.getenv('HOSTNAME') or 'host'),
+      font  = beautiful.font_bitm .. beautiful.bitm_size * 2
+   })
 })
 
 -- Updated every minute.
-local uptime_widget = hp.ctext('Uptime Unknown!', beautiful.font_bitm .. dpi(9), color.fg1)
+local uptime_widget = hp.ctext({
+   text  = 'Uptime Unknown!',
+   color = color.fg1
+})
 gears.timer({
    timeout   = 60,
    call_now  = true,

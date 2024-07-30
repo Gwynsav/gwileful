@@ -7,7 +7,7 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.dash.module')
 
-local width, height, margin = 352, 500, 6
+local width, height, margin = 352, 521, 6
 local screen = awful.screen.focused()
 
 local panel = wibox({
@@ -51,9 +51,9 @@ local panel = wibox({
                forced_height = dpi(1)
             },
             {
-               widget = wibox.widget.textbox,
-               text   = 'Every ray of light is an invitation to death.',
-               halign = 'center'
+               layout = wibox.layout.align.vertical,
+               expand = 'none',
+               nil, mods.random(), nil
             }
          }
       },

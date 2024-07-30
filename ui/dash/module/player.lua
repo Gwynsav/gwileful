@@ -3,12 +3,8 @@ local beautiful = require('beautiful')
 local gears     = require('gears')
 local wibox     = require('wibox')
 
-local dpi = beautiful.xresources.apply_dpi
-local playerctl = require('module.bling').signal.playerctl.lib({
-   player = { 'mpd', '%any', 'firefox' },
-   playerctl_update_on_activity = true,
-   playerctl_position_update_interval = 1
-})
+local dpi   = beautiful.xresources.apply_dpi
+local pctl  = require('signal.system.playerctl')
 
 local hp    = require('helpers')
 local color = require(beautiful.colorscheme)
@@ -26,14 +22,35 @@ return function()
    end
 
    local song_icon   = button(beautiful.song, function() end)
-   local song_status = hp.ctext('Paused',          beautiful.font_bitm .. dpi(9), color.fg1)
-   local song_player = hp.stext('Source Unknown',  beautiful.font_bitm .. dpi(9), color.fg1)
-   local song_title  = hp.stext('Nothing Playing', beautiful.font_bitm .. dpi(9), color.fg0)
-   local song_artist = hp.stext('by Unknown',      beautiful.font_bitm .. dpi(9), color.fg1)
-   local song_album  = hp.stext('',                beautiful.font_bitm .. dpi(9), color.fg2)
-   local song_art    = wibox.widget.imagebox()
+   local song_status = hp.ctext({
+      text  = 'Paused',
+      color = color.fg1
+   })
+   local song_player = hp.stext({
+      text  = 'Source Unknown',
+      color = color.fg1
+   })
+   local song_title  = hp.stext({
+      text  = 'Nothing Playing'
+   })
+   local song_artist = hp.stext({
+      text  = 'by Unknown',
+      color = color.fg1
+   })
+   local song_album  = hp.stext({
+      color = color.fg2
+   })
+   local song_art    = wibox.widget.imagebox(gears.surface.crop_surface({
+         ratio   = 3,
+         surface = beautiful.wallpaper
+      })
+   )
 
-   local prog_text   = hp.ctext('00:00 / 00:00', beautiful.font_bitm .. dpi(9), color.fg1)
+   local prog_text   = hp.ctext({
+      text  = '00:00 / 00:00',
+      font  = beautiful.font,
+      color = color.fg1
+   })
    local prog_slider = wibox.widget({
       widget  = wibox.widget.slider,
       minimum = 0,
@@ -50,16 +67,16 @@ return function()
    end)
 
    local play_pause = button(beautiful.play,
-      function() playerctl:play_pause() end)
+      function() pctl:play_pause() end)
    local back = button(beautiful.back,
-      function() playerctl:previous() end)
+      function() pctl:previous() end)
    local forward = button(beautiful.forward,
-      function() playerctl:next() end)
+      function() pctl:next() end)
    local loop = button(beautiful.loop,
-      function() playerctl:cycle_loop_status() end)
+      function() pctl:cycle_loop_status() end)
    local shuffle = button(beautiful.shuffle,
-      function() playerctl:cycle_shuffle() end)
-   local loop_text = hp.ctext('None', beautiful.font_bitm .. dpi(9), color.fg0)
+      function() pctl:cycle_shuffle() end)
+   local loop_text = hp.ctext({ text = 'None' })
 
    local widget = wibox.widget({
       layout = wibox.layout.stack,
@@ -152,7 +169,7 @@ return function()
       artist = nil,
       prog   = 0
    }
-   playerctl:connect_signal('metadata', function(_, title, artist, cover, album, _, player)
+   pctl:connect_signal('metadata', function(_, title, artist, cover, album, _, player)
       -- Whenever a new song comes through:
       if title ~= last_poll.title or artist ~= last_poll.artist then
          -- Update widget info.
@@ -161,7 +178,7 @@ return function()
          song_album.text  = 'on ' .. gears.string.xml_unescape(album)
          song_art.image   = gears.surface.crop_surface({
             ratio   = 3,
-            surface = gears.surface.load_uncached(cover)
+            surface = cover and gears.surface.load_uncached(cover) or beautiful.wallpaper
          })
          song_player.text = 'via ' .. player
 
@@ -176,14 +193,14 @@ return function()
       end
    end)
 
-   playerctl:connect_signal('position', function(_, prog, len, _)
+   pctl:connect_signal('position', function(_, prog, len, _)
       prog_slider.maximum = len
       prog_slider.value   = prog
       prog_text.text      = string.format('%02d:%02d', math.floor(prog / 60), prog % 60)
          .. ' / ' .. string.format('%02d:%02d', math.floor(len / 60), len % 60)
    end)
 
-   playerctl:connect_signal('playback_status', function(_, playing, _)
+   pctl:connect_signal('playback_status', function(_, playing, _)
       if playing then
          prog_slider.bar_active_color = color.fg2
          song_status.text = 'Playing'
@@ -193,11 +210,11 @@ return function()
       end
    end)
 
-   playerctl:connect_signal('loop_status', function(_, loop_status, _)
+   pctl:connect_signal('loop_status', function(_, loop_status, _)
       loop_text.text = loop_status:gsub('^%l', string.upper)
    end)
 
-   playerctl:connect_signal('shuffle', function(_, shuff, _)
+   pctl:connect_signal('shuffle', function(_, shuff, _)
       shuffle.image = shuff and beautiful.shuffle_hl or beautiful.shuffle
    end)
 
@@ -213,7 +230,7 @@ return function()
    end)
    prog_slider:connect_signal('property::value', function(_, new)
       if prog_hover and (new > last_poll.prog + 4 or new < last_poll.prog - 4) then
-         playerctl:set_position(new)
+         pctl:set_position(new)
       end
       last_poll.prog = new
    end)

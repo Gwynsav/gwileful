@@ -16,8 +16,13 @@ return function()
    --    - icon_hover: the icon when hovered.
    --    - on_click: the action to execute on icon click.
    local function entry(args)
-      local title = helpers.ctext(args.title, beautiful.font_bitm .. dpi(9), color.fg0)
-      local body  = helpers.ctext(args.body,  beautiful.font_bitm .. dpi(9), color.fg1)
+      local title = helpers.ctext({
+         text  = args.title
+      })
+      local body  = helpers.ctext({
+         text  = args.body,
+         color = color.fg1
+      })
 
       local icon = wibox.widget({
          widget = wibox.widget.imagebox,

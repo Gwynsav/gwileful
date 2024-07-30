@@ -5,7 +5,6 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local user  = require('config.user')
 local color = require(beautiful.colorscheme)
 
 -- Create a launcher widget. Opens the Awesome menu when clicked.
@@ -27,7 +26,7 @@ return function(s)
       {
          widget = wibox.widget.imagebox,
          clip_shape = gears.shape.circle,
-         image = user.pfp or beautiful.def_pfp
+         image = beautiful.pfp
       },
       {
          widget = wibox.container.background,

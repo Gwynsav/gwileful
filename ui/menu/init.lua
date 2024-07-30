@@ -30,7 +30,7 @@ section.power = {
 -- Create a main menu.
 menu.main = awful.menu({
    theme = {
-      font   = beautiful.font_bitm .. dpi(9),
+      font   = beautiful.font,
       width  = dpi(172),
       height = dpi(32),
       bg_normal = color.bg0,

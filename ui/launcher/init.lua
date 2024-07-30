@@ -10,7 +10,6 @@ local wibox     = require('wibox')
 local dpi = beautiful.xresources.apply_dpi
 local gio = require('lgi').Gio
 
-local user  = require('config.user')
 local color = require(beautiful.colorscheme)
 local height, width, margin = 220, 540, 6
 local entry_max = 12
@@ -47,7 +46,7 @@ launcher:setup({
       widget = wibox.widget.imagebox,
       image  = gears.surface.crop_surface({
          ratio   = width / height,
-         surface = gears.surface.load_uncached(user.wallpaper)
+         surface = beautiful.wallpaper
       })
    },
    {

@@ -11,13 +11,13 @@ return function()
       widget  = wibox.widget.textclock,
       format  = '%H:%M:%S',
       refresh = 1,
-      font    = beautiful.font_bitm .. dpi(18),
+      font    = beautiful.font_bitm .. beautiful.bitm_size * 2,
       halign  = 'center'
    })
 
-   local date = wibox.widget({
-      widget = wibox.widget.textbox,
-      halign  = 'center'
+   local date = helpers.ctext({
+      color = color.fg2,
+      align = 'center'
    })
    require('gears').timer({
       timeout   = 60,
@@ -25,18 +25,13 @@ return function()
       autostart = true,
       callback  = function()
          local day = tonumber(os.date('%e'))
-         date.markup =
+         date.text =
             os.date('%A, the ') .. day .. helpers.get_suffix(day) .. os.date(' of %B')
       end
    })
 
    return wibox.widget({
       layout = wibox.layout.fixed.vertical,
-      hour,
-      {
-         widget = wibox.container.background,
-         fg     = color.fg2,
-         date
-      }
+      hour, date
    })
 end

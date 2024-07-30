@@ -35,7 +35,7 @@ local function slider(args)
       self.image = args.icon_normal
    end)
 
-   local label = helpers.ctext(args.label, beautiful.font_bitm .. dpi(9), color.fg0)
+   local label = helpers.ctext({ text = args.label })
 
    -- Slider.
    local bar = wibox.widget({
@@ -64,7 +64,7 @@ local function slider(args)
    bar:connect_signal('property::value', args.bar_action)
 
    -- Non-interactable level.
-   local level = helpers.ctext('N/A', beautiful.font_bitm .. dpi(9), color.fg0)
+   local level = helpers.ctext({ text = 'N/A' })
 
    return wibox.widget({
       widget   = wibox.container.constraint,
