@@ -3,7 +3,6 @@
 local awful     = require('awful')
 local beautiful = require('beautiful')
 
-local dpi = beautiful.xresources.apply_dpi
 local c = require(beautiful.colorscheme)
 local path = os.getenv('HOME') .. '/.Xresources'
 
@@ -19,7 +18,7 @@ Xcursor.theme: Miku Cursor
 ]],
    awful.screen.focused().dpi,
    c.bg0, c.accent, c.bg1, c.fg0, c.bccent,
-   (beautiful.font_bitm .. dpi(9)):gsub(' ', '-')
+   (beautiful.font_mono .. beautiful.bitm_size):gsub(' ', '-')
 )
 
 return function()

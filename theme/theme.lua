@@ -23,6 +23,7 @@ _T.wallpaper   = gears.surface.load_uncached(user.wallpaper)
 
 -- Fonts
 _T.font_bitm = 'satori '
+_T.font_mono = 'koishi '
 _T.bitm_size = dpi(9)
 
 -- A few defaults.

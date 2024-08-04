@@ -1,6 +1,3 @@
-[submodule "module/rubato"]
-	path = module/rubato
-	url = https://github.com/andOrlando/rubato
 [submodule "module/lua-dbus_proxy"]
 	path = module/lua-dbus_proxy
 	url = https://github.com/stefano-m/lua-dbus_proxy.git

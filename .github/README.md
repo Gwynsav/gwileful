@@ -32,7 +32,7 @@ defined correctly.
 
 ## Gallery
 
-![How it looks as of 27/07/2024](assets/showcase.png)
+![How it looks as of 04/08/2024](assets/showcase.png)
 
 ## References and Acknowledgements
 
@@ -46,10 +46,10 @@ made my own icons for everything here. But still, I used them in the past and as
 reference making my own icons, so I think they're still worth a mention.
 - [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/), the beautiful font
 from KreativeKorp used for UI as well as terminal, in the past.
-- [sakuya](https://codeberg.org/moseni/bitmap-fonts). Creator of the `koishi` and `satori`
-fonts used in this rice currently, as well as help making my own icon font, used here.
 
 Individuals:
+- [sakuya](https://codeberg.org/moseni/bitmap-fonts). Creator of the `koishi` and `satori`
+fonts used in this rice currently, as well as help making my own icon font, used here.
 - [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.
 - [Crylia](https://github.com/Crylia/crylia-theme/), used some of their code. 
 - [rxyhn](https://github.com/rxyhn/yoru), used calendar and some ideas.
