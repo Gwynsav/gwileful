@@ -96,4 +96,13 @@ function _H.get_suffix(day)
    end
 end
 
+function _H.in_table(ele, table)
+   for _, v in table do
+      if v == ele then
+         return true
+      end
+   end
+   return false
+end
+
 return _H

@@ -5,6 +5,7 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
+local icons = require('theme.icons')
 
 local hp   = require('helpers')
 local conf = require('config.user')
@@ -23,18 +24,21 @@ local user_at_host = wibox.widget({
    hp.ctext({
       text  = os.getenv('USER') or 'user',
       font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
-      color = color.accent
+      color = color.accent,
+      align = 'right'
    }),
    hp.ctext({
       text  = '@' .. (os.getenv('HOSTNAME') or 'host'),
-      font  = beautiful.font_bitm .. beautiful.bitm_size * 2
+      font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
+      align = 'right'
    })
 })
 
 -- Updated every minute.
 local uptime_widget = hp.ctext({
    text  = 'Uptime Unknown!',
-   color = color.fg1
+   color = color.fg1,
+   align = 'right'
 })
 gears.timer({
    timeout   = 60,
@@ -47,24 +51,48 @@ gears.timer({
    end
 })
 
-local function button(icon, icon_hl, action)
-   local widget = wibox.widget({
-      widget = wibox.widget.imagebox,
-      image  = icon,
-      halign = 'center',
-      valign = 'center',
-      forced_height = dpi(18),
-      forced_width  = dpi(18),
-      scaling_quality = 'nearest',
-      buttons = { awful.button(nil, 1, action) }
+local function button(icon, action)
+   local widget = hp.ctext({
+      font = icons.font .. icons.size * 2,
+      text = icon
    })
+   widget.buttons = { awful.button(nil, 1, action) }
+   widget.set_action = function(self, new_action)
+      self.buttons = { awful.button(nil, 1, new_action) }
+   end
    widget:connect_signal('mouse::enter', function(self)
-      self.image = icon_hl
+      self.color = color.red
    end)
    widget:connect_signal('mouse::leave', function(self)
-      self.image = icon
+      self.color = color.fg0
    end)
    return widget
+end
+
+-- Power options revealer.
+local show_power = button(icons['arrow_right'], function() end)
+local power = wibox.widget({
+   layout = wibox.layout.fixed.horizontal,
+   spacing = dpi(8),
+   show_power,
+   {
+      layout  = wibox.layout.fixed.horizontal,
+      spacing = dpi(8),
+      visible = false,
+      id      = 'power',
+      button(icons['power_shutdown'], function() awful.spawn(conf.shutdown_cmd) end),
+      button(icons['power_reboot'],   function() awful.spawn(conf.reboot_cmd) end),
+      button(icons['power_suspend'],  function() awful.spawn(conf.suspend_cmd) end),
+      button(icons['power_logoff'],   function() awesome.quit() end)
+   },
+   toggle_show_power = function(self)
+      local power = self:get_children_by_id('power')[1]
+      power.visible = not power.visible
+      show_power.text = power.visible and icons['arrow_left'] or icons['arrow_right']
+   end
+})
+show_power.action = function()
+   power.toggle_show_power(power)
 end
 
 return function()
@@ -110,27 +138,13 @@ return function()
                -- Text alignment sucks.
                {
                   layout = wibox.layout.align.horizontal,
-                  nil, nil, user_at_host
+                  nil, nil,
+                  user_at_host,
                },
-               {
-                  layout = wibox.layout.align.horizontal,
-                  nil, nil, uptime_widget
-
-               }
+               uptime_widget
             },
             nil,
-            {
-               layout  = wibox.layout.fixed.horizontal,
-               spacing = dpi(8),
-               button(beautiful.shutdown, beautiful.shutdown_hl,
-                        function() awful.spawn(conf.shutdown_cmd) end),
-               button(beautiful.reboot, beautiful.reboot_hl,
-                        function() awful.spawn(conf.reboot_cmd) end),
-               button(beautiful.suspend, beautiful.suspend_hl,
-                        function() awful.spawn(conf.suspend_cmd) end),
-               button(beautiful.logoff, beautiful.logoff_hl,
-                        function() awesome.quit() end)
-            }
+            power
          }
       }
    })

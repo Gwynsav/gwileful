@@ -1,13 +1,10 @@
 local awful     = require('awful')
 local beautiful = require('beautiful')
-local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
 local widgets   = require('ui')
 local user      = require('config.user')
-local color     = require(beautiful.colorscheme)
-local helpers   = require('helpers')
 
 --- Attach tags and widgets to all screens.
 screen.connect_signal('request::desktop_decoration', function(s)
@@ -22,15 +19,15 @@ screen.connect_signal('request::desktop_decoration', function(s)
    -- Add padding to the screens themselves.
    s.padding = dpi(user.tag_padding)
 
-   -- Attach some widgets to each screen.
-   s.bar      = widgets.wibar(s)
-   s.dash     = require('ui.dash')
-   s.launcher = require('ui.launcher')
+   -- Attach a bar to each screen.
+   s.bar = widgets.wibar(s)
 end)
 
--- Maybe something in the future.
--- local wall_widget = wibox.widget({
--- })
+-- It doesn't make a whole lot of sense to have these in every screen.
+local main_screen = awful.screen.focused()
+main_screen.dash     = require('ui.dash')
+main_screen.launcher = require('ui.launcher')
+require('ui.osd')
 
 --- Wallpaper.
 -- NOTE: `awful.wallpaper` is ideal for creating a wallpaper IF YOU
@@ -38,31 +35,26 @@ end)
 -- background. IF YOU JUST WISH TO SET THE ROOT WINDOW BACKGROUND, you 
 -- may want to use the deprecated `gears.wallpaper` instead. This is 
 -- the most common case of just wanting to set an image as wallpaper.
-screen.connect_signal('request::wallpaper', function(s)
-   awful.wallpaper({
-      screen = s,
-      widget = {
-         -- layout = wibox.layout.stack,
-         -- {
-            widget = wibox.container.tile,
-            valign = 'center',
-            halign = 'center',
-            tiled  = false,
-            {
-               widget    = wibox.widget.imagebox,
-               image     = beautiful.wallpaper,
-               upscale   = true,
-               downscale = true
-            }
-         -- },
-         -- {
-         --    widget  = wibox.container.margin,
-         --    margins = user.tag_padding + user.gaps * 2,
-         --    wall_widget
-         -- }
-      }
-   })
-end)
+-- screen.connect_signal('request::wallpaper', function(s)
+--    awful.wallpaper({
+--       screen = s,
+--       widget = {
+--          widget = wibox.container.tile,
+--          valign = 'center',
+--          halign = 'center',
+--          tiled  = false,
+--          {
+--             widget    = wibox.widget.imagebox,
+--             image     = gears.surface.crop_surface({
+--                surface = beautiful.wallpaper,
+--                ratio   = s.geometry.width / s.geometry.height
+--             }),
+--             upscale   = true,
+--             downscale = true
+--          }
+--       }
+--    })
+-- end)
 -- An example of what's mentioned above. For more information, see:
 -- https://awesomewm.org/apidoc/utility_libraries/gears.wallpaper.html
--- require('gears').wallpaper.maximized(user.wallpaper or beautiful.wallpaper)
+require('gears').wallpaper.maximized(beautiful.wallpaper)

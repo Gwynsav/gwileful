@@ -43,15 +43,15 @@ return {
    -- Colors. Available options:
    --   lite-xl, mardel, oxocarbon, rose-pine.
    colorscheme = 'mardel',
-   style = 'dark',
+   style = 'light',
 
    -- Profile Picture.
-   pfp = HOME .. 'Pictures/avatars/misuta-o-saru/gundamZOOM.jpg',
-   -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/squidZOOM.jpg',
+   -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/gundamZOOM.jpg',
+   pfp = HOME .. 'Pictures/avatars/misuta-o-saru/foxZOOM.jpg',
 
    -- Wallpaper.
-   wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
-   -- wallpaper = HOME .. 'Pictures/walls/abstract/GeometricalShape.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
+   wallpaper = HOME .. 'Pictures/walls/abstract/GeometricalShape.jpg',
 
    -- Screenshots, they're only saved to this path when you select SAVE on the screenshot
    -- notification.
@@ -59,9 +59,13 @@ return {
 
    -- Power
    --------
-   -- systemd distros need not prepend anything to the {poweroff,reboot,suspend} commands,
-   -- but distros not using systemd must use a polkit or other methods to access these.
+   -- Most systemd distros need not prepend anything to the {poweroff,reboot,suspend}
+   -- commands, but distros not using systemd must use a polkit or other methods to access
+   -- these. Some systemd distros also require prepending `systemctl` as user.
    shutdown_cmd = 'loginctl poweroff',
    reboot_cmd   = 'loginctl reboot',
-   suspend_cmd  = 'loginctl suspend'
+   suspend_cmd  = 'loginctl suspend',
+   -- The battery name, actually refers to its path in `/org/freedesktop/UPower/devices/`.
+   -- Most devices will just have 'BAT0' for the battery.
+   -- battery_name = 'BAT0'
 }

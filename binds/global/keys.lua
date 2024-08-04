@@ -7,6 +7,7 @@ local apps    = require('config.apps')
 local audio   = require('signal.system.audio')
 local pctl    = require('signal.system.playerctl')
 local shooter = require('script.shooter')
+local scratch = require('ui.scratch')
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({
@@ -134,5 +135,7 @@ awful.keyboard.append_global_keybindings({
    awful.key({          }, 'XF86AudioPrev', function() pctl:previous() end,
       { description = 'rewinds to previous song', group = 'music' }),
    awful.key({          }, 'XF86AudioNext', function() pctl:next() end,
-      { description = 'skips to next song', group = 'music' })
+      { description = 'skips to next song', group = 'music' }),
+   awful.key({ modkey   }, 'o', function() scratch.music:toggle() end,
+      { description = 'toggles music scratchpad', group = 'music' })
 })

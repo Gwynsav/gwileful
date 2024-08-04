@@ -8,27 +8,33 @@ local pctl  = require('signal.system.playerctl')
 
 local hp    = require('helpers')
 local color = require(beautiful.colorscheme)
+local icons = require('theme.icons')
 
 return function()
    local function button(icon, action)
-      return wibox.widget({
-         widget = wibox.widget.imagebox,
-         scaling_quality = 'nearest',
-         forced_height = dpi(9),
-         forced_width  = dpi(9),
-         image = icon,
-         buttons = { awful.button({}, 1, action) }
+      local widget = hp.ctext({
+         text = icon,
+         font = icons.font .. icons.size
       })
+      widget.buttons = { awful.button({}, 1, action) }
+      widget:connect_signal('mouse::enter', function(self)
+         self.color = color.bccent
+      end)
+      widget:connect_signal('mouse::leave', function(self)
+         self.color = color.fg0
+      end)
+      return widget
    end
 
-   local song_icon   = button(beautiful.song, function() end)
+   local song_icon   = button(icons['music'], function() end)
    local song_status = hp.ctext({
       text  = 'Paused',
       color = color.fg1
    })
-   local song_player = hp.stext({
+   local song_player = hp.ctext({
       text  = 'Source Unknown',
-      color = color.fg1
+      color = color.fg1,
+      align = 'right'
    })
    local song_title  = hp.stext({
       text  = 'Nothing Playing'
@@ -66,17 +72,16 @@ return function()
       self.bar_color = color.transparent
    end)
 
-   local play_pause = button(beautiful.play,
-      function() pctl:play_pause() end)
-   local back = button(beautiful.back,
-      function() pctl:previous() end)
-   local forward = button(beautiful.forward,
-      function() pctl:next() end)
-   local loop = button(beautiful.loop,
-      function() pctl:cycle_loop_status() end)
-   local shuffle = button(beautiful.shuffle,
-      function() pctl:cycle_shuffle() end)
+   local play_pause = button(icons['music_play'],  function() pctl:play_pause() end)
+   local back = button(icons['music_previous'], function() pctl:previous() end)
+   local forward = button(icons['music_next'], function() pctl:next() end)
+   local loop = button(icons['music_loop'], function() pctl:cycle_loop_status() end)
    local loop_text = hp.ctext({ text = 'None' })
+   local shuffle = button(icons['music_shuffle'], function() pctl:cycle_shuffle() end)
+   local last_shuffle = false
+   shuffle:connect_signal('mouse::leave', function(self)
+      self.color = last_shuffle and color.accent or color.fg0
+   end)
 
    local widget = wibox.widget({
       layout = wibox.layout.stack,
@@ -105,12 +110,8 @@ return function()
                      {
                         layout  = wibox.layout.fixed.horizontal,
                         spacing = dpi(6),
-                        {
-                           widget  = wibox.container.margin,
-                           margins = { top = dpi(1) },
-                           song_icon
-                        },
-                        song_status,
+                        song_icon,
+                        song_status
                      },
                      nil,
                      song_player
@@ -138,11 +139,7 @@ return function()
                               layout = wibox.layout.fixed.horizontal,
                               spacing = dpi(6),
                               loop,
-                              {
-                                 widget  = wibox.container.margin,
-                                 margins = { top = dpi(-2) },
-                                 loop_text
-                              }
+                              loop_text
                            }
                         },
                         shuffle
@@ -204,9 +201,11 @@ return function()
       if playing then
          prog_slider.bar_active_color = color.fg2
          song_status.text = 'Playing'
+         play_pause.text = icons['music_pause']
       else
          prog_slider.bar_active_color = color.bg4
          song_status.text = 'Paused'
+         play_pause.text = icons['music_play']
       end
    end)
 
@@ -215,7 +214,8 @@ return function()
    end)
 
    pctl:connect_signal('shuffle', function(_, shuff, _)
-      shuffle.image = shuff and beautiful.shuffle_hl or beautiful.shuffle
+      shuffle.color = shuff and color.accent or color.fg0
+      last_shuffle = shuff
    end)
 
    -- Prevent overwriting of song progress when not using the bar to seek.

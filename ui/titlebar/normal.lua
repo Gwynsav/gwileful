@@ -5,8 +5,10 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local color = require(beautiful.colorscheme)
-local tabbed = require('module.bling').widget.tabbed_misc
+local tabbed  = require('module.bling').widget.tabbed_misc
+local helpers = require('helpers')
+local color   = require(beautiful.colorscheme)
+local icons   = require('theme.icons')
 
 local _SIZE = dpi(9)
 local _MARGIN = dpi(4)
@@ -14,26 +16,21 @@ local _EDGE = dpi(11) - _MARGIN
 
 --- The titlebar to be used on normal clients.
 return function(c)
-   local function button(regular, hover, action)
+   local function button(icon, hover, action)
       local widget = wibox.widget({
-         widget = wibox.container.background,
-         bg     = color.transparent,
+         widget = wibox.container.margin,
+         margins = { left = _MARGIN, right = _MARGIN },
          {
-            widget = wibox.container.margin,
-            margins = { left = _MARGIN, right = _MARGIN },
-            {
-               widget = wibox.widget.imagebox,
-               image  = regular,
-               id     = 'image_role',
-               valign = 'center',
-               forced_height   = _SIZE,
-               forced_width    = _SIZE,
-               scaling_quality = 'nearest'
-            }
+            widget = helpers.ctext({
+               text  = icon,
+               font  = icons.font .. icons.size,
+               align = 'center'
+            }),
+            id = 'image_role'
          },
          buttons = { awful.button(nil, 1, action) },
-         set_image = function(self, image)
-            self:get_children_by_id('image_role')[1].image = image
+         set_col = function(self, col)
+            self:get_children_by_id('image_role')[1].color = col
          end
       })
 
@@ -49,10 +46,10 @@ return function(c)
 
       -- Adjust colors when hovering.
       widget:connect_signal('mouse::enter', function(self)
-         self.image = hover
+         self.col = hover
       end)
       widget:connect_signal('mouse::leave', function(self)
-         self.image = regular
+         self.col = color.fg0
       end)
 
       return widget
@@ -106,7 +103,7 @@ return function(c)
                   left   = _EDGE+1,
                   right  = _EDGE+1
                },
-               button(beautiful.titlebar_pin_focus, beautiful.titlebar_pin_hover,
+               button(icons['title_pin'], color.accent,
                   function()
                      c.sticky = not c.sticky
                   end
@@ -126,22 +123,49 @@ return function(c)
             {
                layout  = wibox.layout.fixed.horizontal,
                spacing = dpi(1),
-               button(beautiful.titlebar_min_focus, beautiful.titlebar_min_hover,
+               button(icons['title_minimize'], color.accent,
                   function()
                      gears.timer.delayed_call(function()
                         c.minimized = not c.minimized
                      end)
                   end
                ),
-               button(beautiful.titlebar_max_focus, beautiful.titlebar_max_hover,
+               button(icons['title_maximize'], color.accent,
                   function()
                      c.maximized = not c.maximized
                      c:raise()
                   end
                ),
-               button(beautiful.titlebar_close_focus, beautiful.titlebar_close_hover,
-                  function() c:kill() end)
+               button(icons['title_close'], color.red, function() c:kill() end)
             }
+         }
+      }
+   })
+
+   local bottom = wibox.widget({
+      widget = wibox.container.background,
+      bg     = color.bg1,
+      border_width = dpi(1),
+      border_color = color.bg3,
+      {
+         layout = wibox.layout.fixed.horizontal,
+         {
+            widget = wibox.container.background,
+            bg     = color.transparent,
+            forced_width = dpi(48),
+            buttons = {
+               awful.button(nil, 1, function()
+                  c:activate({ context = 'titlebar', action = 'mouse_move' })
+               end),
+               awful.button(nil, 3, function()
+                  c:activate({ context = 'titlebar', action = 'mouse_resize' })
+               end)
+            }
+         },
+         {
+            widget = wibox.container.background,
+            bg     = color.bg3,
+            forced_width = dpi(1)
          }
       }
    })
@@ -152,7 +176,7 @@ return function(c)
    })
 
    awful.titlebar(c, { position = 'top',    size = dpi(33) }).widget = top
-   awful.titlebar(c, { position = 'bottom', size = dpi(1)  }).widget = empty
+   awful.titlebar(c, { position = 'bottom', size = dpi(7)  }).widget = bottom
    awful.titlebar(c, { position = 'left',   size = dpi(1)  }).widget = empty
    awful.titlebar(c, { position = 'right',  size = dpi(1)  }).widget = empty
 end

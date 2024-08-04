@@ -83,7 +83,7 @@ local function new()
         muted = true
       end
       aspawn.easy_async_with_shell([[LC_ALL=C pactl get-source-volume @DEFAULT_SOURCE@ | awk '{print $5}']], function(stdout2)
-        if stdout2 == nil or stdout2 == 'awful' then return end
+        if stdout2 == nil or stdout2 == '' then return end
         self:emit_signal('source::get', muted, stdout2:gsub('%%', ''):gsub('\n', '') or 0)
       end)
     end)

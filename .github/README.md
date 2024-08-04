@@ -18,10 +18,14 @@ keybinds.
 <!-- - `NetworkManager` for network widgets, still TODO. -->
 <!-- - `bluez` for bluetooth widgets, still TODO. -->
 
-As of right now, this is only the AwesomeWM configuration, so to install it just:
+As of right now, this is only a custom icon font and the AwesomeWM configuration, so to
+install it, just run:
 ```
 # Assuming ~/.config/ exists.
 git clone https://github.com/Gwynsav/gwileful.git ~/.config/awesome --recursive
+# Assuming ~/.local/share/fonts exists.
+cp ~/.config/awesome/theme/assets/fonts/*.otb ~/.local/share/fonts
+fc-cache -f
 ```
 There are also some variables in the `config` directory, so make sure everything is
 defined correctly.
@@ -41,7 +45,9 @@ Groups/projects:
 made my own icons for everything here. But still, I used them in the past and as
 reference making my own icons, so I think they're still worth a mention.
 - [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/), the beautiful font
-from KreativeKorp used for UI as well as terminal.
+from KreativeKorp used for UI as well as terminal, in the past.
+- [sakuya](https://codeberg.org/moseni/bitmap-fonts). Creator of the `koishi` and `satori`
+fonts used in this rice currently, as well as help making my own icon font, used here.
 
 Individuals:
 - [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.

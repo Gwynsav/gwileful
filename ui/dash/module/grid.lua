@@ -6,14 +6,14 @@ local dpi = beautiful.xresources.apply_dpi
 
 local color   = require(beautiful.colorscheme)
 local helpers = require('helpers')
+local icons   = require('theme.icons')
 
 return function()
    -- Returns a grid entry, with an icon, title, and body.
    -- @param args:
    --    - title: the entry title.
    --    - body: the entry body.
-   --    - icon_normal: the icon in normal state.
-   --    - icon_hover: the icon when hovered.
+   --    - icon: the icon in normal state.
    --    - on_click: the action to execute on icon click.
    local function entry(args)
       local title = helpers.ctext({
@@ -24,13 +24,10 @@ return function()
          color = color.fg1
       })
 
-      local icon = wibox.widget({
-         widget = wibox.widget.imagebox,
-         image  = args.icon_normal,
-         valign = 'center',
-         forced_height = dpi(9),
-         forced_width  = dpi(9),
-         scaling_quality = 'nearest'
+      local icon = helpers.ctext({
+         text  = args.icon,
+         font  = icons.font .. icons.size * 2,
+         align = 'center'
       })
 
       local widget = wibox.widget({
@@ -50,9 +47,14 @@ return function()
                   icon
                },
                {
-                  layout = wibox.layout.fixed.vertical,
-                  title,
-                  body
+                  widget = wibox.container.place,
+                  valign = 'center',
+                  halign = 'left',
+                  {
+                     layout = wibox.layout.fixed.vertical,
+                     title,
+                     body
+                  }
                }
             }
          },
@@ -62,11 +64,11 @@ return function()
       })
       widget:connect_signal('mouse::enter', function(self)
          self.border_color = color.accent
-         icon.image        = args.icon_hover
+         icon.color        = color.accent
       end)
       widget:connect_signal('mouse::leave', function(self)
          self.border_color = color.bg3
-         icon.image        = args.icon_normal
+         icon.color        = color.fg0
       end)
 
       return widget
@@ -75,15 +77,13 @@ return function()
    local network = entry({
       title = 'Network',
       body  = 'Wired connection',
-      icon_normal = beautiful.network,
-      icon_hover  = beautiful.network_hl,
+      icon  = icons['net_wired_normal'],
       on_click = function() end
    })
    local bluetooth = entry({
       title = 'Bluetooth',
       body  = 'Powered on',
-      icon_normal = beautiful.bluetooth,
-      icon_hover  = beautiful.bluetooth_hl,
+      icon  = icons['bluez_on'],
       on_click = function() end
    })
 

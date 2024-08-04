@@ -8,7 +8,9 @@ local gears     = require('gears')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local hp    = require('helpers')
 local color = require(beautiful.colorscheme)
+local icons = require('theme.icons')
 
 local function weekday_widget(name)
    return wibox.widget({
@@ -115,7 +117,12 @@ local function new()
       }
    })
 
-   local function button(action)
+   local function button(icon, action)
+      local icon_widget = hp.ctext({
+         text = icon,
+         font = icons.font .. icons.size
+      })
+
       local widget = wibox.widget({
          widget = wibox.container.background,
          bg     = color.bg0 .. '60',
@@ -125,29 +132,23 @@ local function new()
                left = dpi(8), right = dpi(8),
                top = dpi(6), bottom = dpi(6)
             },
-            {
-               widget = wibox.widget.imagebox,
-               image  = beautiful.arrow,
-               halign = 'center',
-               valign = 'center',
-               forced_height = dpi(9),
-               forced_width  = dpi(9),
-               scaling_quality = 'nearest',
-               id = 'image_role'
-            }
+            icon_widget
          },
          buttons = { awful.button(nil, 1, action) },
-         set_image = function(self, image)
-            self:get_children_by_id('image_role')[1].image = image
+         set_image = function(_, image)
+            icon_widget.text = image
+         end,
+         set_icon_color = function(_, fg)
+            icon_widget.color = fg
          end
       })
       widget:connect_signal('mouse::enter', function(self)
-         self.bg    = color.accent
-         self.image = beautiful.arrow_ng
+         self.bg = color.accent
+         self.icon_color = color.bg0
       end)
       widget:connect_signal('mouse::leave', function(self)
-         self.bg    = color.bg0 .. '60'
-         self.image = beautiful.arrow
+         self.bg = color.bg0 .. '60'
+         self.icon_color = color.fg0
       end)
       return widget
    end
@@ -168,16 +169,8 @@ local function new()
          nil,
          {
             layout = wibox.layout.fixed.horizontal,
-            {
-               widget = wibox.container.rotate,
-               direction = 'east',
-               button(function() ret:decrease_date() end)
-            },
-            {
-               widget = wibox.container.rotate,
-               direction = 'west',
-               button(function() ret:increase_date() end)
-            }
+            button(icons['arrow_left'], function() ret:decrease_date() end),
+            button(icons['arrow_right'], function() ret:increase_date() end)
          }
       }
    })

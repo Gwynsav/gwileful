@@ -4,41 +4,7 @@ local wibox     = require('wibox')
 
 local dpi   = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
-
-local function button(icon, icon_ng, action)
-   local widget = wibox.widget({
-      widget = wibox.container.background,
-      bg     = color.bg0 .. '60',
-      {
-         widget = wibox.container.margin,
-         margins = {
-            left = dpi(8), right = dpi(8),
-            top = dpi(6), bottom = dpi(6)
-         },
-         {
-            widget = wibox.widget.imagebox,
-            image  = icon,
-            halign = 'center',
-            valign = 'center',
-            forced_height = dpi(9),
-            forced_width  = dpi(9),
-            scaling_quality = 'nearest',
-            id = 'image_role'
-         }
-      },
-      buttons = { awful.button(nil, 1, action) },
-      set_image = function(self, image)
-         self:get_children_by_id('image_role')[1].image = image
-      end
-   })
-   widget:connect_signal('mouse::enter', function(self)
-      self.image = icon_ng
-   end)
-   widget:connect_signal('mouse::leave', function(self)
-      self.image = icon
-   end)
-   return widget
-end
+local icons = require('theme.icons')
 
 return function()
    return wibox.widget({
@@ -59,8 +25,20 @@ return function()
          },
          nil,
          {
-            layout = wibox.layout.fixed.horizontal,
-            button(beautiful.hamburger, beautiful.hamburger, function() end)
+            widget = wibox.container.background,
+            bg     = color.bg0 .. '60',
+            {
+               widget = wibox.container.margin,
+               margins = {
+                  left = dpi(8), right = dpi(8),
+                  top = dpi(6), bottom = dpi(6)
+               },
+               {
+                  widget = wibox.widget.textbox,
+                  text   = icons['util_hamburger'],
+                  font   = icons.font .. icons.size
+               }
+            }
          }
       }
    })

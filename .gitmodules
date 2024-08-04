@@ -7,3 +7,6 @@
 [submodule "module/bling"]
 	path = module/bling
 	url = https://github.com/BlingCorp/bling.git
+[submodule "module/awesome-battery_widget"]
+	path = module/awesome-battery_widget
+	url = https://github.com/Aire-One/awesome-battery_widget

@@ -6,19 +6,18 @@ local dpi = beautiful.xresources.apply_dpi
 
 local helpers = require('helpers')
 local color = require(beautiful.colorscheme)
+local icons = require('theme.icons')
 
 return function(s)
    local widget = wibox.widget({
       layout  = wibox.layout.fixed.horizontal,
       spacing = dpi(6),
       {
-         widget = wibox.widget.imagebox,
-         image  = beautiful.search,
-         valign = 'center',
-         id     = 'image_role',
-         scaling_quality = 'nearest',
-         forced_height   = dpi(9),
-         forced_width    = dpi(9)
+         widget = helpers.ctext({
+            text = icons['util_magnifier'],
+            font = icons.font .. icons.size
+         }),
+         id = 'icon_role'
       },
       {
          widget = helpers.ctext({ text = 'Search' }),
@@ -27,16 +26,16 @@ return function(s)
       buttons = {
          awful.button(nil, 1, function() s.launcher:open() end)
       },
-      set_fg = function(self, col, icon)
-         self:get_children_by_id('text_role')[1].fg = col
-         self:get_children_by_id('image_role')[1].image = icon
+      set_fg = function(self, col)
+         self:get_children_by_id('text_role')[1].color = col
+         self:get_children_by_id('icon_role')[1].color = col
       end
    })
    widget:connect_signal('mouse::enter', function(self)
-      self.set_fg(self, color.accent, beautiful.search_hl)
+      self.fg = color.accent
    end)
    widget:connect_signal('mouse::leave', function(self)
-      self.set_fg(self, color.fg0, beautiful.search)
+      self.fg = color.fg0
    end)
 
    return widget
