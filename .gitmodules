@@ -7,3 +7,6 @@
 [submodule "module/awesome-battery_widget"]
 	path = module/awesome-battery_widget
 	url = https://github.com/Aire-One/awesome-battery_widget
+[submodule "module/rubato"]
+	path = module/rubato
+	url = https://github.com/andorlando/rubato
