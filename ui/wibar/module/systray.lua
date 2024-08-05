@@ -4,7 +4,9 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local helpers = require('helpers')
 local color = require(beautiful.colorscheme)
+local icons = require('theme.icons')
 
 return function()
    -- The systray itself.
@@ -16,18 +18,10 @@ return function()
    })
 
    -- The arrow image.
-   local switch = wibox.widget({
-      widget    = wibox.container.rotate,
-      direction = 'east',
-      {
-         widget = wibox.widget.imagebox,
-         image  = beautiful.arrow,
-         valign = 'center',
-         halign = 'center',
-         forced_height = dpi(9),
-         forced_width  = dpi(9),
-         scaling_quality = 'nearest'
-      }
+   local switch = helpers.ctext({
+      text  = icons['arrow_left'],
+      font  = icons.font .. icons.size,
+      align = 'center'
    })
 
    -- Widget containing both, when hovered, lights up the switch and when clicked,
@@ -50,11 +44,11 @@ return function()
          buttons = {
             awful.button(nil, 1, function()
                if systray.visible then
-                  systray.visible  = false
-                  switch.direction = 'east'
+                  systray.visible = false
+                  switch.text = icons['arrow_left']
                else
-                  systray.visible  = true
-                  switch.direction = 'west'
+                  systray.visible = true
+                  switch.text = icons['arrow_right']
                end
             end)
          }
