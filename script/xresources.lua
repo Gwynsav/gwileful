@@ -18,7 +18,7 @@ Xcursor.theme: Miku Cursor
 ]],
    awful.screen.focused().dpi,
    c.bg0, c.accent, c.bg1, c.fg0, c.bccent,
-   (beautiful.font_mono .. beautiful.bitm_size):gsub(' ', '-')
+   (beautiful.font_bitm .. beautiful.bitm_size):gsub(' ', '-')
 )
 
 return function()

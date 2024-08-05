@@ -47,10 +47,9 @@ return function()
       color = color.fg2
    })
    local song_art    = wibox.widget.imagebox(gears.surface.crop_surface({
-         ratio   = 3,
-         surface = beautiful.wallpaper
-      })
-   )
+      ratio   = 33/12,
+      surface = beautiful.wallpaper
+   }))
 
    local prog_text   = hp.ctext({
       text  = '00:00 / 00:00',
@@ -174,7 +173,7 @@ return function()
          song_artist.text = 'by ' .. gears.string.xml_unescape(artist)
          song_album.text  = 'on ' .. gears.string.xml_unescape(album)
          song_art.image   = gears.surface.crop_surface({
-            ratio   = 3,
+            ratio   = 33/12,
             surface = cover and gears.surface.load_uncached(cover) or beautiful.wallpaper
          })
          song_player.text = 'via ' .. player

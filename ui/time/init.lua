@@ -7,8 +7,7 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.time.module')
 
-local width, height, margin = 260, 360, 6
--- local width, height, margin = 260, 293, 6
+local width, height, margin = 260, 370, 6
 local screen = awful.screen.focused()
 
 local panel = wibox({

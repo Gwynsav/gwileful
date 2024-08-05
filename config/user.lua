@@ -43,15 +43,15 @@ return {
    -- Colors. Available options:
    --   lite-xl, mardel, oxocarbon, rose-pine.
    colorscheme = 'mardel',
-   style = 'light',
+   style = 'dark',
 
    -- Profile Picture.
    -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/gundamZOOM.jpg',
    pfp = HOME .. 'Pictures/avatars/misuta-o-saru/foxZOOM.jpg',
 
    -- Wallpaper.
-   -- wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
-   wallpaper = HOME .. 'Pictures/walls/abstract/GeometricalShape.jpg',
+   wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/abstract/GeometricalShape.jpg',
 
    -- Screenshots, they're only saved to this path when you select SAVE on the screenshot
    -- notification.
