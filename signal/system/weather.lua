@@ -15,6 +15,7 @@ local command = [[bash -c "curl -s --show-error -X GET '%s'"]]
 local url =
    'https://api.openweathermap.org/data/2.5/onecall?lat=' .. coords[1] ..
    '&lon=' .. coords[2] .. '&appid=' .. key .. '&units=metric&exclude=minutely'
+local shell_cmd = string.format(command, url)
 
 -- Customizable values.
 local weather = {
@@ -61,9 +62,9 @@ local function new()
       call_now = true,
       single_shot = true,
       callback = function()
-         awful.spawn.easy_async_with_shell(string.format(command, url), function(out)
+         awful.spawn.easy_async_with_shell(shell_cmd, function(out)
             if out == nil or out == '' then
-               if retries < weather.max_retries then
+               if retries < self.max_retries then
                   retries = retries + 1
                   print('Weather info nil, trying again (' .. retries .. ' attempt' ..
                      retries == 1 or 's' .. ').')
