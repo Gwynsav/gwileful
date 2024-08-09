@@ -67,5 +67,11 @@ return {
    suspend_cmd  = 'loginctl suspend',
    -- The battery name, actually refers to its path in `/org/freedesktop/UPower/devices/`.
    -- Most devices will just have 'BAT0' for the battery.
-   -- battery_name = 'BAT0'
+   -- battery_name = 'BAT0',
+
+   -- Weather
+   ----------
+   -- OpenWeather key and coordinates, requires an account to get.
+   weather_key    = 'very*very*longnumbergoeshere',
+   weather_coords = { 69.000, -4.200 }
 }

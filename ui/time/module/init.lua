@@ -1,4 +1,5 @@
 return {
    calendar = require(... .. '.calendar'),
-   clock    = require(... .. '.clock')
+   clock    = require(... .. '.clock'),
+   weather  = require(... .. '.weather')
 }

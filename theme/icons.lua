@@ -1,4 +1,7 @@
-local _I = { battery = {} }
+local _I = {
+   battery = {},
+   weather = {}
+}
 
 _I.font = 'gwnce '
 -- The glyphs are actually 9px tall.
@@ -19,6 +22,24 @@ _I.battery['HIGH']     = ''
 _I.battery['FULL']     = ''
 _I.battery['CHARGING'] = 'p'
 _I.battery['CHARGED']  = ''
+
+-- Weather.
+_I.weather['day_clear']           = ''
+_I.weather['day_partly_cloudy']   = ''
+_I.weather['day_cloudy']          = ''
+_I.weather['day_light_rain']      = ''
+_I.weather['day_rain']            = ''
+_I.weather['day_storm']           = ''
+_I.weather['day_snow']            = ''
+_I.weather['day_fog']             = ''
+_I.weather['night_clear']         = ''
+_I.weather['night_partly_cloudy'] = ''
+_I.weather['night_cloudy']        = ''
+_I.weather['night_light_rain']    = ''
+_I.weather['night_rain']          = ''
+_I.weather['night_storm']         = ''
+_I.weather['night_snow']          = ''
+_I.weather['night_fog']           = ''
 
 -- Network.
 _I['net_wifi_high']    = ''

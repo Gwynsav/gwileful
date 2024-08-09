@@ -7,17 +7,17 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.time.module')
 
-local width, height, margin = 260, 370, 6
 local screen = awful.screen.focused()
+local width, height, margin = dpi(260), dpi(370), dpi(6)
 
 local panel = wibox({
    ontop    = true,
    visible  = false,
-   width    = dpi(width),
-   height   = dpi(height),
+   width    = width,
+   height   = height,
+   x        = margin,
+   y        = margin + screen.bar.height,
    bg       = color.bg0,
-   x        = dpi(margin),
-   y        = dpi(margin + screen.bar.height),
    border_width = dpi(1),
    border_color = color.bg3,
    widget = {
@@ -27,9 +27,10 @@ local panel = wibox({
          layout = wibox.layout.fixed.vertical,
          spacing = dpi(16),
          mods.clock(),
+         mods.weather(),
          {
             widget = wibox.container.background,
-            bg = color.bg2,
+            bg = color.bg3,
             forced_height = dpi(1)
          },
          mods.calendar()
@@ -40,5 +41,16 @@ local panel = wibox({
 function panel:show()
    self.visible = not self.visible
 end
+
+local grown = false
+require('signal.system.weather'):connect_signal('weather::data', function()
+   if not grown then
+      panel:geometry({
+         x = panel.x, y = panel.y, width = panel.width,
+         height = panel.height + dpi(45)
+      })
+      grown = true
+   end
+end)
 
 return panel
