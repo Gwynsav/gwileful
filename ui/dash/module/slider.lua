@@ -35,7 +35,7 @@ local function slider(args)
    -- Slider.
    local bar = wibox.widget({
       widget = wibox.widget.slider,
-      bar_height = dpi(19),
+      bar_height = dpi(21),
       bar_color  = color.bg1,
       handle_width = dpi(4),
       handle_border_width = 0,
@@ -64,7 +64,7 @@ local function slider(args)
    return wibox.widget({
       widget   = wibox.container.constraint,
       strategy = 'exact',
-      height   = dpi(19),
+      height   = dpi(21),
       {
          layout = wibox.layout.stack,
          bar,
@@ -110,46 +110,40 @@ end
 local volume_slider = slider({
    label       = 'Audio Device Unknown',
    icon        = icons['audio_muted'],
-   icon_click  = function() audio:toggle_sink_mute() end,
-   bar_action  = function(_, new) audio:set_sink_volume(new) end
+   icon_click  = function() audio:default_sink_toggle_mute() end,
+   bar_action  = function(_, new) audio:default_sink_set_volume(new) end
 })
-audio:connect_signal('sink::get', function(_, mute, volume)
-   if volume == nil then return end
-   local value = tonumber(volume)
-   volume_slider.value = value
-   volume_slider.level = value
-   if mute or value == 0 then
+
+audio:connect_signal('sinks::default', function(_, default_sink)
+   volume_slider.value = default_sink.volume
+   volume_slider.level = default_sink.volume
+   if default_sink.mute or default_sink.volume == 0 then
       volume_slider.icon = icons['audio_muted']
-   elseif value >= 50 then
+   elseif default_sink.volume >= 50 then
       volume_slider.icon = icons['audio_increase']
    else
       volume_slider.icon = icons['audio_decrease']
    end
-end)
-audio:connect_signal('sink::name', function(_, name)
-   volume_slider.label = name
+   volume_slider.label = default_sink.description
 end)
 
 local mic_slider = slider({
    label       = 'Microphone Unknown',
    icon        = icons['mic_muted'],
-   icon_click  = function() audio:toggle_source_mute() end,
-   bar_action  = function(_, new) audio:set_source_volume(new) end
+   icon_click  = function() audio:default_source_toggle_mute() end,
+   bar_action  = function(_, new) audio:default_source_set_volume(new) end
 })
-audio:connect_signal('source::get', function(_, mute, volume)
-   local value = tonumber(volume or 0)
-   mic_slider.value = value
-   mic_slider.level = value
-   if mute or value == 0 then
+audio:connect_signal('sources::default', function(_, default_source)
+   mic_slider.value = default_source.volume
+   mic_slider.level = default_source.volume
+   if default_source.mute or default_source.volume == 0 then
       mic_slider.icon = icons['mic_muted']
-   elseif value >= 50 then
+   elseif default_source.volume >= 50 then
       mic_slider.icon = icons['mic_increase']
    else
       mic_slider.icon = icons['mic_decrease']
    end
-end)
-audio:connect_signal('source::name', function(_, name)
-   mic_slider.label = name
+   mic_slider.label = default_source.description
 end)
 
 local music_slider = slider({

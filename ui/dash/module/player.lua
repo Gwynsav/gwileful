@@ -6,9 +6,10 @@ local wibox     = require('wibox')
 local dpi   = beautiful.xresources.apply_dpi
 local pctl  = require('signal.system.playerctl')
 
-local hp    = require('helpers')
-local color = require(beautiful.colorscheme)
-local icons = require('theme.icons')
+local hp     = require('helpers')
+local color  = require(beautiful.colorscheme)
+local icons  = require('theme.icons')
+local player = require('ui.scratch').music
 
 return function()
    local function button(icon, action)
@@ -26,7 +27,7 @@ return function()
       return widget
    end
 
-   local song_icon   = button(icons['music'], function() end)
+   local song_icon   = button(icons['music'], function() player:turn_on() end)
    local song_status = hp.ctext({
       text  = 'Paused',
       color = color.fg1

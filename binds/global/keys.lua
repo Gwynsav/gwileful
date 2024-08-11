@@ -122,11 +122,11 @@ awful.keyboard.append_global_keybindings({
       { description = 'take a delayed fullscreen screenshot', group = 'screenshot' }),
 
    -- Audio.
-   awful.key({          }, 'XF86AudioRaiseVolume', function() audio:set_sink_volume('+2') end,
+   awful.key({          }, 'XF86AudioRaiseVolume', function() audio:default_sink_volume_up(2) end,
       { description = 'raises default audio device volume', group = 'audio' }),
-   awful.key({          }, 'XF86AudioLowerVolume', function() audio:set_sink_volume('-2') end,
+   awful.key({          }, 'XF86AudioLowerVolume', function() audio:default_sink_volume_down(2) end,
       { description = 'lowers default audio device volume', group = 'audio' }),
-   awful.key({          }, 'XF86AudioMute', function() audio:toggle_sink_mute() end,
+   awful.key({          }, 'XF86AudioMute', function() audio:default_sink_toggle_mute() end,
       { description = 'toggles default audio device mute', group = 'audio' }),
 
    -- Music.

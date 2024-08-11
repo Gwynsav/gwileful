@@ -24,7 +24,7 @@ install it, just run:
 # Assuming ~/.config/ exists.
 git clone https://github.com/Gwynsav/gwileful.git ~/.config/awesome --recursive
 # Assuming ~/.local/share/fonts exists.
-cp ~/.config/awesome/theme/assets/fonts/*.otb ~/.local/share/fonts
+cp ~/.config/awesome/theme/assets/fonts/* ~/.local/share/fonts
 fc-cache -f
 ```
 There are also some variables in the `config` directory, so make sure everything is
@@ -51,6 +51,7 @@ Individuals:
 - [sakuya](https://codeberg.org/moseni/bitmap-fonts). Creator of the `koishi` and `satori`
 fonts used in this rice currently, as well as help making my own icon font, used here.
 - [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.
+- [Kasper](https://github.com/Kasper24/KwesomeDE), used some of their daemons. 
 - [Crylia](https://github.com/Crylia/crylia-theme/), used some of their code. 
 - [rxyhn](https://github.com/rxyhn/yoru), used calendar and some ideas.
 - The beautiful artwork I often display in the screenshots is by

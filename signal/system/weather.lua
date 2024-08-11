@@ -1,3 +1,9 @@
+-- The original version of this script was inspired by ChadCat's, see:
+-- https://github.com/chadcat7/crystal/blob/the-awesome-config/signals/stat/weather.lua
+
+-- This version improves upon it by adding timeouts and other measures of control, to
+-- ensure that weather information is obtained or fails cleanly.
+
 local awful = require('awful')
 local gears = require('gears')
 
@@ -20,8 +26,8 @@ local shell_cmd = string.format(command, url)
 -- Customizable values.
 local weather = {
    poll_wait   = 720,
-   timeout     = 15,
-   max_retries = 2
+   timeout     = 5,
+   max_retries = 11
 }
 
 local icon_map = {
@@ -66,11 +72,8 @@ local function new()
             if out == nil or out == '' then
                if retries < self.max_retries then
                   retries = retries + 1
-                  print('Weather info nil, trying again (' .. retries .. ' attempt' ..
-                     retries == 1 or 's' .. ').')
-                  self:emit_signal('retry')
+                  self.timer:start()
                else
-                  print('Maximum amount of retries reached.')
                   retries = 0
                end
             else
@@ -89,7 +92,7 @@ local function new()
    self:connect_signal('get', function(_, res)
       -- This usually means that the user has introduced invalid OpenWeather credentials.
       if res.current == nil then
-         print('WARNING: OpenWeather credentials incorrect!')
+         gears.debug.print_warning('OpenWeather credentials incorrect!')
          return
       end
 
@@ -114,7 +117,6 @@ local function new()
          table.insert(data.by_day, res.daily[i])
       end
 
-      print('Emitting weather info.')
       self:emit_signal('weather::data', data)
       retries = 0
    end)
@@ -126,6 +128,24 @@ local function new()
       autostart = true,
       callback = function() self:emit_signal('retry') end
    })
+
+   -- Same code as ran in the retry timer, meant for widgets to call directly.
+   function self:request_data()
+      if not self.timer.started then
+         awful.spawn.easy_async_with_shell(shell_cmd, function(out)
+            if out == nil or out == '' then
+               if retries < self.max_retries then
+                  retries = retries + 1
+                  self.timer:start()
+               else
+                  retries = 0
+               end
+            else
+               self:emit_signal('get', json.decode(out))
+            end
+         end)
+      end
+   end
 
    return self
 end

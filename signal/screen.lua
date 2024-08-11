@@ -3,10 +3,9 @@ local beautiful = require('beautiful')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local widgets   = require('ui')
-local user      = require('config.user')
+local user = require('config.user')
 
---- Attach tags and widgets to all screens.
+--- Attach tags and require('ui') to all screens.
 screen.connect_signal('request::desktop_decoration', function(s)
    -- Create all tags and attach the layouts to each of them.
    local tags = {}
@@ -20,14 +19,16 @@ screen.connect_signal('request::desktop_decoration', function(s)
    s.padding = dpi(user.tag_padding)
 
    -- Attach a bar to each screen.
-   s.bar = widgets.wibar(s)
-end)
+   s.bar = require('ui.wibar')(s)
+   s.launcher = require('ui.launcher')(s)
 
--- It doesn't make a whole lot of sense to have these in every screen.
-local main_screen = awful.screen.focused()
-main_screen.dash     = require('ui.dash')
-main_screen.launcher = require('ui.launcher')
-require('ui.osd')
+   -- And some other widgets only to the `main` screen.
+   if s == awful.screen.focused() then
+      s.dash = require('ui.dash')(s)
+      s.time = require('ui.time')(s)
+      s.osds = require('ui.osd')(s)
+   end
+end)
 
 --- Wallpaper.
 -- NOTE: `awful.wallpaper` is ideal for creating a wallpaper IF YOU

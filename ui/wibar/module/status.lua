@@ -14,10 +14,13 @@ local audio_widget = helpers.ctext({
    font  = icons.font .. icons.size,
    color = color.red
 })
-audio:connect_signal('sink::get', function(_, mute, _)
-   if mute then
+audio:connect_signal('sinks::default', function(_, default_sink)
+   if default_sink.mute or default_sink.volume == 0 then
       audio_widget.text  = icons['audio_muted']
       audio_widget.color = color.red
+   elseif default_sink.volume < 50 then
+      audio_widget.text  = icons['audio_decrease']
+      audio_widget.color = color.fg0
    else
       audio_widget.text  = icons['audio_increase']
       audio_widget.color = color.fg0

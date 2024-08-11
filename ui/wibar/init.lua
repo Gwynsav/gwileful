@@ -28,11 +28,11 @@ return function(s)
                {
                   layout  = wibox.layout.fixed.horizontal,
                   spacing = dpi(16),
-                  module.clock(),
+                  module.clock(s),
                   {
                      widget   = wibox.container.constraint,
                      strategy = 'exact',
-                     width    = dpi(awful.screen.focused().geometry.width * 0.3),
+                     width    = dpi(awful.screen.focused().geometry.width * 0.28),
                      module.tasklist(s)
                   }
                },

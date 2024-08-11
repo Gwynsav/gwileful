@@ -5,7 +5,7 @@ local _I = {
 
 _I.font = 'gwnce '
 -- The glyphs are actually 9px tall.
-_I.size = require('beautiful').xresources.apply_dpi(7)
+_I.size = require('beautiful').xresources.apply_dpi(9)
 
 -- Power.
 _I['power_shutdown'] = ''
