@@ -166,23 +166,23 @@ return function()
       artist = nil,
       prog   = 0
    }
-   pctl:connect_signal('metadata', function(_, title, artist, cover, album, _, player)
+   pctl:connect_signal('metadata', function(_, title, artist, cover, album, _, source)
       -- Whenever a new song comes through:
       if title ~= last_poll.title or artist ~= last_poll.artist then
          -- Update widget info.
-         song_title.text  = gears.string.xml_unescape(title)
-         song_artist.text = 'by ' .. gears.string.xml_unescape(artist)
-         song_album.text  = 'on ' .. gears.string.xml_unescape(album)
+         song_title.text  = gears.string.xml_unescape(title) or 'Unknown'
+         song_artist.text = 'by ' .. (gears.string.xml_unescape(artist) or 'Unknown')
+         song_album.text  = 'on ' .. (gears.string.xml_unescape(album) or 'Unknown')
          song_art.image   = gears.surface.crop_surface({
             ratio   = 33/12,
             surface = cover and gears.surface.load_uncached(cover) or beautiful.wallpaper
          })
-         song_player.text = 'via ' .. player
+         song_player.text = 'via ' .. source
 
          -- Update last poll info.
          last_poll.title  = title
          last_poll.artist = artist
-         last_poll.player = player
+         last_poll.player = source
 
          -- Manually call Lua's gc to get rid of the old album art and prevent memory
          -- usage from stacking up.

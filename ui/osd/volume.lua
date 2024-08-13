@@ -1,4 +1,3 @@
-local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
 local wibox     = require('wibox')
@@ -10,7 +9,6 @@ local audio  = require('signal.system.audio')
 local helper = require('helpers')
 local icons  = require('theme.icons')
 
--- local screen = awful.screen.focused()
 local width, height, timeout = 200, 32, 3
 
 return function(s)
@@ -75,19 +73,7 @@ return function(s)
       if old.mute == default_sink.mute and old.level == default_sink.volume then
          return
       end
-      -- Prevents the OSD from being shown on startup.
-      if old.fresh then
-         old.fresh = false
-         return
-      end
 
-      -- Reset timer.
-      if timer.started then
-         timer:again()
-      else
-         osd.visible = true
-         timer:start()
-      end
       -- Update OSD.
       if default_sink.mute or default_sink.volume == 0 then
          icon.text = icons['audio_muted']
@@ -101,6 +87,33 @@ return function(s)
       -- Update reference values.
       old.mute  = default_sink.mute
       old.level = default_sink.volume
+
+      -- Prevents the OSD from being shown when interacting with dashboard sliders.
+      if s.dash.visible then return end
+      -- Prevents the OSD from being shown on startup.
+      if old.fresh then
+         old.fresh = false
+         return
+      end
+      -- Hide all other OSDs if visible.
+      awesome.emit_signal('osd::new', osd)
+      -- Reset timer.
+      if timer.started then
+         timer:again()
+      else
+         osd.visible = true
+         timer:start()
+      end
+   end)
+
+   awesome.connect_signal('osd::new', function(new_osd)
+      -- If the new osd is this one, do nothing.
+      if new_osd == osd then return end
+      -- Otherwise stop the timer and hide the osd if the timer is running.
+      if timer.started then
+         osd.visible = false
+         timer:stop()
+      end
    end)
 
    return osd

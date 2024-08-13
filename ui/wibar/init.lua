@@ -55,6 +55,7 @@ return function(s)
                      },
                      module.systray()
                   },
+                  awful.widget.keyboardlayout(),
                   module.status(),
                   {
                      widget  = wibox.container.margin,

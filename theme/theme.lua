@@ -19,7 +19,7 @@ local _T = {}
 -- This may have been a very smart or ridiculously stupid choice. We'll see.
 _T.colorscheme = color.path
 _T.pfp         = gears.surface.load_uncached(user.pfp or asset .. 'default/pfp.png')
-_T.wallpaper   = gears.surface.load_uncached(user.wallpaper)
+_T.wallpaper   = gears.surface.load_uncached(user.wallpaper or asset .. 'default/wall.png')
 
 -- Fonts
 _T.font_bitm = 'satori '

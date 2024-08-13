@@ -6,7 +6,5 @@ return {
    -- upon creation.
    tag     = require(... .. '.tag'),
    screen  = require(... .. '.screen'),
-   naughty = require(... .. '.naughty'),
-   -- Extras.
-   battery = require(... .. '.system.battery')
+   naughty = require(... .. '.naughty')
 }

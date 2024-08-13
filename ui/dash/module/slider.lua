@@ -48,15 +48,22 @@ local function slider(args)
       value = 0,
       id = 'slider_role'
    })
+   local is_hovered = false
    bar:connect_signal('mouse::enter', function(self)
+      is_hovered = true
       self.handle_color     = color.accent
       self.bar_border_color = color.accent
    end)
    bar:connect_signal('mouse::leave', function(self)
+      is_hovered = false
       self.handle_color     = color.bg3
       self.bar_border_color = color.bg3
    end)
-   bar:connect_signal('property::value', args.bar_action)
+   bar:connect_signal('property::value', function(_, val)
+      if is_hovered then
+         args.bar_action(_, val)
+      end
+   end)
 
    -- Non-interactable level.
    local level = helpers.ctext({ text = 'N/A' })
@@ -113,7 +120,6 @@ local volume_slider = slider({
    icon_click  = function() audio:default_sink_toggle_mute() end,
    bar_action  = function(_, new) audio:default_sink_set_volume(new) end
 })
-
 audio:connect_signal('sinks::default', function(_, default_sink)
    volume_slider.value = default_sink.volume
    volume_slider.level = default_sink.volume
