@@ -19,7 +19,6 @@ local function spawn_if_not_running(program)
 end
 
 -- "Daemons", but not really daemonized, just programs running in the bg.
-spawn_if_not_running('pipewire')
 spawn_if_not_running('mpd')
 spawn_if_not_running('mpDris2')
 spawn_if_not_running('playerctld')

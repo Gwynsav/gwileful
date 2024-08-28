@@ -1,202 +1,284 @@
--- Based off rxyhn's Yoru calendar.
--- https://github.com/rxyhn/yoru/blob/main/config/awesome/ui/panels/info-panel/calendar.lua
+-- From Myagko, see:
+-- https://github.com/myagko/dotfiles/blob/0122545e8245d11852fb6785be8fc72c41928574/home/.config/awesome/ui/calendar.lua
 
-local awful     = require('awful')
-local beautiful = require('beautiful')
-local wibox     = require('wibox')
-local gears     = require('gears')
-
+local awful = require("awful")
+local wibox = require("wibox")
+local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
-local hp    = require('helpers')
 local color = require(beautiful.colorscheme)
 local icons = require('theme.icons')
 
-local function weekday_widget(name)
-   return wibox.widget({
-      widget = wibox.container.background,
-      fg     = color.fg2,
-      {
-         widget  = wibox.container.margin,
-         margins = { left = dpi(8) },
-         wibox.widget.textbox(name)
-      }
-   })
+local calendar = {}
+local instance = nil
+
+local hebr_format = {
+	[1] = 7,
+	[2] = 1,
+	[3] = 2,
+	[4] = 3,
+	[5] = 4,
+	[6] = 5,
+	[7] = 6
+}
+
+local wday_map = {
+   ['Mon'] = 'Mo',
+   ['Tue'] = 'Tu',
+   ['Wed'] = 'We',
+   ['Thu'] = 'Th',
+   ['Fri'] = 'Fr',
+   ['Sat'] = 'Sa',
+   ['Sun'] = 'Su'
+}
+
+local function create_wday_widget(wday, col)
+	local fg_color = col or color.fg0
+	return wibox.widget {
+		widget = wibox.container.background,
+		fg = fg_color,
+		{
+			widget = wibox.container.margin,
+			margins = dpi(10),
+			{
+				widget = wibox.widget.textbox,
+				align = "center",
+				text = wday
+			}
+		}
+	}
 end
 
-local function day_widget(date, is_current, other_month)
-   local col = color.fg0
-   if is_current then
-      col = color.bg0
-   elseif other_month then
-      col = color.bg4
-   end
+local function create_day_widget(day, is_current, is_another_month)
+	local fg_color = color.fg0
+	local bg_color = color.bg1
 
-   return wibox.widget({
+	if is_current then
+		fg_color = color.bg0
+		bg_color = color.accent
+	elseif is_another_month then
+		fg_color = color.fg2
+		bg_color = color.bg1 .. '80' -- TODO
+	end
+
+	return wibox.widget {
+		widget = wibox.container.background,
+		fg = fg_color,
+		bg = bg_color,
+		{
+			widget = wibox.container.margin,
+			margins = dpi(10),
+			{
+				widget = wibox.widget.textbox,
+				halign = "center",
+				valign = "center",
+				text = day
+			}
+		}
+	}
+end
+
+local function button(icon, action)
+   local widget = wibox.widget({
       widget = wibox.container.background,
-      bg     = is_current and color.accent or color.transparent,
-      fg     = col,
+      bg     = color.bg1,
+      buttons = {
+         awful.button({}, 1, action)
+      },
       {
          widget  = wibox.container.margin,
          margins = {
-            left = dpi(6), right = dpi(6),
-            top = dpi(8), bottom = dpi(8)
+            top = dpi(6), bottom = dpi(4),
+            left = dpi(8), right = dpi(8)
          },
          {
             widget = wibox.widget.textbox,
+            font = icons.font .. icons.size,
+            text = icons[icon],
             halign = 'center',
-            text   = date
+            valign = 'center'
          }
       }
    })
+   widget:connect_signal('mouse::enter', function(self)
+      self.bg = color.bg2 .. '80'
+      self.fg = color.accent
+   end)
+   widget:connect_signal('mouse::leave', function(self)
+      self.bg = color.bg1
+      self.fg = color.fg0
+   end)
+
+   return widget
 end
 
-local calendar = { mt = {} }
+function calendar:set(date)
+	calendar.day_layout:reset()
+	self.date = date
 
-function calendar:set_date(date)
-   self.date = date
-   self.days:reset()
-   self.days:add(weekday_widget('Su'))
-   self.days:add(weekday_widget('Mo'))
-   self.days:add(weekday_widget('Tu'))
-   self.days:add(weekday_widget('We'))
-   self.days:add(weekday_widget('Th'))
-   self.days:add(weekday_widget('Fr'))
-   self.days:add(weekday_widget('Sa'))
+	local curr_date = os.date("*t")
+	local firstday = os.date("*t", os.time({ year = date.year, month = date.month, day = 1 }))
+	local lastday = os.date("*t", os.time({ year = date.year, month = date.month + 1, day = 0 }))
 
-   local current_date = os.date('*t')
+	local month_count = lastday.day
+	local month_start = not self.sun_start and hebr_format[firstday.wday] or firstday.wday
+	local rows = math.max(5, math.min(6, 5 - (36 - (month_start + month_count))))
 
-   local first_day = os.date('*t', os.time({ year = date.year, month = date.month, day = 1}))
-   local last_day  = os.date('*t', os.time({ year = date.year, month = date.month + 1, day = 0}))
-   local month_days = last_day.day
+	local month_prev_lastday = os.date("*t", os.time({ year = date.year, month = date.month, day = 0 })).day
+	local month_prev_count = month_start - 1
+	local month_next_count = rows*7 - lastday.day - month_prev_count
 
-   self.month:set_text(os.date('%B %Y', os.time({ year = date.year, month = date.month, day = 1 })))
+	self.top_widget.title = os.date("%B %Y", os.time(date))
 
-   local days_to_add_at_month_start = first_day.wday - 1
-	local days_to_add_at_month_end = 42 - last_day.day - days_to_add_at_month_start
-
-	local previous_month_last_day = os.date("*t", os.time({ year = date.year, month = date.month, day = 0 })).day
-	for day = previous_month_last_day - days_to_add_at_month_start, previous_month_last_day - 1, 1 do
-		self.days:add(day_widget(day, false, true))
+	for day = month_prev_lastday - (month_prev_count - 1), month_prev_lastday, 1 do
+		self.day_layout:add(create_day_widget(day, false, true))
 	end
 
-	for day = 1, month_days do
-		local is_current = day == current_date.day and date.month == current_date.month
-		self.days:add(day_widget(day, is_current, false))
+	for day = 1, month_count, 1 do
+		local is_current = day == curr_date.day and date.month == curr_date.month and date.year == curr_date.year
+		self.day_layout:add(create_day_widget(day, is_current, false))
 	end
 
-	for day = 1, days_to_add_at_month_end do
-		self.days:add(day_widget(day, false, true))
+	for day = 1, month_next_count, 1 do
+		self.day_layout:add(create_day_widget(day, false, true))
 	end
 end
 
-function calendar:update_date()
-	self:set_date(os.date("*t"))
+function calendar:inc(dir)
+	local new_calendar_month = self.date.month + dir
+	self:set({ year = self.date.year, month = new_calendar_month, day = self.date.day })
 end
 
-function calendar:increase_date()
-	local new_calendar_month = self.date.month + 1
-	self:set_date({ year = self.date.year, month = new_calendar_month, day = self.date.day })
-end
-
-function calendar:decrease_date()
-	local new_calendar_month = self.date.month - 1
-	self:set_date({ year = self.date.year, month = new_calendar_month, day = self.date.day })
-end
-
--- So here's where things actually go down
 local function new()
-   local ret = gears.object({})
-   gears.table.crush(ret, calendar, true)
+	local ret = calendar
 
-   ret.month = wibox.widget({
+
+	ret.sun_start = false
+
+	ret.day_layout = wibox.widget {
+		layout = wibox.layout.grid,
+		forced_num_cols = 7,
+		expand = true,
+		forced_height = dpi(230)
+	}
+
+	ret.wday_layout = wibox.widget {
+		layout = wibox.layout.flex.horizontal
+	}
+
+	for i = 1, 7 do
+		if ret.sun_start then
+			i = i - 1
+			if i > 0 and i < 6 then
+				ret.wday_layout:add(create_wday_widget(wday_map[os.date("%a", os.time({year = 1, month = 1, day = i}))]))
+			else
+				ret.wday_layout:add(create_wday_widget(wday_map[os.date("%a", os.time({year = 1, month = 1, day = i}))], color.red))
+			end
+		else
+			if i < 6 then
+				ret.wday_layout:add(create_wday_widget(wday_map[os.date("%a", os.time({year = 1, month = 1, day = i}))]))
+			else
+				ret.wday_layout:add(create_wday_widget(wday_map[os.date("%a", os.time({year = 1, month = 1, day = i}))], color.red))
+			end
+		end
+	end
+
+   local title_text = wibox.widget({
       widget = wibox.widget.textbox,
-      text   = os.date('%B %Y'),
-      buttons = {
-         awful.button(nil, 1, function() ret:update_date() end)
-      }
+      halign = "center",
+      valign = "center"
    })
-
-   local function button(icon, action)
-      local icon_widget = hp.ctext({
-         text = icon,
-         font = icons.font .. icons.size
-      })
-
-      local widget = wibox.widget({
-         widget = wibox.container.background,
-         bg     = color.bg0 .. '60',
-         {
-            widget = wibox.container.margin,
-            margins = {
-               left = dpi(8), right = dpi(8),
-               top = dpi(6), bottom = dpi(6)
-            },
-            icon_widget
-         },
-         buttons = { awful.button(nil, 1, action) },
-         set_image = function(_, image)
-            icon_widget.text = image
-         end,
-         set_icon_color = function(_, fg)
-            icon_widget.color = fg
-         end
-      })
-      widget:connect_signal('mouse::enter', function(self)
-         self.bg = color.accent
-         self.icon_color = color.bg0
-      end)
-      widget:connect_signal('mouse::leave', function(self)
-         self.bg = color.bg0 .. '60'
-         self.icon_color = color.fg0
-      end)
-      return widget
-   end
-
-   local month = wibox.widget({
+   local title = wibox.widget({
       widget = wibox.container.background,
-      bg     = color.bg1,
+      buttons = {
+         awful.button({}, 1, function()
+            ret:set(os.date("*t"))
+         end)
+      },
+      title_text
+   })
+   title:connect_signal('mouse::enter', function(self)
+      self.fg = color.accent
+   end)
+   title:connect_signal('mouse::leave', function(self)
+      self.fg = color.fg0
+   end)
+
+	ret.top_widget = wibox.widget {
+      widget = wibox.container.background,
+      bg = color.bg1,
       {
          layout = wibox.layout.align.horizontal,
          {
             widget  = wibox.container.margin,
             margins = {
-               top = dpi(6), bottom = dpi(6),
+               top = dpi(8), bottom = dpi(6),
                left = dpi(10), right = dpi(10)
             },
-            ret.month
+            title
          },
          nil,
          {
-            layout = wibox.layout.fixed.horizontal,
-            button(icons['arrow_left'], function() ret:decrease_date() end),
-            button(icons['arrow_right'], function() ret:increase_date() end)
+            widget = wibox.layout.fixed.horizontal,
+            {
+               widget = wibox.container.background,
+               bg = color.bg3,
+               forced_width = dpi(1)
+            },
+            button('arrow_left', function() ret:inc(-1) end),
+            {
+               widget = wibox.container.background,
+               bg = color.bg3,
+               forced_width = dpi(1)
+            },
+            button('arrow_right', function() ret:inc(1) end)
          }
-      }
-   })
+      },
+      set_title = function(_, text)
+         title_text.text = text
+      end
+	}
 
-   ret.days = wibox.widget({
-      layout = wibox.layout.grid,
-      forced_num_rows = 6,
-      forced_num_cols = 7,
-      spacing = dpi(5),
-      expand = true
-   })
+	ret.main_widget = wibox.widget {
+		widget = wibox.container.background,
+		bg = color.bg0,
+		border_width = dpi(1),
+		border_color = color.bg3,
+		{
+         layout = wibox.layout.align.vertical,
+         {
+            layout = wibox.layout.fixed.vertical,
+            ret.top_widget,
+            {
+               widget = wibox.container.background,
+               bg     = color.bg3,
+               forced_height = dpi(1)
+            }
+         },
+         nil,
+         {
+            widget  = wibox.container.margin,
+            margins = {
+               top = dpi(8), bottom = dpi(16),
+               left = dpi(16), right = dpi(16)
+            },
+            {
+               layout = wibox.layout.fixed.vertical,
+               spacing = dpi(5),
+               ret.wday_layout,
+               ret.day_layout
+            }
+         }
+		}
+	}
 
-   local widget = wibox.widget({
-      layout  = wibox.layout.fixed.vertical,
-      spacing = dpi(8),
-      ret.days,
-      month
-   })
+   ret:set(os.date("*t"))
 
-   ret:set_date(os.date('*t'))
-   gears.table.crush(widget, calendar, true)
-   return widget
+	return ret
 end
 
-function calendar.mt:__call()
-	return new()
+if not instance then
+	instance = new()
 end
 
-return setmetatable(calendar, calendar.mt)
+return instance

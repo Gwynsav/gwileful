@@ -1,3 +1,4 @@
+local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
 local wibox     = require('wibox')
@@ -26,14 +27,17 @@ return function(s)
       align = 'right'
    })
    _W.title = helper.stext({
-      text = 'Nothing Playing'
+      text = 'Nothing Playing',
+      font  = beautiful.font_mono .. beautiful.bitm_size
    })
    _W.artist = helper.stext({
       text  = 'by Unknown',
+      font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg1
    })
    _W.album = helper.stext({
       text  = 'on N/A',
+      font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg2
    })
    _W.progress = helper.ctext({
@@ -81,8 +85,6 @@ return function(s)
    })
 
    local osd = wibox({
-      x = (s.geometry.width - width) / 2,
-      y = s.bar.height + beautiful.useless_gap,
       height  = height,
       width   = width,
       screen  = s,
@@ -170,6 +172,19 @@ return function(s)
       end
    })
 
+   local function show()
+      -- Hide all other OSDs if visible.
+      awesome.emit_signal('osd::new', osd)
+      -- Reset timer.
+      if timer.started then
+         timer:again()
+      else
+         osd.visible = true
+         awful.placement.bottom(osd, { margins = { bottom = beautiful.useless_gap } })
+         timer:start()
+      end
+   end
+
    pctl:connect_signal('metadata', function(_, title, artist, cover, album, new, source)
       -- Update OSD.
       _W.player.text = (source or 'Unknown player')
@@ -184,16 +199,7 @@ return function(s)
       collectgarbage('collect')
 
       -- Show the OSD when a new song comes through.
-      if not new then return end
-      -- Hide all other OSDs if visible.
-      awesome.emit_signal('osd::new', osd)
-      -- Reset timer.
-      if timer.started then
-         timer:again()
-      else
-         osd.visible = true
-         timer:start()
-      end
+      if new and not s.dash.visible then show() end
    end)
 
    pctl:connect_signal('playback_status', function(_, playing, _)
@@ -206,15 +212,7 @@ return function(s)
          _W.status.status = 'Paused'
       end
 
-      -- Hide all other OSDs if visible.
-      awesome.emit_signal('osd::new', osd)
-      -- Reset timer.
-      if timer.started then
-         timer:again()
-      else
-         osd.visible = true
-         timer:start()
-      end
+      if not s.dash.visible then show() end
    end)
 
    pctl:connect_signal('volume', function(_, volume, _)
@@ -228,15 +226,7 @@ return function(s)
          _W.volume_level.text = icons['audio_increase']
       end
 
-      -- Hide all other OSDs if visible.
-      awesome.emit_signal('osd::new', osd)
-      -- Reset timer.
-      if timer.started then
-         timer:again()
-      else
-         osd.visible = true
-         timer:start()
-      end
+      if not s.dash.visible then show() end
    end)
 
    pctl:connect_signal('position', function(_, prog, len, _)

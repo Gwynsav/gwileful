@@ -8,6 +8,8 @@ local color   = require(beautiful.colorscheme)
 local helpers = require('helpers')
 local icons   = require('theme.icons')
 
+-- local net = require('signal.system.network')
+
 return function()
    -- Returns a grid entry, with an icon, title, and body.
    -- @param args:
@@ -19,11 +21,10 @@ return function()
       local title = helpers.ctext({
          text  = args.title
       })
-      local body  = helpers.ctext({
+      local body = helpers.ctext({
          text  = args.body,
          color = color.fg1
       })
-
       local icon = helpers.ctext({
          text  = args.icon,
          font  = icons.font .. icons.size * 2,
@@ -76,8 +77,9 @@ return function()
 
    local network = entry({
       title = 'Network',
-      body  = 'Wired connection',
-      icon  = icons['net_wired_normal'],
+      body  = 'No connection available',
+      icon  = icons['net_none'],
+      -- on_click = function() net:toggle_networking() end
       on_click = function() end
    })
    local bluetooth = entry({

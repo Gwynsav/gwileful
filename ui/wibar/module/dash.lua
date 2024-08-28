@@ -36,7 +36,7 @@ return function(s)
       },
       buttons = {
          awful.button(nil, 1, function()
-            s.dash:show()
+            s.dash:toggle()
             arrow.text = s.dash.visible and icons['arrow_up'] or icons['arrow_down']
          end)
       },

@@ -6,7 +6,7 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.dash.module')
 
-local width, height, margin = 352, 530, 6
+local width, height, margin = 352, 510, 6
 
 return function(s)
    local panel = wibox({
@@ -56,19 +56,25 @@ return function(s)
                }
             }
          },
-         {
-            widget  = wibox.container.margin,
-            margins = {
-               left = dpi(16), right = dpi(16),
-               bottom = dpi(16)
-            },
-            mods.title()
-         }
+         mods.title()
       }
    })
 
+   function panel:hide()
+      self.visible = false
+   end
+
    function panel:show()
-      self.visible = not self.visible
+      s.time.visible = false
+      self.visible = true
+   end
+
+   function panel:toggle()
+      if self.visible then
+         self:hide()
+      else
+         self:show()
+      end
    end
 
    return panel

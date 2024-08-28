@@ -2,9 +2,11 @@ local instance = nil
 
 local function new()
    return require('module.bling').signal.playerctl.lib({
-      player = { 'mpd', '%any', 'firefox' },
-      pctl_update_on_activity = true,
-      pctl_position_update_interval = 1
+      player = { 'mpd', '%any' },
+      ignore = { 'firefox' },
+      update_on_activity = true,
+      interval = 1,
+      debounce_delay = 0.35
    })
 end
 

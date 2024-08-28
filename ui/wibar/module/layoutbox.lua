@@ -11,19 +11,37 @@ return function(s)
    -- We need one layoutbox per screen.
    local layout = wibox.widget({
       widget = wibox.container.background,
-      fg     = color.fg0,
+      bg     = color.bg1,
       {
-         layout  = wibox.layout.fixed.horizontal,
-         spacing = dpi(2),
-         wibox.widget.textbox('['),
+         layout = wibox.layout.fixed.horizontal,
          {
-            widget  = wibox.container.margin,
-            margins = {
-               top = dpi(7), bottom = dpi(7)
-            },
-            awful.widget.layoutbox({ screen = s })
+            widget = wibox.container.background,
+            bg     = color.bg3,
+            forced_width = dpi(1)
          },
-         wibox.widget.textbox(']')
+         {
+            layout = wibox.layout.align.vertical,
+            {
+               widget = wibox.container.background,
+               bg     = color.bg3,
+               forced_height = dpi(1)
+            },
+            {
+               widget  = wibox.container.margin,
+               margins = dpi(6),
+               {
+                  widget = wibox.container.constraint,
+                  strategy = 'exact',
+                  height = dpi(9),
+                  awful.widget.layoutbox({ screen = s })
+               }
+            },
+            {
+               widget = wibox.container.background,
+               bg     = color.bg3,
+               forced_height = dpi(1)
+            }
+         }
       },
       buttons = {
          awful.button(nil, 1, function() awful.layout.inc( 1) end),
@@ -33,10 +51,10 @@ return function(s)
       }
    })
    layout:connect_signal('mouse::enter', function(self)
-      self.fg = color.accent
+      self.bg = color.bg2
    end)
    layout:connect_signal('mouse::leave', function(self)
-      self.fg = color.fg0
+      self.bg = color.bg1
    end)
 
    return layout

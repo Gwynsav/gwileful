@@ -38,17 +38,21 @@ return function()
       align = 'right'
    })
    local song_title  = hp.stext({
-      text  = 'Nothing Playing'
+      text  = 'Nothing Playing',
+      font  = beautiful.font_mono .. beautiful.bitm_size
    })
    local song_artist = hp.stext({
       text  = 'by Unknown',
+      font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg1
    })
    local song_album  = hp.stext({
+      text  = 'No album',
+      font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg2
    })
    local song_art    = wibox.widget.imagebox(gears.surface.crop_surface({
-      ratio   = 33/12,
+      ratio   = 3,
       surface = beautiful.wallpaper
    }))
 
@@ -62,15 +66,9 @@ return function()
       minimum = 0,
       maximum = 100,
       value   = 0,
-      bar_color        = color.transparent,
-      bar_active_color = color.bg4
+      bar_color        = color.bg1,
+      bar_active_color = color.bg3
    })
-   prog_slider:connect_signal('mouse::enter', function(self)
-      self.bar_color = color.bg1
-   end)
-   prog_slider:connect_signal('mouse::leave', function(self)
-      self.bar_color = color.transparent
-   end)
 
    local play_pause = button(icons['music_play'],  function() pctl:play_pause() end)
    local back = button(icons['music_previous'], function() pctl:previous() end)
@@ -97,11 +95,16 @@ return function()
                { 0.73, color.bg0 .. 'CC' }, { 1, color.bg0 .. 'A0' }
             }
          },
+         border_width = dpi(1),
+         border_color = color.bg3,
          {
             layout = wibox.layout.align.vertical,
             {
                widget  = wibox.container.margin,
-               margins = dpi(16),
+               margins = {
+                  top = dpi(16), bottom = dpi(14),
+                  left = dpi(16), right = dpi(16)
+               },
                {
                   layout  = wibox.layout.fixed.vertical,
                   spacing = dpi(8),
@@ -149,10 +152,18 @@ return function()
             },
             nil,
             {
-               widget   = wibox.container.constraint,
-               strategy = 'exact',
-               height   = dpi(4),
-               prog_slider
+               layout = wibox.layout.fixed.vertical,
+               {
+                  widget = wibox.container.background,
+                  bg = color.bg3,
+                  forced_height = dpi(1)
+               },
+               {
+                  widget   = wibox.container.constraint,
+                  strategy = 'exact',
+                  height   = dpi(4),
+                  prog_slider
+               }
             }
          }
       }
@@ -170,12 +181,12 @@ return function()
       -- Whenever a new song comes through:
       if title ~= last_poll.title or artist ~= last_poll.artist then
          -- Update widget info.
-         song_title.text  = gears.string.xml_unescape(title) or 'Unknown'
-         song_artist.text = 'by ' .. (gears.string.xml_unescape(artist) or 'Unknown')
-         song_album.text  = 'on ' .. (gears.string.xml_unescape(album) or 'Unknown')
+         song_title.text  = gears.string.xml_unescape(title or 'Unknown')
+         song_artist.text = 'by ' .. (gears.string.xml_unescape(artist or 'Unknown'))
+         song_album.text  = 'on ' .. (gears.string.xml_unescape(album or 'Unknown'))
          song_art.image   = gears.surface.crop_surface({
-            ratio   = 33/12,
-            surface = cover and gears.surface.load_uncached(cover) or beautiful.wallpaper
+            ratio   = 3,
+            surface = gears.surface.load_uncached(cover or beautiful.wallpaper)
          })
          song_player.text = 'via ' .. source
 
@@ -199,11 +210,11 @@ return function()
 
    pctl:connect_signal('playback_status', function(_, playing, _)
       if playing then
-         prog_slider.bar_active_color = color.fg2
+         prog_slider.bar_active_color = color.bg4
          song_status.text = 'Playing'
          play_pause.text = icons['music_pause']
       else
-         prog_slider.bar_active_color = color.bg4
+         prog_slider.bar_active_color = color.bg3
          song_status.text = 'Paused'
          play_pause.text = icons['music_play']
       end

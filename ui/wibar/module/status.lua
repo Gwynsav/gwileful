@@ -61,6 +61,8 @@ return function()
    return wibox.widget({
       widget = wibox.container.background,
       bg     = color.bg1,
+      border_width = dpi(1),
+      border_color = color.bg3,
       {
          widget  = wibox.container.margin,
          margins = {

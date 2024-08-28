@@ -1,8 +1,7 @@
-return {
-   title  = require(... .. '.title'),
-   user   = require(... .. '.user'),
-   slider = require(... .. '.slider'),
-   player = require(... .. '.player'),
-   grid   = require(... .. '.grid'),
-   random = require(... .. '.random')
-}
+local path = ... .. '.'
+return setmetatable({}, {
+   __index = function(_, key)
+      local module, _ = require(path .. key)
+      return module
+   end
+})

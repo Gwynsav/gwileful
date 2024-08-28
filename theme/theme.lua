@@ -55,6 +55,10 @@ _T.tooltip_border_width = dpi(1)
 _T.tooltip_bg           = colorscheme.bg0
 _T.tooltip_fg           = colorscheme.fg0
 
+-- Systray.
+_T.bg_systray           = colorscheme.bg1
+_T.systray_icon_spacing = dpi(2)
+
 -- Icons
 --------
 -- Layouts.
@@ -71,5 +75,16 @@ _T.layout_floating =
 --------
 -- Tabbar.
 _T.tabbar_disable = true
+
+-- Tag Preview.
+_T.tag_preview_widget_border_width = dpi(1)
+_T.tag_preview_widget_margin       = _T.useless_gap
+_T.tag_preview_widget_bg           = colorscheme.bg1
+_T.tag_preview_widget_border_color = colorscheme.bg3
+--- Clients.
+_T.tag_preview_client_opacity      = 1
+_T.tag_preview_client_border_width = dpi(1)
+_T.tag_preview_client_bg           = colorscheme.bg0
+_T.tag_preview_client_border_color = colorscheme.bg3
 
 return _T

@@ -1,7 +1,7 @@
 -- This is used later as the default terminal and editor to run.
 local apps = {}
 
-apps.terminal     = os.getenv('TERM') or 'xterm'
+apps.terminal     = 'tym'
 apps.terminal_cmd = apps.terminal .. ' -e '
 
 apps.editor     = os.getenv('EDITOR') or 'vim'

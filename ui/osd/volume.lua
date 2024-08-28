@@ -1,3 +1,4 @@
+local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
 local wibox     = require('wibox')
@@ -102,6 +103,7 @@ return function(s)
          timer:again()
       else
          osd.visible = true
+         awful.placement.bottom(osd, { margins = { bottom = beautiful.useless_gap } })
          timer:start()
       end
    end)

@@ -64,7 +64,7 @@ ruled.client.connect_signal('request::rules', function()
    })
    ruled.client.append_rule({
       rule_any = {
-         class = { 'Discord', 'vesktop' }
+         class = { 'Discord', 'discord', 'vesktop' }
       },
       properties = { tag = screen[1].tags[user.tags - 1] }
    })

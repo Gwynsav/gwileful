@@ -57,6 +57,8 @@ local function new()
    local self = gears.object({})
    gears.table.crush(self, weather, true)
    local retries = 0
+   local data = {}
+
 
    -- This timer is a fetch attempt timeout. If it fails to get the weather info, it will
    -- wait for `weather.timeout` seconds and try again, up to `weather.max_retries`
@@ -96,8 +98,6 @@ local function new()
          return
       end
 
-      local data = {}
-
       -- Right now!
       data.description = res.current.weather[1].description:gsub('^%l', string.upper)
       data.humidity    = res.current.humidity
@@ -109,12 +109,17 @@ local function new()
       data.by_hour = {}
       for i = 1, 12, 1 do
          table.insert(data.by_hour, res.hourly[i])
+         data.by_hour[i].temp = math.floor(data.by_hour[i].temp)
+         data.by_hour[i].icon = icon_map[res.hourly[i].weather[1].icon]
       end
 
       -- The next 7 days.
       data.by_day = {}
       for i = 1, 7, 1 do
          table.insert(data.by_day, res.daily[i])
+         data.by_day[i].icon = icon_map[res.daily[i].weather[1].icon]
+         data.by_day[i].max  = math.floor(data.by_day[i].temp.day)
+         data.by_day[i].min  = math.floor(data.by_day[i].temp.night)
       end
 
       self:emit_signal('weather::data', data)
@@ -131,6 +136,10 @@ local function new()
 
    -- Same code as ran in the retry timer, meant for widgets to call directly.
    function self:request_data()
+      if data.description ~= nil then
+         self:emit_signal('weather::data', data)
+         return
+      end
       if not self.timer.started then
          awful.spawn.easy_async_with_shell(shell_cmd, function(out)
             if out == nil or out == '' then

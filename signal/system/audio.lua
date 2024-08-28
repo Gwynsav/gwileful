@@ -381,7 +381,7 @@ local function new()
    -- is what Kasper actually intended to do, may have been an oversight.
    awful.spawn.with_shell('pkill pactl')
    gtimer({
-      timeout = 5,
+      timeout = 3,
       autostart = true,
       single_shot = true,
       call_now = false,

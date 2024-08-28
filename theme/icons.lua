@@ -20,7 +20,7 @@ _I.battery['LOW']      = ''
 _I.battery['NORMAL']   = ''
 _I.battery['HIGH']     = ''
 _I.battery['FULL']     = ''
-_I.battery['CHARGING'] = 'p'
+_I.battery['CHARGING'] = ''
 _I.battery['CHARGED']  = ''
 
 -- Weather.

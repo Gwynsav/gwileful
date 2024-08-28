@@ -14,7 +14,8 @@ ruled.notification.connect_signal('request::rules', function()
    })
 end)
 
--- Defines the default notification layout.
+-- Defines the default notification layout. Given I have OSDs now, special notifications
+-- won't be a necessity.
 require('naughty').connect_signal('request::display', function(n)
-   require('ui.notification').normal(n)
+   require('ui.notification')(n)
 end)

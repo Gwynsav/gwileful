@@ -1,4 +1,4 @@
-local path = ...
+local path = ... .. '.'
 
 return function(s)
    return {

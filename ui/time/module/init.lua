@@ -1,5 +1,7 @@
-return {
-   calendar = require(... .. '.calendar'),
-   clock    = require(... .. '.clock'),
-   weather  = require(... .. '.weather')
-}
+local path = ... .. '.'
+return setmetatable({}, {
+   __index = function(_, key)
+      local module, _ = require(path .. key)
+      return module
+   end
+})

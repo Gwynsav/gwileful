@@ -20,8 +20,6 @@ return function(s)
       ontop   = true,
       width   = dpi(width),
       height  = dpi(height),
-      x       = dpi((s.geometry.width - width) / 2),
-      y       = dpi(s.geometry.height - height - margin),
       bg      = color.bg0,
       border_width = dpi(1),
       border_color = color.bg3
@@ -68,7 +66,6 @@ return function(s)
                spacing = dpi(16),
                {
                   layout = wibox.layout.align.horizontal,
-                  nil, nil,
                   {
                      layout = wibox.layout.fixed.vertical,
                      {
@@ -86,7 +83,8 @@ return function(s)
                         bg     = color.bg2,
                         forced_height = dpi(1)
                      }
-                  }
+                  },
+                  nil, nil
                },
                _W.entries
             }
@@ -178,7 +176,8 @@ return function(s)
          textbox = _W.prompt,
          -- Upon modifying the contents of the prompt.
          changed_callback = function(cmd)
-            _A.filter(cmd)
+            local input = cmd:gsub("[%[%]%(%)%.%-%+%?%*%%]", "%%%1")
+            _A.filter(input)
          end,
          -- Upon pressing enter.
          exe_callback = function(cmd)
@@ -204,6 +203,13 @@ return function(s)
       else
          awful.keygrabber.stop()
       end
+
+      awful.placement.next_to(launcher, {
+         margins  = { top = dpi(margin), left = dpi(margin) },
+         geometry = s.bar,
+         preferred_positions = 'bottom',
+         preferred_anchors   = 'front'
+      })
    end
 
    return launcher

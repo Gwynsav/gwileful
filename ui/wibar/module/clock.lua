@@ -36,7 +36,7 @@ return function(s)
       },
       buttons = {
          awful.button(nil, 1, function()
-            if s.time then s.time:show() end
+            if s.time then s.time:toggle() end
          end)
       }
    })
@@ -55,7 +55,7 @@ return function(s)
       {
          widget  = wibox.container.margin,
          margins = {
-            top = dpi(9), bottom = dpi(9)
+            top = dpi(5), bottom = dpi(5)
          },
          {
             widget = wibox.container.background,
@@ -82,7 +82,7 @@ return function(s)
       },
       buttons = {
          awful.button(nil, 1, function()
-            if s.time then s.time:show() end
+            if s.time then s.time:toggle() end
          end)
       },
       set_col = function(self, col)

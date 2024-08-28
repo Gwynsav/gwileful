@@ -56,8 +56,8 @@ return function(c)
    end
 
    local tabs = tabbed.titlebar_indicator(c, {
-      bg_color       = color.bg0 .. '80',
-      bg_color_focus = color.bg0,
+      bg_color       = color.bg1 .. '80',
+      bg_color_focus = color.transparent,
       fg_color       = color.fg0 .. 'AB',
       fg_color_focus = color.accent,
       layout = wibox.layout.flex.horizontal,
@@ -109,34 +109,50 @@ return function(c)
                   end
                )
             },
-            tabs
+            {
+               widget = wibox.container.background,
+               bg     = color.bg3,
+               forced_width = dpi(1)
+            }
          },
          -- Middle
-         nil,
+         {
+            widget = wibox.container.background,
+            bg     = color.bg0 .. '80',
+            tabs
+         },
          -- Right
          {
-            widget  = wibox.container.margin,
-            margins = {
-               left   = _EDGE+1,
-               right  = _EDGE+1
+            layout  = wibox.layout.fixed.horizontal,
+            {
+               widget = wibox.container.background,
+               bg     = color.bg3,
+               forced_width = dpi(1)
             },
             {
-               layout  = wibox.layout.fixed.horizontal,
-               spacing = dpi(1),
-               button(icons['title_minimize'], color.accent,
-                  function()
-                     gears.timer.delayed_call(function()
-                        c.minimized = not c.minimized
-                     end)
-                  end
-               ),
-               button(icons['title_maximize'], color.accent,
-                  function()
-                     c.maximized = not c.maximized
-                     c:raise()
-                  end
-               ),
-               button(icons['title_close'], color.red, function() c:kill() end)
+               widget  = wibox.container.margin,
+               margins = {
+                  left   = _EDGE+1,
+                  right  = _EDGE+1
+               },
+               {
+                  layout  = wibox.layout.fixed.horizontal,
+                  spacing = dpi(1),
+                  button(icons['title_minimize'], color.accent,
+                     function()
+                        gears.timer.delayed_call(function()
+                           c.minimized = not c.minimized
+                        end)
+                     end
+                  ),
+                  button(icons['title_maximize'], color.accent,
+                     function()
+                        c.maximized = not c.maximized
+                        c:raise()
+                     end
+                  ),
+                  button(icons['title_close'], color.red, function() c:kill() end)
+               }
             }
          }
       }

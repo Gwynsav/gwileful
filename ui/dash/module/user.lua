@@ -19,6 +19,11 @@ local pfp_widget = wibox.widget({
    })
 })
 
+local host = hp.ctext({
+   text  = '@host',
+   font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
+   align = 'right'
+})
 local user_at_host = wibox.widget({
    layout = wibox.layout.fixed.horizontal,
    hp.ctext({
@@ -27,12 +32,12 @@ local user_at_host = wibox.widget({
       color = color.accent,
       align = 'right'
    }),
-   hp.ctext({
-      text  = '@' .. (os.getenv('HOSTNAME') or 'host'),
-      font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
-      align = 'right'
-   })
+   host
 })
+awful.spawn.easy_async_with_shell('uname -n', function(out)
+   if out == nil or out == '' then return end
+   host.text = '@' .. out:gsub('\n', '')
+end)
 
 -- Updated every minute.
 local uptime_widget = hp.ctext({
