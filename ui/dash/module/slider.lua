@@ -78,7 +78,7 @@ local function slider(args)
          {
             widget  = wibox.container.margin,
             margins = {
-               top = dpi(5), bottom = dpi(5),
+               top = dpi(5), bottom = dpi(3),
                left = dpi(7), right = dpi(7)
             },
             {

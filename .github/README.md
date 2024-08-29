@@ -32,7 +32,7 @@ defined correctly.
 
 ## Gallery
 
-![How it looks as of 04/08/2024](assets/showcase.png)
+![How it looks as of 29/08/2024](assets/showcase.png)
 
 ## References and Acknowledgements
 
@@ -52,6 +52,7 @@ Individuals:
 fonts used in this rice currently, as well as help making my own icon font, used here.
 - [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.
 - [Kasper](https://github.com/Kasper24/KwesomeDE), used some of their daemons. 
+- [Myagko](https://github.com/myagko/dotfiles), used their calendar.
 - [Crylia](https://github.com/Crylia/crylia-theme/), used some of their code. 
 - [rxyhn](https://github.com/rxyhn/yoru), used calendar and some ideas.
 - The beautiful artwork I often display in the screenshots is by
