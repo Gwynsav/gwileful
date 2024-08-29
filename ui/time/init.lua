@@ -46,7 +46,7 @@ return function(s)
    end
 
    function panel:show()
-      s.dash.visible = false
+      s.dash:hide()
       self.visible = true
    end
 

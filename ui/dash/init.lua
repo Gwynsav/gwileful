@@ -65,7 +65,7 @@ return function(s)
    end
 
    function panel:show()
-      s.time.visible = false
+      s.time:hide()
       self.visible = true
    end
 

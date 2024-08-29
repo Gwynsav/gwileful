@@ -50,6 +50,7 @@ from KreativeKorp used for UI as well as terminal, in the past.
 Individuals:
 - [sakuya](https://codeberg.org/moseni/bitmap-fonts). Creator of the `koishi` and `satori`
 fonts used in this rice currently, as well as help making my own icon font, used here.
+Their rice also influenced the look of mine.
 - [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.
 - [Kasper](https://github.com/Kasper24/KwesomeDE), used some of their daemons. 
 - [Myagko](https://github.com/myagko/dotfiles), used their calendar.
