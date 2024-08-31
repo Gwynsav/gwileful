@@ -40,12 +40,13 @@ return function()
    local _H = {}
    local hour_widgets = wibox.widget({
       layout  = wibox.layout.flex.horizontal,
-      spacing = dpi(12)
+      spacing = dpi(8)
    })
 
    local function hourly(index)
       local time = helpers.ctext({
          text  = '+' .. string.format('%02d', index) .. ':00',
+         font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
          color = color.fg1
       })
@@ -56,10 +57,12 @@ return function()
       })
       local temp = helpers.ctext({
          text  = 'N/A',
+         font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center'
       })
       local humy = helpers.ctext({
          text  = 'N/A',
+         font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
          color = color.fg2
       })
@@ -87,7 +90,7 @@ return function()
       })
    end
 
-   for i = 1, 7, 1 do
+   for i = 1, 6, 1 do
       local widget = hourly(i)
       table.insert(_H, widget)
       hour_widgets:add(widget)
@@ -98,13 +101,14 @@ return function()
    local day_widgets = wibox.widget({
       layout  = wibox.layout.flex.horizontal,
       visible = false,
-      spacing = dpi(13)
+      spacing = dpi(14)
    })
    local weekdays = { 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' }
 
    local function daily(index)
       local time = helpers.ctext({
          text  = '+' .. index,
+         font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
          color = color.fg1
       })
@@ -115,10 +119,12 @@ return function()
       })
       local max = helpers.ctext({
          text  = 'N/A',
+         font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center'
       })
       local min = helpers.ctext({
          text  = 'N/A',
+         font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
          color = color.fg2
       })
@@ -145,7 +151,7 @@ return function()
       })
    end
 
-   for i = 1, 7, 1 do
+   for i = 1, 6, 1 do
       local widget = daily(i)
       table.insert(_D, widget)
       day_widgets:add(widget)

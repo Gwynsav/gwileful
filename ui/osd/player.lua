@@ -10,7 +10,7 @@ local pctl   = require('signal.system.playerctl')
 local helper = require('helpers')
 local icons  = require('theme.icons')
 
-local width, height, timeout = 300, 100, 3
+local width, height, timeout = 270, 120, 3
 
 return function(s)
    local _W = {}
@@ -76,12 +76,18 @@ return function(s)
       widget = wibox.widget.progressbar,
       background_color = color.bg1,
       color = color.fg0,
-      max_value = 100,
+      margins = {
+         left = dpi(9), right = dpi(9),
+         top = dpi(4), bottom = dpi(4)
+      }
    })
    _W.volume_level = helper.ctext({
       text  = icons['audio_muted'],
       font  = icons.font .. icons.size,
       align = 'center'
+   })
+   _W.volume_label = helper.ctext({
+      text = 'N/A'
    })
 
    local osd = wibox({
@@ -94,7 +100,7 @@ return function(s)
       border_width = dpi(1),
       border_color = color.bg3,
       widget = {
-         layout = wibox.layout.fixed.horizontal,
+         layout = wibox.layout.fixed.vertical,
          {
             layout = wibox.layout.stack,
             _W.cover,
@@ -136,29 +142,19 @@ return function(s)
          {
             widget = wibox.container.background,
             bg     = color.bg3,
-            forced_width = dpi(1)
+            forced_height = dpi(1)
          },
          {
             widget  = wibox.container.margin,
             margins = {
-               top = dpi(12), bottom = dpi(12),
-               left = dpi(6), right = dpi(6)
+               top = dpi(6), bottom = dpi(6),
+               left = dpi(12), right = dpi(12)
             },
             {
-               layout  = wibox.layout.fixed.vertical,
-               spacing = dpi(8),
+               layout  = wibox.layout.align.horizontal,
                _W.volume_level,
-               {
-                  widget  = wibox.container.margin,
-                  margins = {
-                     left = dpi(4), right = dpi(4)
-                  },
-                  {
-                     widget = wibox.container.rotate,
-                     direction = 'east',
-                     _W.volume
-                  }
-               }
+               _W.volume,
+               _W.volume_label
             }
          }
       }
@@ -193,7 +189,7 @@ return function(s)
       _W.album.text  = 'on ' .. (gears.string.xml_unescape(album) or 'Unknown')
       _W.cover.image = gears.surface.crop_surface({
          surface = gears.surface.load_uncached(cover or beautiful.wallpaper),
-         ratio   = (width - 24) / height
+         ratio   = width / (height - 24)
       })
       -- GC old album covers.
       collectgarbage('collect')
@@ -216,8 +212,9 @@ return function(s)
    end)
 
    pctl:connect_signal('volume', function(_, volume, _)
-      volume = volume * 100
       _W.volume.value = volume
+      volume = volume * 100
+      _W.volume_label.text = volume .. '%'
       if volume == 0 then
          _W.volume_level.text = icons['audio_muted']
       elseif volume < 50 then
