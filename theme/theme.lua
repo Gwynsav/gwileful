@@ -1,13 +1,16 @@
+local require, os = require, os
+
 local gears = require('gears')
 
 local gc  = gears.color
 local gfs = gears.filesystem
 local dpi = require('beautiful.xresources').apply_dpi
 
+local home  = os.getenv('HOME') .. '/'
 local user  = require('config.user')
 local color = require('theme.color')
+local asset = gfs.get_configuration_dir() .. 'theme/assets/'
 local colorscheme = color.palette
-local asset        = gfs.get_configuration_dir() .. 'theme/assets/'
 
 -- NOTE: try to keep all usages of `gears.color.recolor_image` within this file to prevent
 -- it from being executed multiple times. It will burn through your RAM at alarming speed.
@@ -18,12 +21,17 @@ local _T = {}
 --   - 2: having to run the `theme.color` logic every time.
 -- This may have been a very smart or ridiculously stupid choice. We'll see.
 _T.colorscheme = color.path
-_T.pfp         = gears.surface.load_uncached(user.pfp or asset .. 'default/pfp.png')
-_T.wallpaper   = gears.surface.load_uncached(user.wallpaper or asset .. 'default/wall.png')
+
+if not user.lite or user.lite == nil then
+   _T.pfp       = gears.surface.load_uncached(user.pfp or asset .. 'default/pfp.png')
+   _T.wallpaper = gears.surface.load_uncached(user.wall or asset .. 'default/wall.png')
+else
+   _T.wallpaper = user.wall or asset .. 'default/wall.png'
+end
 
 -- Fonts
 _T.font_bitm = 'satori '
-_T.font_mono = 'koishi '
+_T.font_mono = 'angwish '
 _T.bitm_size = dpi(9)
 
 -- A few defaults.
@@ -59,18 +67,6 @@ _T.tooltip_fg           = colorscheme.fg0
 _T.bg_systray           = colorscheme.bg1
 _T.systray_icon_spacing = dpi(2)
 
--- Icons
---------
--- Layouts.
-_T.layout_tile =
-   gc.recolor_image(asset .. 'wibar/layout/tile_right.png',  colorscheme.fg0)
-_T.layout_tileleft =
-   gc.recolor_image(asset .. 'wibar/layout/tile_left.png',   colorscheme.fg0)
-_T.layout_tilebottom =
-   gc.recolor_image(asset .. 'wibar/layout/tile_bottom.png', colorscheme.fg0)
-_T.layout_floating =
-   gc.recolor_image(asset .. 'wibar/layout/float.png',       colorscheme.fg0)
-
 -- Bling
 --------
 -- Tabbar.
@@ -86,5 +82,10 @@ _T.tag_preview_client_opacity      = 1
 _T.tag_preview_client_border_width = dpi(1)
 _T.tag_preview_client_bg           = colorscheme.bg0
 _T.tag_preview_client_border_color = colorscheme.bg3
+
+-- Files
+--------
+_T.data_dir  = home .. '.local/share/gwileful/'
+_T.state_dir = home .. '.local/state/gwileful/'
 
 return _T

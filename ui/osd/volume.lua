@@ -1,3 +1,5 @@
+local require, awesome = require, awesome
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
@@ -7,13 +9,13 @@ local dpi = beautiful.xresources.apply_dpi
 
 local color  = require(beautiful.colorscheme)
 local audio  = require('signal.system.audio')
-local helper = require('helpers')
+local widget = require('widget')
 local icons  = require('theme.icons')
 
 local width, height, timeout = 200, 32, 3
 
 return function(s)
-   local icon = helper.ctext({
+   local icon = widget.textbox.colored({
       text  = icons['audio_muted'],
       font  = icons.font .. icons.size,
       align = 'center'

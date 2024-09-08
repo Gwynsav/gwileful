@@ -1,5 +1,6 @@
 -- Credits to Aproxia for the timeout animation logic.
 -- https://github.com/Aproxia-dev
+local require, collectgarbage = require, collectgarbage
 
 local awful     = require('awful')
 local beautiful = require('beautiful')
@@ -9,19 +10,19 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local helpers = require('helpers')
-local color   = require(beautiful.colorscheme)
+local widget = require('widget')
+local color  = require(beautiful.colorscheme)
 
 local _N = {}
 
 function _N.title(n)
-   return helpers.stext({
+   return widget.textbox.scrolling({
       text = '<i>'..((n.title == nil or n.title == '') and 'AwesomeWM' or n.title)..'</i>'
    })
 end
 
 function _N.body(n)
-   return helpers.stext({
+   return widget.textbox.scrolling({
       text  = n.message,
       color = color.fg1 .. 'cc',
       dir   = 'vertical'

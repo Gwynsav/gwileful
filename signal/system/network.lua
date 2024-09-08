@@ -1,3 +1,5 @@
+local require, string, table, ipairs, print = require, string, table, ipairs, print
+
 local gears = require('gears')
 
 local lgi  = require('lgi')

@@ -1,4 +1,6 @@
 -- See: https://lazka.github.io/pgi-docs/UPowerGlib-1.0/classes/Device.html
+local require, string, ipairs = require, string, ipairs
+
 local gears = require('gears')
 
 local upower = require('lgi').require('UPowerGlib')

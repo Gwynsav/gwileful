@@ -1,3 +1,5 @@
+local require, client = require, client
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
@@ -5,10 +7,10 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local tabbed  = require('module.bling').widget.tabbed_misc
-local helpers = require('helpers')
-local color   = require(beautiful.colorscheme)
-local icons   = require('theme.icons')
+local tabbed = require('module.bling').widget.tabbed_misc
+local widget = require('widget')
+local color  = require(beautiful.colorscheme)
+local icons  = require('theme.icons')
 
 local _SIZE = dpi(9)
 local _MARGIN = dpi(4)
@@ -17,11 +19,11 @@ local _EDGE = dpi(11) - _MARGIN
 --- The titlebar to be used on normal clients.
 return function(c)
    local function button(icon, hover, action)
-      local widget = wibox.widget({
+      local w = wibox.widget({
          widget = wibox.container.margin,
          margins = { left = _MARGIN, right = _MARGIN },
          {
-            widget = helpers.ctext({
+            widget = widget.textbox.colored({
                text  = icon,
                font  = icons.font .. icons.size,
                align = 'center'
@@ -38,21 +40,21 @@ return function(c)
       -- focus loss.
       client.connect_signal('property::active', function()
          if c.active then
-            widget.opacity = 1
+            w.opacity = 1
          else
-            widget.opacity = 0.66
+            w.opacity = 0.66
          end
       end)
 
       -- Adjust colors when hovering.
-      widget:connect_signal('mouse::enter', function(self)
+      w:connect_signal('mouse::enter', function(self)
          self.col = hover
       end)
-      widget:connect_signal('mouse::leave', function(self)
+      w:connect_signal('mouse::leave', function(self)
          self.col = color.fg0
       end)
 
-      return widget
+      return w
    end
 
    local tabs = tabbed.titlebar_indicator(c, {
@@ -77,11 +79,11 @@ return function(c)
                id     = 'text_role'
             }
          },
-         create_callback = function(self, client, _)
-            self.text = client.name
+         create_callback = function(self, window, _)
+            self.text = window.name
          end,
-         update_callback = function(self, client, group)
-            self.create_callback(self, client, group)
+         update_callback = function(self, window, group)
+            self.create_callback(self, window, group)
          end
       }
    })

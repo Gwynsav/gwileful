@@ -1,15 +1,17 @@
+local require = require
+
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
-local dpi   = beautiful.xresources.apply_dpi
-local color = require(beautiful.colorscheme)
-local icons = require('theme.icons')
+local dpi = beautiful.xresources.apply_dpi
 
-local helpers = require('helpers')
+local color   = require(beautiful.colorscheme)
+local icons   = require('theme.icons')
+local widget  = require('widget')
 local audio   = require('signal.system.audio')
 local battery = require('signal.system.battery')
 
-local audio_widget = helpers.ctext({
+local audio_widget = widget.textbox.colored({
    text  = icons['audio_muted'],
    font  = icons.font .. icons.size,
    color = color.red
@@ -28,11 +30,11 @@ audio:connect_signal('sinks::default', function(_, default_sink)
 end)
 
 -- Only assigned if a valid battery is found.
-local battery_icon = helpers.ctext({
+local battery_icon = widget.textbox.colored({
    text = icons.battery['UNKNOWN'],
    font = icons.font .. icons.size
 })
-local battery_level = helpers.ctext({
+local battery_level = widget.textbox.colored({
    text = 'N/A',
 })
 local battery_widget = wibox.widget({

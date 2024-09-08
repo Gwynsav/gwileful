@@ -1,12 +1,14 @@
+local require = require
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local color   = require(beautiful.colorscheme)
-local helpers = require('helpers')
-local icons   = require('theme.icons')
+local color  = require(beautiful.colorscheme)
+local widget = require('widget')
+local icons  = require('theme.icons')
 
 -- local net = require('signal.system.network')
 
@@ -18,20 +20,20 @@ return function()
    --    - icon: the icon in normal state.
    --    - on_click: the action to execute on icon click.
    local function entry(args)
-      local title = helpers.ctext({
+      local title = widget.textbox.colored({
          text  = args.title
       })
-      local body = helpers.ctext({
+      local body = widget.textbox.colored({
          text  = args.body,
          color = color.fg1
       })
-      local icon = helpers.ctext({
+      local icon = widget.textbox.colored({
          text  = args.icon,
          font  = icons.font .. icons.size * 2,
          align = 'center'
       })
 
-      local widget = wibox.widget({
+      local w = wibox.widget({
          widget = wibox.container.background,
          bg     = color.bg1,
          border_width = dpi(1),
@@ -63,16 +65,16 @@ return function()
             awful.button(nil, 1, args.on_click)
          }
       })
-      widget:connect_signal('mouse::enter', function(self)
+      w:connect_signal('mouse::enter', function(self)
          self.border_color = color.accent
          icon.color        = color.accent
       end)
-      widget:connect_signal('mouse::leave', function(self)
+      w:connect_signal('mouse::leave', function(self)
          self.border_color = color.bg3
          icon.color        = color.fg0
       end)
 
-      return widget
+      return w
    end
 
    local network = entry({

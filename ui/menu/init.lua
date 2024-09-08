@@ -1,3 +1,5 @@
+local require, awesome, os = require, awesome, os
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')

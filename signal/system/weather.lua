@@ -3,6 +3,7 @@
 
 -- This version improves upon it by adding timeouts and other measures of control, to
 -- ensure that weather information is obtained or fails cleanly.
+local require, string, math, table = require, string, math, table
 
 local awful = require('awful')
 local gears = require('gears')
@@ -58,7 +59,6 @@ local function new()
    gears.table.crush(self, weather, true)
    local retries = 0
    local data = {}
-
 
    -- This timer is a fetch attempt timeout. If it fails to get the weather info, it will
    -- wait for `weather.timeout` seconds and try again, up to `weather.max_retries`

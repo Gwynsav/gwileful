@@ -1,3 +1,5 @@
+local require, awesome, client = require, awesome, client
+
 local awful = require('awful')
 
 local mod    = require('binds.mod')

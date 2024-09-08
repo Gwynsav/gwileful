@@ -3,6 +3,8 @@
 -- @copyright 2021-2022 Kasper24
 -------------------------------------------
 --- NOTE: contains modifications and fixes for issues that I encountered.
+local require, string = require, string
+
 local awful = require("awful")
 local gobject = require("gears.object")
 local gtable = require("gears.table")
@@ -10,7 +12,6 @@ local gtimer = require("gears.timer")
 local gmath = require("gears.math")
 local gdebug = require("gears.debug")
 local tonumber = tonumber
-local string = string
 local pairs = pairs
 
 local audio = {}

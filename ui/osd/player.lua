@@ -1,3 +1,5 @@
+local require, math, string, awesome = require, math, string, awesome
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
@@ -7,40 +9,49 @@ local dpi = beautiful.xresources.apply_dpi
 
 local color  = require(beautiful.colorscheme)
 local pctl   = require('signal.system.playerctl')
-local helper = require('helpers')
+local widget = require('widget')
 local icons  = require('theme.icons')
+local user   = require('config.user')
 
 local width, height, timeout = 270, 120, 3
+local ratio = width / (height - 24)
 
 return function(s)
    local _W = {}
 
    _W.cover = wibox.widget.imagebox()
-   _W.icon = helper.ctext({
+   if not user.lite or user.lite == nil then
+      _W.cover.image = gears.surface.crop_surface({
+         ratio   = ratio,
+         surface = beautiful.wallpaper
+      })
+   end
+
+   _W.icon = widget.textbox.colored({
       text  = icons['music'],
       font  = icons.font .. icons.size,
       color = color.fg1
    })
-   _W.player = helper.ctext({
+   _W.player = widget.textbox.colored({
       text  = 'N/A',
       color = color.fg1,
       align = 'right'
    })
-   _W.title = helper.stext({
+   _W.title = widget.textbox.scrolling({
       text = 'Nothing Playing',
       font  = beautiful.font_mono .. beautiful.bitm_size
    })
-   _W.artist = helper.stext({
+   _W.artist = widget.textbox.scrolling({
       text  = 'by Unknown',
       font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg1
    })
-   _W.album = helper.stext({
+   _W.album = widget.textbox.scrolling({
       text  = 'on N/A',
       font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg2
    })
-   _W.progress = helper.ctext({
+   _W.progress = widget.textbox.colored({
       text  = '00:00 / 00:00',
       color = color.fg1
    })
@@ -50,7 +61,7 @@ return function(s)
          layout  = wibox.layout.fixed.horizontal,
          spacing = dpi(8),
          {
-            widget = helper.ctext({
+            widget = widget.textbox.colored({
                text  = icons['music_pause'],
                font  = icons.font .. icons.size,
                align = 'right'
@@ -58,7 +69,7 @@ return function(s)
             id = 'icon'
          },
          {
-            widget = helper.ctext({
+            widget = widget.textbox.colored({
                text  = 'Paused',
                align = 'right'
             }),
@@ -81,12 +92,12 @@ return function(s)
          top = dpi(4), bottom = dpi(4)
       }
    })
-   _W.volume_level = helper.ctext({
+   _W.volume_level = widget.textbox.colored({
       text  = icons['audio_muted'],
       font  = icons.font .. icons.size,
       align = 'center'
    })
-   _W.volume_label = helper.ctext({
+   _W.volume_label = widget.textbox.colored({
       text = 'N/A'
    })
 
@@ -119,8 +130,8 @@ return function(s)
                   widget  = wibox.container.margin,
                   margins = dpi(12),
                   {
-                     layout = wibox.layout.align.vertical,
-                     expand = 'none',
+                     layout  = wibox.layout.fixed.vertical,
+                     spacing = dpi(6),
                      {
                         layout = wibox.layout.align.horizontal,
                         _W.icon, nil, _W.player
@@ -187,10 +198,13 @@ return function(s)
       _W.title.text  = gears.string.xml_unescape(title) or 'Unknown'
       _W.artist.text = 'by ' .. (gears.string.xml_unescape(artist) or 'Unknown')
       _W.album.text  = 'on ' .. (gears.string.xml_unescape(album) or 'Unknown')
-      _W.cover.image = gears.surface.crop_surface({
-         surface = gears.surface.load_uncached(cover or beautiful.wallpaper),
-         ratio   = width / (height - 24)
-      })
+      -- Update cover only if desired.
+      if not user.lite or user.lite == nil then
+         _W.cover.image = gears.surface.crop_surface({
+            surface = gears.surface.load_uncached(cover or beautiful.wallpaper),
+            ratio   = ratio
+         })
+      end
       -- GC old album covers.
       collectgarbage('collect')
 

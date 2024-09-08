@@ -1,3 +1,5 @@
+local require, client, awesome = require, client, awesome
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
@@ -7,25 +9,28 @@ local dpi = beautiful.xresources.apply_dpi
 
 local bling  = require('module.bling')
 local color  = require(beautiful.colorscheme)
+local user   = require('config.user')
 local mod    = require('binds.mod')
 local modkey = mod.modkey
 
 return function(s)
-   -- Enable and customize the tag preview widget.
-   bling.widget.tag_preview.enable({
-      show_client_content = true,
-      scale = 0.125,
-      honor_padding  = true,
-      honor_workarea = true,
-      placement_fn = function(c)
-         awful.placement.next_to(c, {
-            margins = { top = beautiful.useless_gap, left = dpi(40) },
-            preferred_positions = 'bottom',
-            preferred_anchors   = 'front',
-            geometry            = s.bar
-         })
-      end
-   })
+   if not user.lite or user.lite == nil then
+      -- Enable and customize the tag preview widget.
+      bling.widget.tag_preview.enable({
+         show_client_content = true,
+         scale = 0.125,
+         honor_padding  = true,
+         honor_workarea = true,
+         placement_fn = function(c)
+            awful.placement.next_to(c, {
+               margins = { top = beautiful.useless_gap, left = dpi(40) },
+               preferred_positions = 'bottom',
+               preferred_anchors   = 'front',
+               geometry            = s.bar
+            })
+         end
+      })
+   end
 
    -- Create the taglist.
    local tags = awful.widget.taglist({

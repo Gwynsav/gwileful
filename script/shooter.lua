@@ -1,11 +1,13 @@
 -- Screenshot script using maim and xclip. `awful.screenshot` has yet to be
 -- reliable enough to be usable.
+local require, io, os = require, io, os
 
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local naughty   = require('naughty')
 
-local user      = require('config.user')
+local user    = require('config.user')
+local helpers = require('helpers')
 
 -- The directory where PERMANENT files would be stored.
 local perm_dir  = user.screenshot_path or os.getenv('HOME')
@@ -16,6 +18,9 @@ local function send_notif(path)
    local discard = naughty.action({ name = 'Discard' })
 
    save:connect_signal('invoked', function()
+      if not helpers.dir_exists(perm_dir) then
+         awful.spawn('mkdir -p ' .. perm_dir)
+      end
       awful.spawn.easy_async_with_shell('cp ' .. path .. ' ' .. perm_dir, function()
          naughty.notification({
             icon    = beautiful.notification_default,

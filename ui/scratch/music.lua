@@ -1,3 +1,5 @@
+local require = require
+
 local awful = require('awful')
 local dpi   = require('beautiful').xresources.apply_dpi
 
@@ -9,7 +11,7 @@ local h = dpi(400)
 local w = dpi(600)
 
 return scratch({
-   -- `autcclose` is the buggiest shit on earth.
+   -- `autoclose` is the buggiest shit on earth.
    command   = apps.terminal .. ' --role="musicpad" -e ncmpcpp',
    rule      = { role = 'musicpad' },
    sticky    = true,

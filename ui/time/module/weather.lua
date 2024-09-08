@@ -1,3 +1,5 @@
+local require, string, math, os, table, ipairs = require, string, math, os, table, ipairs
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
@@ -5,32 +7,32 @@ local wibox     = require('wibox')
 local dpi = beautiful.xresources.apply_dpi
 
 local weather = require('signal.system.weather')
-local helpers = require('helpers')
-local color = require(beautiful.colorscheme)
-local icons = require('theme.icons')
+local widget  = require('widget')
+local color   = require(beautiful.colorscheme)
+local icons   = require('theme.icons')
 
 return function()
    -- Current weather widgets!
    local _C = {}
-   _C.icon = helpers.ctext({
+   _C.icon = widget.textbox.colored({
       text  = icons.weather['day_clear'],
       font  = icons.font .. icons.size * 12,
       color = color.bg3
    })
-   _C.desc = helpers.ctext({
+   _C.desc = widget.textbox.colored({
       text = 'No weather info',
       font = beautiful.font_bitm .. beautiful.bitm_size * 2
    })
-   _C.humy = helpers.ctext({
+   _C.humy = widget.textbox.colored({
       text  = 'Humidity: N/A',
       color = color.fg2
    })
-   _C.temp = helpers.ctext({
+   _C.temp = widget.textbox.colored({
       text  = 'N/A',
       align = 'right',
       font  = beautiful.font_bitm .. beautiful.bitm_size * 2
    })
-   _C.feel = helpers.ctext({
+   _C.feel = widget.textbox.colored({
       text  = 'N/A',
       align = 'right',
       color = color.fg2
@@ -44,23 +46,23 @@ return function()
    })
 
    local function hourly(index)
-      local time = helpers.ctext({
+      local time = widget.textbox.colored({
          text  = '+' .. string.format('%02d', index) .. ':00',
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
          color = color.fg1
       })
-      local icon = helpers.ctext({
+      local icon = widget.textbox.colored({
          text  = icons.weather['day_clear'],
          font  = icons.font .. icons.size * 2,
          align = 'center'
       })
-      local temp = helpers.ctext({
+      local temp = widget.textbox.colored({
          text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center'
       })
-      local humy = helpers.ctext({
+      local humy = widget.textbox.colored({
          text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
@@ -91,9 +93,9 @@ return function()
    end
 
    for i = 1, 6, 1 do
-      local widget = hourly(i)
-      table.insert(_H, widget)
-      hour_widgets:add(widget)
+      local w = hourly(i)
+      table.insert(_H, w)
+      hour_widgets:add(w)
    end
 
    -- Daily weather widgets!
@@ -106,23 +108,23 @@ return function()
    local weekdays = { 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' }
 
    local function daily(index)
-      local time = helpers.ctext({
+      local time = widget.textbox.colored({
          text  = '+' .. index,
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
          color = color.fg1
       })
-      local icon = helpers.ctext({
+      local icon = widget.textbox.colored({
          text  = icons.weather['day_clear'],
          font  = icons.font .. icons.size * 2,
          align = 'center'
       })
-      local max = helpers.ctext({
+      local max = widget.textbox.colored({
          text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center'
       })
-      local min = helpers.ctext({
+      local min = widget.textbox.colored({
          text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
@@ -152,9 +154,9 @@ return function()
    end
 
    for i = 1, 6, 1 do
-      local widget = daily(i)
-      table.insert(_D, widget)
-      day_widgets:add(widget)
+      local w = daily(i)
+      table.insert(_D, w)
+      day_widgets:add(w)
    end
 
    -- Switch between hourly and daily forecast.
@@ -168,7 +170,7 @@ return function()
             left = dpi(8), right = dpi(8)
          },
          {
-            widget = helpers.ctext({
+            widget = widget.textbox.colored({
                text  = 'By Hour',
                align = 'center'
             }),
@@ -188,7 +190,7 @@ return function()
             left = dpi(8), right = dpi(8)
          },
          {
-            widget = helpers.ctext({
+            widget = widget.textbox.colored({
                text  = 'By Day',
                align = 'center',
                color = color.fg2
@@ -241,7 +243,7 @@ return function()
       }
    })
 
-   local widget = wibox.widget({
+   local w = wibox.widget({
       widget = wibox.container.background,
       bg     = color.bg1,
       border_width = dpi(1),
@@ -293,7 +295,7 @@ return function()
 
    -- Global signals won't cut it, they get emitted before this widget is even drawn.
    weather:connect_signal('weather::data', function(_, info)
-      widget.visible = true
+      w.visible = true
 
       -- Current.
       _C.desc.text = info.description
@@ -303,19 +305,19 @@ return function()
       _C.icon.text = icons.weather[info.icon]
 
       -- Hourly.
-      for i, w in ipairs(_H) do
-         w.time = os.date('%H')
-         w.icon = icons.weather[info.by_hour[i].icon]
-         w.temp = info.by_hour[i].temp
-         w.humy = info.by_hour[i].humidity
+      for i, h in ipairs(_H) do
+         h.time = os.date('%H')
+         h.icon = icons.weather[info.by_hour[i].icon]
+         h.temp = info.by_hour[i].temp
+         h.humy = info.by_hour[i].humidity
       end
 
       -- Daily.
-      for i, w in ipairs(_D) do
-         w.time = os.date('%w') + 1
-         w.icon = icons.weather[info.by_day[i].icon]
-         w.max  = info.by_day[i].max .. '°C'
-         w.min  = info.by_day[i].min .. '°C'
+      for i, d in ipairs(_D) do
+         d.time = os.date('%w') + 1
+         d.icon = icons.weather[info.by_day[i].icon]
+         d.max  = info.by_day[i].max .. '°C'
+         d.min  = info.by_day[i].min .. '°C'
       end
    end)
 
@@ -324,5 +326,5 @@ return function()
    -- when drawn for the first time.
    weather:request_data()
 
-   return widget
+   return w
 end

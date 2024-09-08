@@ -24,4 +24,3 @@ spawn_if_not_running('mpDris2')
 spawn_if_not_running('playerctld')
 -- X stuff.
 awful.spawn.once('setxkbmap -option caps:super us')
-awful.spawn.once('xsetroot -cursor_name left_ptr')

@@ -1,3 +1,5 @@
+local client = client
+
 -- Add a titlebar if titlebars_enabled is set to true for the client in `config/rules.lua`.
 client.connect_signal('request::titlebars', function(c)
    -- Some clients don't actually want to have a titlebar.

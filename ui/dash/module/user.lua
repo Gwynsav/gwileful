@@ -1,32 +1,37 @@
+local require, os, awesome = require, os, awesome
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
 local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
-local color = require(beautiful.colorscheme)
-local icons = require('theme.icons')
 
-local hp   = require('helpers')
-local conf = require('config.user')
+local color  = require(beautiful.colorscheme)
+local icons  = require('theme.icons')
+local widget = require('widget')
+local conf   = require('config.user')
 
-local pfp_widget = wibox.widget({
-   widget = wibox.widget.imagebox,
-   image  = gears.surface.crop_surface({
-      surface = beautiful.pfp,
-      ratio   = 7/3,
-      left    = dpi(48)
+local pfp_widget
+if not conf.lite or conf.lite == nil then
+   pfp_widget = wibox.widget({
+      widget = wibox.widget.imagebox,
+      image  = gears.surface.crop_surface({
+         surface = beautiful.pfp,
+         ratio   = 7/3,
+         left    = dpi(48)
+      })
    })
-})
+end
 
-local host = hp.ctext({
+local host = widget.textbox.colored({
    text  = '@host',
    font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
    align = 'right'
 })
 local user_at_host = wibox.widget({
    layout = wibox.layout.fixed.horizontal,
-   hp.ctext({
+   widget.textbox.colored({
       text  = os.getenv('USER') or 'user',
       font  = beautiful.font_bitm .. beautiful.bitm_size * 2,
       color = color.accent,
@@ -40,7 +45,7 @@ awful.spawn.easy_async_with_shell('uname -n', function(out)
 end)
 
 -- Updated every minute.
-local uptime_widget = hp.ctext({
+local uptime_widget = widget.textbox.colored({
    text  = 'Uptime Unknown!',
    color = color.fg1,
    align = 'right'
@@ -57,21 +62,21 @@ gears.timer({
 })
 
 local function button(icon, action)
-   local widget = hp.ctext({
+   local w = widget.textbox.colored({
       font = icons.font .. icons.size * 2,
       text = icon
    })
-   widget.buttons = { awful.button(nil, 1, action) }
-   widget.set_action = function(self, new_action)
+   w.buttons = { awful.button(nil, 1, action) }
+   w.set_action = function(self, new_action)
       self.buttons = { awful.button(nil, 1, new_action) }
    end
-   widget:connect_signal('mouse::enter', function(self)
+   w:connect_signal('mouse::enter', function(self)
       self.color = color.red
    end)
-   widget:connect_signal('mouse::leave', function(self)
+   w:connect_signal('mouse::leave', function(self)
       self.color = color.fg0
    end)
-   return widget
+   return w
 end
 
 -- Power options revealer.

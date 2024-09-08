@@ -1,3 +1,5 @@
+local require = require
+
 local user = require('config.user')
 
 local colorscheme = user.colorscheme or 'rose-pine'

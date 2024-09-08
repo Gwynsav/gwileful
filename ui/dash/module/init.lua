@@ -1,3 +1,4 @@
+local require = require
 local path = ... .. '.'
 return setmetatable({}, {
    __index = function(_, key)

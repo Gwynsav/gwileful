@@ -1,14 +1,18 @@
+local require = require
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local color = require(beautiful.colorscheme)
+local widget = require('widget')
+local color  = require(beautiful.colorscheme)
 
 return function(s)
-   -- Create an imagebox widget which will contain an icon indicating which layout we're using.
+   -- Create a textbox widget which will contain an icon indicating which layout we're using.
    -- We need one layoutbox per screen.
+   -- NOTE: the layoutbox widget used here is custom and can be found at `widget.layoutbox`.
    local layout = wibox.widget({
       widget = wibox.container.background,
       bg     = color.bg1,
@@ -33,7 +37,7 @@ return function(s)
                   widget = wibox.container.constraint,
                   strategy = 'exact',
                   height = dpi(9),
-                  awful.widget.layoutbox({ screen = s })
+                  widget.layoutbox({ screen = s })
                }
             },
             {

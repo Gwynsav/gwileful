@@ -1,4 +1,5 @@
 --- Notifications
+local require = require
 
 -- Something particularly odd about naughty is that you must set position and screen
 -- setting through ruled, since trying to do that on the `naughty.notification.layout_box`

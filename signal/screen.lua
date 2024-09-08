@@ -1,3 +1,5 @@
+local require, screen, table = require, screen, table
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 
@@ -36,6 +38,7 @@ end)
 -- background. IF YOU JUST WISH TO SET THE ROOT WINDOW BACKGROUND, you 
 -- may want to use the deprecated `gears.wallpaper` instead. This is 
 -- the most common case of just wanting to set an image as wallpaper.
+
 -- screen.connect_signal('request::wallpaper', function(s)
 --    awful.wallpaper({
 --       screen = s,
@@ -56,6 +59,7 @@ end)
 --       }
 --    })
 -- end)
+
 -- An example of what's mentioned above. For more information, see:
 -- https://awesomewm.org/apidoc/utility_libraries/gears.wallpaper.html
 require('gears').wallpaper.maximized(beautiful.wallpaper)

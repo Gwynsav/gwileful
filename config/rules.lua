@@ -1,3 +1,5 @@
+local require, screen = require, screen
+
 local awful = require('awful')
 local ruled = require('ruled')
 

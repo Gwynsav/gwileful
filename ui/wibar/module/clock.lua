@@ -1,9 +1,12 @@
+local require, os = require, os
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local widget  = require('widget')
 local helpers = require('helpers')
 local color   = require(beautiful.colorscheme)
 local icons   = require('theme.icons')
@@ -67,14 +70,14 @@ return function(s)
          layout = wibox.layout.fixed.horizontal,
          spacing = dpi(6),
          {
-            widget = helpers.ctext({
+            widget = widget.textbox.colored({
                text = icons.weather['net_none'],
                font = icons.font .. icons.size
             }),
             id = 'icon'
          },
          {
-            widget = helpers.ctext({
+            widget = widget.textbox.colored({
                text = 'N/A'
             }),
             id = 'temp'

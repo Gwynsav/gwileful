@@ -1,11 +1,13 @@
+local require, math = require, math
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local widget  = require('widget')
 local pctl    = require('module.bling').signal.playerctl.lib()
-local helpers = require('helpers')
 local audio   = require('signal.system.audio')
 local color   = require(beautiful.colorscheme)
 local icons   = require('theme.icons')
@@ -18,7 +20,7 @@ local icons   = require('theme.icons')
 --    - bar_action, what to do with new values of the slider.
 local function slider(args)
    -- Icon.
-   local icon = helpers.ctext({
+   local icon = widget.textbox.colored({
       text = args.icon,
       font = icons.font .. icons.size
    })
@@ -30,7 +32,7 @@ local function slider(args)
       self.color = color.fg0
    end)
 
-   local label = helpers.ctext({ text = args.label })
+   local label = widget.textbox.colored({ text = args.label })
 
    -- Slider.
    local bar = wibox.widget({
@@ -66,7 +68,7 @@ local function slider(args)
    end)
 
    -- Non-interactable level.
-   local level = helpers.ctext({ text = 'N/A' })
+   local level = widget.textbox.colored({ text = 'N/A' })
 
    return wibox.widget({
       widget   = wibox.container.constraint,

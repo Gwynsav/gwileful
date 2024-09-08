@@ -1,3 +1,5 @@
+local require, math, string, collectgarbage = require, math, string, collectgarbage
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
@@ -6,57 +8,63 @@ local wibox     = require('wibox')
 local dpi   = beautiful.xresources.apply_dpi
 local pctl  = require('signal.system.playerctl')
 
-local hp     = require('helpers')
+local widget = require('widget')
 local color  = require(beautiful.colorscheme)
 local icons  = require('theme.icons')
 local player = require('ui.scratch').music
+local user   = require('config.user')
 
 return function()
+   -- The art is a bit special.
+   local song_art = wibox.widget.imagebox()
+   if not user.lite or user.lite == nil then
+      song_art.image = gears.surface.crop_surface({
+         ratio   = 3,
+         surface = beautiful.wallpaper
+      })
+   end
+
    local function button(icon, action)
-      local widget = hp.ctext({
+      local w = widget.textbox.colored({
          text = icon,
          font = icons.font .. icons.size
       })
-      widget.buttons = { awful.button({}, 1, action) }
-      widget:connect_signal('mouse::enter', function(self)
+      w.buttons = { awful.button({}, 1, action) }
+      w:connect_signal('mouse::enter', function(self)
          self.color = color.bccent
       end)
-      widget:connect_signal('mouse::leave', function(self)
+      w:connect_signal('mouse::leave', function(self)
          self.color = color.fg0
       end)
-      return widget
+      return w
    end
 
    local song_icon   = button(icons['music'], function() player:turn_on() end)
-   local song_status = hp.ctext({
+   local song_status = widget.textbox.colored({
       text  = 'Paused',
       color = color.fg1
    })
-   local song_player = hp.ctext({
+   local song_player = widget.textbox.colored({
       text  = 'Source Unknown',
       color = color.fg1,
       align = 'right'
    })
-   local song_title  = hp.stext({
+   local song_title  = widget.textbox.scrolling({
       text  = 'Nothing Playing',
       font  = beautiful.font_mono .. beautiful.bitm_size
    })
-   local song_artist = hp.stext({
+   local song_artist = widget.textbox.scrolling({
       text  = 'by Unknown',
       font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg1
    })
-   local song_album  = hp.stext({
+   local song_album  = widget.textbox.scrolling({
       text  = 'No album',
       font  = beautiful.font_mono .. beautiful.bitm_size,
       color = color.fg2
    })
-   local song_art    = wibox.widget.imagebox(gears.surface.crop_surface({
-      ratio   = 3,
-      surface = beautiful.wallpaper
-   }))
 
-   local prog_text   = hp.ctext({
+   local prog_text   = widget.textbox.colored({
       text  = '00:00 / 00:00',
       font  = beautiful.font,
       color = color.fg1
@@ -74,14 +82,14 @@ return function()
    local back = button(icons['music_previous'], function() pctl:previous() end)
    local forward = button(icons['music_next'], function() pctl:next() end)
    local loop = button(icons['music_loop'], function() pctl:cycle_loop_status() end)
-   local loop_text = hp.ctext({ text = 'None' })
+   local loop_text = widget.textbox.colored({ text = 'None' })
    local shuffle = button(icons['music_shuffle'], function() pctl:cycle_shuffle() end)
    local last_shuffle = false
    shuffle:connect_signal('mouse::leave', function(self)
       self.color = last_shuffle and color.accent or color.fg0
    end)
 
-   local widget = wibox.widget({
+   local w = wibox.widget({
       layout = wibox.layout.stack,
       song_art,
       {
@@ -184,11 +192,14 @@ return function()
          song_title.text  = gears.string.xml_unescape(title or 'Unknown')
          song_artist.text = 'by ' .. (gears.string.xml_unescape(artist or 'Unknown'))
          song_album.text  = 'on ' .. (gears.string.xml_unescape(album or 'Unknown'))
-         song_art.image   = gears.surface.crop_surface({
-            ratio   = 3,
-            surface = gears.surface.load_uncached(cover or beautiful.wallpaper)
-         })
          song_player.text = 'via ' .. source
+         -- Update image only if desired.
+         if not user.lite or user.lite == nil then
+            song_art.image   = gears.surface.crop_surface({
+               ratio   = 3,
+               surface = gears.surface.load_uncached(cover or beautiful.wallpaper)
+            })
+         end
 
          -- Update last poll info.
          last_poll.title  = title
@@ -246,5 +257,5 @@ return function()
       last_poll.prog = new
    end)
 
-   return widget
+   return w
 end

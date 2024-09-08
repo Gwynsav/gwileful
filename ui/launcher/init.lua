@@ -1,6 +1,7 @@
 -- Logic based largely (carbon copied, for the most part) on Stardust-kyun's launcher.
 -- I removed mouse support :P
 -- https://github.com/Stardust-kyun/dotfiles/blob/126b2df5edbec8044cbdbf13fb261f935311f6fe/home/.config/awesome/theme/launcher.lua
+local require, table, ipairs = require, table, ipairs
 
 local awful     = require('awful')
 local beautiful = require('beautiful')
@@ -10,11 +11,20 @@ local wibox     = require('wibox')
 local dpi = beautiful.xresources.apply_dpi
 local gio = require('lgi').Gio
 
+local user  = require('config.user')
 local color = require(beautiful.colorscheme)
 local height, width, margin = 220, 540, 6
 local entry_max = 12
 
 return function(s)
+   local default
+   if not user.lite or user.lite == nil then
+      default = gears.surface.crop_surface({
+         ratio   = width / height,
+         surface = beautiful.wallpaper
+      })
+   end
+
    local launcher = wibox({
       visible = false,
       ontop   = true,
@@ -42,10 +52,7 @@ return function(s)
       layout = wibox.layout.stack,
       {
          widget = wibox.widget.imagebox,
-         image  = gears.surface.crop_surface({
-            ratio   = width / height,
-            surface = beautiful.wallpaper
-         })
+         image  = default
       },
       {
          widget = wibox.container.background,

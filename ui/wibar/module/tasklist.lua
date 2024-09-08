@@ -1,3 +1,5 @@
+local require, awesome = require, awesome
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
@@ -7,47 +9,50 @@ local dpi = beautiful.xresources.apply_dpi
 
 local bling = require('module.bling')
 local color = require(beautiful.colorscheme)
+local user  = require('config.user')
 
 return function(s)
-   -- Enable and customize the task preview widget.
-   bling.widget.task_preview.enable({
-      placement_fn = function(c)
-         awful.placement.next_to(c, {
-            margins = { top = beautiful.useless_gap },
-            preferred_positions = 'bottom',
-            preferred_anchors   = 'middle',
-            geometry            = s.bar
-         })
-      end,
-      structure = {
-         widget = wibox.container.background,
-         bg     = color.bg1,
-         border_width = dpi(1),
-         border_color = color.bg3,
-         {
-            widget  = wibox.container.margin,
-            margins = {
-               top = dpi(6), bottom = dpi(8),
-               left = dpi(8), right = dpi(8)
-            },
+   if not user.lite or user.lite == nil then
+      -- Enable and customize the task preview widget.
+      bling.widget.task_preview.enable({
+         placement_fn = function(c)
+            awful.placement.next_to(c, {
+               margins = { top = beautiful.useless_gap },
+               preferred_positions = 'bottom',
+               preferred_anchors   = 'middle',
+               geometry            = s.bar
+            })
+         end,
+         structure = {
+            widget = wibox.container.background,
+            bg     = color.bg1,
+            border_width = dpi(1),
+            border_color = color.bg3,
             {
-               layout  = wibox.layout.fixed.vertical,
-               spacing = dpi(4),
-               {
-                  widget = wibox.widget.textbox,
-                  id     = 'name_role'
+               widget  = wibox.container.margin,
+               margins = {
+                  top = dpi(6), bottom = dpi(8),
+                  left = dpi(8), right = dpi(8)
                },
                {
-                  widget = wibox.widget.imagebox,
-                  resize = true,
-                  valign = 'center',
-                  halign = 'center',
-                  id     = 'image_role'
+                  layout  = wibox.layout.fixed.vertical,
+                  spacing = dpi(4),
+                  {
+                     widget = wibox.widget.textbox,
+                     id     = 'name_role'
+                  },
+                  {
+                     widget = wibox.widget.imagebox,
+                     resize = true,
+                     valign = 'center',
+                     halign = 'center',
+                     id     = 'image_role'
+                  }
                }
             }
          }
-      }
-   })
+      })
+   end
 
    -- Create a tasklist widget.
    return awful.widget.tasklist({

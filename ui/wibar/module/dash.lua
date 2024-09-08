@@ -1,35 +1,61 @@
+local require = require
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local gears     = require('gears')
 local wibox     = require('wibox')
 
-local color   = require(beautiful.colorscheme)
-local helpers = require('helpers')
-local icons   = require('theme.icons')
+local dpi = beautiful.xresources.apply_dpi
+
+local color  = require(beautiful.colorscheme)
+local widget = require('widget')
+local icons  = require('theme.icons')
+local user   = require('config.user')
 
 -- Create a launcher widget. Opens the Awesome menu when clicked.
 return function(s)
-   local arrow = helpers.ctext({
+   local arrow = widget.textbox.colored({
       text  = icons['arrow_down'],
       font  = icons.font .. icons.size,
       align = 'center'
    })
 
-   local widget = wibox.widget({
+   local idle
+   if not user.lite or user.lite == nil then
+      idle = wibox.widget({
+         widget = wibox.widget.imagebox,
+         image  = beautiful.pfp,
+         vertical_fit_policy   = 'fit',
+         horizontal_fit_policy = 'fit'
+      })
+   else
+      idle = wibox.widget({
+         widget  = wibox.container.margin,
+         margins = {
+            left = dpi(7), right = dpi(7)
+         },
+         widget.textbox.colored({
+            text  = icons['util_hamburger'],
+            font  = icons.font .. icons.size
+         })
+      })
+   end
+
+   local w = wibox.widget({
       widget = wibox.container.background,
-      shape = function(cr, w, h)
+      bg     = color.bg1,
+      shape  = function(cr, w, h)
          gears.shape.circle(cr, w, h)
       end,
+      forced_height = dpi(23),
+      forced_width = dpi(23),
       {
          layout = wibox.layout.stack,
-         {
-            widget = wibox.widget.imagebox,
-            image = beautiful.pfp
-         },
+         idle,
          {
             widget = wibox.container.background,
             visible = false,
-            bg = color.bg1 .. 'C0',
+            bg = color.bg2 .. 'C0',
             id = 'hover_over',
             arrow
          }
@@ -44,13 +70,13 @@ return function(s)
          self:get_children_by_id('hover_over')[1].visible = bool
       end
    })
-   widget:connect_signal('mouse::enter', function(self)
+   w:connect_signal('mouse::enter', function(self)
       self.hover = true
       arrow.direction = s.dash.visible and 'north' or 'south'
    end)
-   widget:connect_signal('mouse::leave', function(self)
+   w:connect_signal('mouse::leave', function(self)
       self.hover = false
    end)
 
-   return widget
+   return w
 end

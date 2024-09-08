@@ -1,10 +1,11 @@
+local require, os = require, os
+
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
-local dpi = beautiful.xresources.apply_dpi
-
 local helpers = require('helpers')
-local color = require(beautiful.colorscheme)
+local widget  = require('widget')
+local color   = require(beautiful.colorscheme)
 
 return function()
    local hour = wibox.widget({
@@ -15,7 +16,7 @@ return function()
       halign  = 'center'
    })
 
-   local date = helpers.ctext({
+   local date = widget.textbox.colored({
       color = color.fg2,
       align = 'center'
    })

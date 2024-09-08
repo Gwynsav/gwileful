@@ -1,5 +1,6 @@
 -- From Myagko, see:
 -- https://github.com/myagko/dotfiles/blob/0122545e8245d11852fb6785be8fc72c41928574/home/.config/awesome/ui/calendar.lua
+local require, math, os = require, math, os
 
 local awful = require("awful")
 local wibox = require("wibox")

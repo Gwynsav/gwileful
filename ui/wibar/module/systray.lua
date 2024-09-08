@@ -1,12 +1,14 @@
+local require = require
+
 local awful     = require('awful')
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
-local helpers = require('helpers')
-local color = require(beautiful.colorscheme)
-local icons = require('theme.icons')
+local widget = require('widget')
+local color  = require(beautiful.colorscheme)
+local icons  = require('theme.icons')
 
 return function()
    -- The systray itself.
@@ -48,7 +50,7 @@ return function()
    })
 
    -- The arrow image.
-   local switch = helpers.ctext({
+   local switch = widget.textbox.colored({
       text  = icons['arrow_left'],
       font  = icons.font .. icons.size,
       align = 'center'

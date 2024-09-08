@@ -1,3 +1,5 @@
+local require = require
+
 local awful = require('awful')
 
 local menu = require('ui.menu')

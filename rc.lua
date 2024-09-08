@@ -26,10 +26,6 @@ end)
 local awful = require('awful')
 awful.spawn('mkdir -p ' .. os.getenv('HOME') .. '/.local/data/awesome')
 
--- Start system status polls.
--- TODO: make it all async using LGI C/dbus bindings.
--- require('signal.system.polls')
-
 -- Load the theme. In other words, defines the variables within the `beautiful` table.
 require('theme')
 
@@ -45,4 +41,3 @@ require('config.rules')
 
 -- Run startup commands.
 require('config.auto')
-

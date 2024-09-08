@@ -1,3 +1,5 @@
+local require = require
+
 local beautiful = require('beautiful')
 local wibox     = require('wibox')
 
@@ -6,7 +8,7 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.time.module')
 
-local width, height, margin = dpi(300), dpi(344), dpi(6)
+local width, height, margin = dpi(300), dpi(354), dpi(6)
 
 return function(s)
    local panel = wibox({

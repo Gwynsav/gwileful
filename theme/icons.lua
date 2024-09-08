@@ -1,6 +1,7 @@
 local _I = {
    battery = {},
-   weather = {}
+   weather = {},
+   layout  = {}
 }
 
 _I.font = 'gwnce '
@@ -71,6 +72,17 @@ _I['mic_muted']    = ''
 _I['mic_decrease'] = ''
 _I['mic_increase'] = ''
 
+-- Titlebar.
+_I['title_pin']      = ''
+_I['title_minimize'] = ''
+_I['title_maximize'] = ''
+_I['title_close']    = ''
+-- Layout.
+_I.layout['floating']   = ''
+_I.layout['tile']       = ''
+_I.layout['tileleft']   = ''
+_I.layout['tilebottom'] = ''
+
 -- Arrows.
 _I['arrow_up']    = ''
 _I['arrow_right'] = ''
@@ -79,10 +91,5 @@ _I['arrow_left']  = ''
 -- Miscelaneous.
 _I['util_magnifier'] = ''
 _I['util_hamburger'] = ''
--- Titlebar.
-_I['title_pin']      = ''
-_I['title_minimize'] = ''
-_I['title_maximize'] = ''
-_I['title_close']    = ''
 
 return _I
