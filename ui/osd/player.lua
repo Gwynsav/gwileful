@@ -250,8 +250,8 @@ return function(s)
       if new_osd == osd then return end
       -- Otherwise stop the timer and hide the osd if the timer is running.
       if timer.started then
-         osd.visible = false
          timer:stop()
+         osd.visible = false
       end
    end)
 

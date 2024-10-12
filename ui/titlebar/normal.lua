@@ -12,27 +12,35 @@ local widget = require('widget')
 local color  = require(beautiful.colorscheme)
 local icons  = require('theme.icons')
 
-local _SIZE = dpi(9)
-local _MARGIN = dpi(4)
-local _EDGE = dpi(11) - _MARGIN
-
 --- The titlebar to be used on normal clients.
 return function(c)
    local function button(icon, hover, action)
       local w = wibox.widget({
-         widget = wibox.container.margin,
-         margins = { left = _MARGIN, right = _MARGIN },
+         widget = wibox.container.background,
+         bg     = color.bg2 .. '90',
+         border_width = dpi(1),
+         border_color = color.bg3,
          {
-            widget = widget.textbox.colored({
-               text  = icon,
-               font  = icons.font .. icons.size,
-               align = 'center'
-            }),
-            id = 'image_role'
+            widget = wibox.container.margin,
+            margins = { left = dpi(5), right = dpi(5) },
+            {
+               widget = widget.textbox.colored({
+                  text  = icon,
+                  font  = icons.font .. icons.size,
+                  align = 'center'
+               }),
+               id = 'image_role'
+            }
          },
          buttons = { awful.button(nil, 1, action) },
-         set_col = function(self, col)
-            self:get_children_by_id('image_role')[1].color = col
+         set_fg_col = function(self, fg)
+            self:get_children_by_id('image_role')[1].color = fg
+         end,
+         set_bd_col = function(self, bd)
+            self.border_color = bd
+         end,
+         set_bg_col = function(self, bg)
+            self.bg = bg
          end
       })
 
@@ -48,10 +56,14 @@ return function(c)
 
       -- Adjust colors when hovering.
       w:connect_signal('mouse::enter', function(self)
-         self.col = hover
+         self.fg_col = hover
+         self.bd_col = hover
+         self.bg_col = color.bg2
       end)
       w:connect_signal('mouse::leave', function(self)
-         self.col = color.fg0
+         self.fg_col = color.fg0
+         self.bd_col = color.bg3
+         self.bg_col = color.bg2 .. '90'
       end)
 
       return w
@@ -70,8 +82,8 @@ return function(c)
          {
             widget = wibox.container.margin,
             margins = {
-               left = _SIZE+2, right = _SIZE+2,
-               top = _SIZE+2, bottom = _SIZE+2
+               left = dpi(11), right = dpi(11),
+               top = dpi(11), bottom = dpi(11)
             },
             {
                widget = wibox.widget.textbox,
@@ -101,10 +113,7 @@ return function(c)
             layout  = wibox.layout.fixed.horizontal,
             {
                widget  = wibox.container.margin,
-               margins = {
-                  left   = _EDGE+1,
-                  right  = _EDGE+1
-               },
+               margins = dpi(6),
                button(icons['title_pin'], color.accent,
                   function()
                      c.sticky = not c.sticky
@@ -133,13 +142,10 @@ return function(c)
             },
             {
                widget  = wibox.container.margin,
-               margins = {
-                  left   = _EDGE+1,
-                  right  = _EDGE+1
-               },
+               margins = dpi(7),
                {
                   layout  = wibox.layout.fixed.horizontal,
-                  spacing = dpi(1),
+                  spacing = dpi(2),
                   button(icons['title_minimize'], color.accent,
                      function()
                         gears.timer.delayed_call(function()

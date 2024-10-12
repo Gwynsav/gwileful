@@ -41,7 +41,14 @@ return function(s)
    local center = wibox.widget({
       widget = wibox.container.background,
       bg     = color.bg1 .. '80',
-      module.tasklist(s)
+      {
+         widget  = wibox.container.margin,
+         margins = {
+            left = dpi(9), right = dpi(9),
+            top = dpi(6), bottom = dpi(6)
+         },
+         module.tasklist(s)
+      }
    })
 
    -- Right widgets.

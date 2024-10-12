@@ -14,7 +14,7 @@ local mod    = require('binds.mod')
 local modkey = mod.modkey
 
 return function(s)
-   if not user.lite or user.lite == nil then
+   if (not user.lite or user.lite == nil) then
       -- Enable and customize the tag preview widget.
       bling.widget.tag_preview.enable({
          show_client_content = true,
@@ -103,15 +103,17 @@ return function(s)
 
             -- Show a preview of the tag if it's hovered for a second.
             local visible, hovered = false, false
-            local timer   = gears.timer({
+            local timer = gears.timer({
                timeout     = 1,
                single_shot = true,
                callback    = function()
-                  if not visible and hovered then
-                     if #tag:clients() > 0 then
-                        visible = true
-                        awesome.emit_signal('bling::tag_preview::update', tag)
-                        awesome.emit_signal("bling::tag_preview::visibility", s, true)
+                  if not client.focus or not client.focus.fullscreen then
+                     if not visible and hovered then
+                        if #tag:clients() > 0 then
+                           visible = true
+                           awesome.emit_signal('bling::tag_preview::update', tag)
+                           awesome.emit_signal("bling::tag_preview::visibility", s, true)
+                        end
                      end
                   end
                end

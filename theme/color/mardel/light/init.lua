@@ -10,14 +10,13 @@ _C.fg1 = '#666666'
 _C.fg0 = '#404040'
 
 _C.red     = '#ac3251'
-_C.green   = '#5c7b2d'
-_C.yellow  = '#a47c33'
-_C.blue    = '#2b699e'
-_C.magenta = '#c15072'
-_C.cyan    = '#2f7ba0'
+_C.green   = '#465e21'
+_C.yellow  = '#865329'
+_C.blue    = '#254f88'
+_C.magenta = '#97356f'
+_C.cyan    = '#226277'
 
 _C.accent = _C.green
 _C.bccent = _C.blue
 
 return _C
-

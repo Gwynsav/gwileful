@@ -30,7 +30,7 @@ else
 end
 
 -- Fonts
-_T.font_bitm = 'satori '
+_T.font_bitm = 'angwish sans '
 _T.font_mono = 'angwish '
 _T.bitm_size = dpi(9)
 

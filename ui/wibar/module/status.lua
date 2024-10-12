@@ -48,14 +48,22 @@ local battery_widget = wibox.widget({
       battery_level
    }
 })
-battery:connect_signal('update', function(_, percent, state, level, _, _)
+battery:connect_signal('update', function(_, percent, state, _, _, _)
    battery_widget.visible = true
 
    battery_level.text = percent .. '%'
    if state == 'CHARGING' or state == 'FULLY_CHARGED' then
       battery_icon.text = icons.battery[state]
+   elseif percent >= 95 then
+      battery_icon.text = icons.battery['FULL']
+   elseif percent >= 70 then
+      battery_icon.text = icons.battery['HIGH']
+   elseif percent >= 40 then
+      battery_icon.text = icons.battery['NORMAL']
+   elseif percent >= 20 then
+      battery_icon.text = icons.battery['LOW']
    else
-      battery_icon.text = icons.battery[level]
+      battery_icon.text = icons.battery['CRITICAL']
    end
 end)
 

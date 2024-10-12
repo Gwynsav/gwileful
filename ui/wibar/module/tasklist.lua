@@ -1,4 +1,4 @@
-local require, awesome = require, awesome
+local require, awesome, client = require, awesome, client
 
 local awful     = require('awful')
 local beautiful = require('beautiful')
@@ -12,7 +12,7 @@ local color = require(beautiful.colorscheme)
 local user  = require('config.user')
 
 return function(s)
-   if not user.lite or user.lite == nil then
+   if (not user.lite or user.lite == nil) then
       -- Enable and customize the task preview widget.
       bling.widget.task_preview.enable({
          placement_fn = function(c)
@@ -74,7 +74,8 @@ return function(s)
          awful.button(nil, 5, function() awful.client.focus.byidx( 1) end)
       },
       layout = {
-         layout = wibox.layout.flex.horizontal
+         layout  = wibox.layout.flex.horizontal,
+         spacing = dpi(6)
       },
       style = {
          -- Colors.
@@ -82,10 +83,15 @@ return function(s)
          fg_minimize = color.bg4,
          bg_normal   = color.bg1,
          fg_normal   = color.fg2,
-         bg_focus    = color.transparent,
+         bg_focus    = color.bg2 .. '80',
          fg_focus    = color.accent,
-         bg_urgent   = color.red,
-         fg_urgent   = color.bg0,
+         bg_urgent   = color.bg1,
+         fg_urgent   = color.red,
+         shape_border_width           = dpi(1),
+         shape_border_color           = color.bg3,
+         shape_border_color_focus     = color.bg4 .. 'BF',
+         shape_border_color_minimized = color.bg2,
+         shape_border_color_urgent    = color.red,
          -- Styling.
          font         = beautiful.font,
          disable_icon = true,
@@ -98,11 +104,10 @@ return function(s)
       },
       widget_template = {
          widget = wibox.container.background,
-         id     = 'background_role',
+         id = 'background_role',
          {
             widget  = wibox.container.margin,
             margins = {
-               top = dpi(7), bottom = dpi(7),
                left = dpi(13), right = dpi(13)
             },
             {
@@ -114,13 +119,15 @@ return function(s)
          create_callback = function(self, task)
             -- Show a preview of the task if it's hovered for a second.
             local visible, hovered = false, false
-            local timer   = gears.timer({
+            local timer = gears.timer({
                timeout     = 1,
                single_shot = true,
                callback    = function()
-                  if not visible and hovered then
-                     visible = true
-                     awesome.emit_signal("bling::task_preview::visibility", s, true, task)
+                  if not client.focus or not client.focus.fullscreen then
+                     if not visible and hovered then
+                        visible = true
+                        awesome.emit_signal("bling::task_preview::visibility", s, true, task)
+                     end
                   end
                end
             })

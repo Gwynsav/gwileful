@@ -8,7 +8,7 @@ local dpi = beautiful.xresources.apply_dpi
 local color = require(beautiful.colorscheme)
 local mods  = require('ui.time.module')
 
-local width, height, margin = dpi(300), dpi(354), dpi(6)
+local width, height, margin = dpi(300), dpi(370), dpi(6)
 
 return function(s)
    local panel = wibox({
@@ -35,7 +35,8 @@ return function(s)
             },
             {
                widget = wibox.container.constraint,
-               height = dpi(250),
+               strategy = 'exact',
+               height = dpi(270),
                mods.calendar.main_widget
             },
             mods.weather()

@@ -24,12 +24,24 @@ local function slider(args)
       text = args.icon,
       font = icons.font .. icons.size
    })
-   icon.buttons = { awful.button(nil, 1, args.icon_click) }
-   icon:connect_signal('mouse::enter', function(self)
-      self.color = color.accent
+   local iconbox = wibox.widget({
+      widget = wibox.container.background,
+      bg = color.bg2,
+      {
+         widget = wibox.container.margin,
+         margins = {
+            top = dpi(5), bottom = dpi(3),
+            left = dpi(7), right = dpi(7)
+         },
+         icon
+      }
+   })
+   iconbox.buttons = { awful.button(nil, 1, args.icon_click) }
+   iconbox:connect_signal('mouse::enter', function()
+      icon.color = color.accent
    end)
-   icon:connect_signal('mouse::leave', function(self)
-      self.color = color.fg0
+   iconbox:connect_signal('mouse::leave', function()
+      icon.color = color.fg0
    end)
 
    local label = widget.textbox.colored({ text = args.label })
@@ -41,8 +53,6 @@ local function slider(args)
       bar_color  = color.bg1,
       handle_width = dpi(4),
       handle_border_width = 0,
-      bar_border_width = dpi(2),
-      bar_border_color = color.bg3,
       bar_active_color = color.bg2,
       handle_color = color.bg3,
       minimum = 0,
@@ -70,34 +80,48 @@ local function slider(args)
    -- Non-interactable level.
    local level = widget.textbox.colored({ text = 'N/A' })
 
+   local border = wibox.widget({
+      widget = wibox.container.background,
+      border_width = dpi(1),
+      border_color = color.bg3
+   })
+   border:connect_signal('mouse::enter', function(self)
+      self.border_color = color.accent
+   end)
+   border:connect_signal('mouse::leave', function(self)
+      self.border_color = color.bg3
+   end)
+
    return wibox.widget({
       widget   = wibox.container.constraint,
       strategy = 'exact',
       height   = dpi(21),
       {
-         layout = wibox.layout.stack,
-         bar,
+         widget = border,
          {
-            widget  = wibox.container.margin,
-            margins = {
-               top = dpi(5), bottom = dpi(3),
-               left = dpi(7), right = dpi(7)
-            },
+            layout = wibox.layout.fixed.horizontal,
+            iconbox,
             {
-               layout = wibox.layout.align.horizontal,
+               layout = wibox.layout.stack,
+               bar,
                {
-                  layout  = wibox.layout.fixed.horizontal,
-                  spacing = dpi(7),
-                  icon,
+                  widget  = wibox.container.margin,
+                  margins = {
+                     top = dpi(5), bottom = dpi(3),
+                     right = dpi(7)
+                  },
                   {
-                     widget   = wibox.container.constraint,
-                     strategy = 'max',
-                     width    = dpi(200),
-                     label
+                     layout = wibox.layout.align.horizontal,
+                     {
+                        widget   = wibox.container.constraint,
+                        strategy = 'max',
+                        width    = dpi(200),
+                        label
+                     },
+                     nil,
+                     level
                   }
-               },
-               nil,
-               level
+               }
             }
          }
       },

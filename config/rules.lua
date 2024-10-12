@@ -54,6 +54,12 @@ ruled.client.connect_signal('request::rules', function()
       properties = { titlebars_enabled = true      }
    })
 
+   -- Prevent certain clients from forcibly claiming focus.
+   ruled.client.append_rule({
+      rule_any   = { class = { 'firefox', 'steam', 'discord' } },
+      properties = { focus = false }
+   })
+
    -- Map certain clients to certain workspaces.
    ruled.client.append_rule({
       rule_any = {
@@ -66,7 +72,7 @@ ruled.client.connect_signal('request::rules', function()
    })
    ruled.client.append_rule({
       rule_any = {
-         class = { 'Discord', 'discord', 'vesktop' }
+         class = { 'discord', 'vesktop' }
       },
       properties = { tag = screen[1].tags[user.tags - 1] }
    })

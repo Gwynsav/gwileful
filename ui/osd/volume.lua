@@ -25,6 +25,7 @@ return function(s)
       widget = wibox.widget.progressbar,
       background_color = color.bg1,
       color = color.fg0,
+      max_value = 100,
       margins = {
          left = dpi(9), right = dpi(9),
          top = dpi(6), bottom = dpi(6)
@@ -85,7 +86,7 @@ return function(s)
       else
          icon.text = icons['audio_decrease']
       end
-      progress.value = default_sink.volume / 100
+      progress.value = default_sink.volume
       label.text = default_sink.volume .. '%'
       -- Update reference values.
       old.mute  = default_sink.mute
@@ -115,8 +116,8 @@ return function(s)
       if new_osd == osd then return end
       -- Otherwise stop the timer and hide the osd if the timer is running.
       if timer.started then
-         osd.visible = false
          timer:stop()
+         osd.visible = false
       end
    end)
 
