@@ -47,10 +47,10 @@ return {
 
    -- Profile Picture.
    -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/gundamZOOM.jpg',
-   pfp = HOME .. 'Pictures/avatars/misuta-o-saru/foxZOOM.jpg',
+   -- pfp = HOME .. 'Pictures/avatars/misuta-o-saru/foxZOOM.jpg',
 
    -- Wallpaper.
-   wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
+   -- wallpaper = HOME .. 'Pictures/walls/flowers/YellowMacro.jpg',
    -- wallpaper = HOME .. 'Pictures/walls/abstract/GeometricalShape.jpg',
 
    -- Screenshots, they're only saved to this path when you select SAVE on the screenshot
