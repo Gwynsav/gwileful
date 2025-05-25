@@ -69,9 +69,11 @@ return {
    -- Most devices will just have 'BAT0' for the battery.
    -- battery_name = 'BAT0',
 
+   -- Avoid loading non-vital assets to save resources.
+   lite = true,
+
    -- Weather
    ----------
-   -- OpenWeather key and coordinates, requires an account to get.
-   weather_key    = 'very*very*longnumbergoeshere',
-   weather_coords = { 69.000, -4.200 }
+   -- area     = "New+York",
+   -- imperial = false
 }

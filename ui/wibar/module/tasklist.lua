@@ -11,8 +11,10 @@ local bling = require('module.bling')
 local color = require(beautiful.colorscheme)
 local user  = require('config.user')
 
+local preview = user.lite == nil or not user.lite
+
 return function(s)
-   if (not user.lite or user.lite == nil) then
+   if preview then
       -- Enable and customize the task preview widget.
       bling.widget.task_preview.enable({
          placement_fn = function(c)
@@ -117,32 +119,34 @@ return function(s)
             }
          },
          create_callback = function(self, task)
-            -- Show a preview of the task if it's hovered for a second.
-            local visible, hovered = false, false
-            local timer = gears.timer({
-               timeout     = 1,
-               single_shot = true,
-               callback    = function()
-                  if not client.focus or not client.focus.fullscreen then
-                     if not visible and hovered then
-                        visible = true
-                        awesome.emit_signal("bling::task_preview::visibility", s, true, task)
+            if preview then
+               -- Show a preview of the task if it's hovered for a second.
+               local visible, hovered = false, false
+               local timer = gears.timer({
+                  timeout     = 1,
+                  single_shot = true,
+                  callback    = function()
+                     if not client.focus or not client.focus.fullscreen then
+                        if not visible and hovered then
+                           visible = true
+                           awesome.emit_signal("bling::task_preview::visibility", s, true, task)
+                        end
                      end
                   end
-               end
-            })
-            self:connect_signal('mouse::enter', function()
-               hovered = true
-               timer:start()
-            end)
-            self:connect_signal('mouse::leave', function()
-               hovered = false
-               if visible then
-                  visible = false
-                  timer:stop()
-                  awesome.emit_signal("bling::task_preview::visibility", s, false, task)
-               end
-            end)
+               })
+               self:connect_signal('mouse::enter', function()
+                  hovered = true
+                  timer:start()
+               end)
+               self:connect_signal('mouse::leave', function()
+                  hovered = false
+                  if visible then
+                     visible = false
+                     timer:stop()
+                     awesome.emit_signal("bling::task_preview::visibility", s, false, task)
+                  end
+               end)
+            end
          end
       }
    })

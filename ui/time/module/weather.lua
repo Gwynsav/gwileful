@@ -1,4 +1,4 @@
-local require, string, math, os, table, ipairs = require, string, math, os, table, ipairs
+local require, string, os, table, ipairs = require, string, os, table, ipairs
 
 local awful     = require('awful')
 local beautiful = require('beautiful')
@@ -6,6 +6,7 @@ local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
+local imperial = require('config.user').imperial
 local weather = require('signal.system.weather')
 local widget  = require('widget')
 local color   = require(beautiful.colorscheme)
@@ -17,7 +18,7 @@ return function()
    _C.icon = widget.textbox.colored({
       text  = icons.weather['day_clear'],
       font  = icons.font .. icons.size * 12,
-      color = color.bg3
+      color = color.bg3 .. '80'
    })
    _C.desc = widget.textbox.colored({
       text = 'No weather info',
@@ -62,7 +63,7 @@ return function()
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center'
       })
-      local humy = widget.textbox.colored({
+      local rain = widget.textbox.colored({
          text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
          align = 'center',
@@ -71,23 +72,18 @@ return function()
 
       return wibox.widget({
          layout = wibox.layout.fixed.vertical,
-         time, icon, temp, humy,
+         time, icon, temp, rain,
          set_time = function(_, t)
-            if t + index >= 24 then
-               t = t + index - 24
-            else
-               t = t + index
-            end
-            time.text = string.format('%02d', math.floor(t)) .. ':00'
+            time.text = t
          end,
          set_icon = function(_, i)
             icon.text = i
          end,
          set_temp = function(_, t)
-            temp.text = t .. '°C'
+            temp.text = t
          end,
-         set_humy = function(_, h)
-            humy.text = h .. '%'
+         set_rain = function(_, h)
+            rain.text = h
          end
       })
    end
@@ -103,39 +99,81 @@ return function()
    local day_widgets = wibox.widget({
       layout  = wibox.layout.flex.horizontal,
       visible = false,
-      spacing = dpi(14)
+      spacing = dpi(16)
    })
-   local weekdays = { 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' }
+   local weekdays = {
+      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+   }
 
    local function daily(index)
       local time = widget.textbox.colored({
          text  = '+' .. index,
          font  = beautiful.font_mono .. beautiful.bitm_size,
-         align = 'center',
          color = color.fg1
       })
       local icon = widget.textbox.colored({
          text  = icons.weather['day_clear'],
-         font  = icons.font .. icons.size * 2,
-         align = 'center'
+         font  = icons.font .. icons.size * 4
       })
       local max = widget.textbox.colored({
          text  = 'N/A',
+         font  = beautiful.font_mono .. beautiful.bitm_size
+      })
+      local rain = widget.textbox.colored({
+         text  = 'N/A',
+         font  = beautiful.font_mono .. beautiful.bitm_size
+      })
+      local humy = widget.textbox.colored({
+         text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
-         align = 'center'
+         color = color.fg2
       })
       local min = widget.textbox.colored({
          text  = 'N/A',
          font  = beautiful.font_mono .. beautiful.bitm_size,
-         align = 'center',
          color = color.fg2
       })
 
       return wibox.widget({
-         layout = wibox.layout.fixed.vertical,
-         time, icon, max, min,
+         widget  = wibox.container.margin,
+         margins = { top = dpi(1), bottom = dpi(2) },
+         {
+            layout  = wibox.layout.fixed.horizontal,
+            spacing = dpi(9),
+            icon,
+            {
+               layout  = wibox.layout.fixed.vertical,
+               spacing = dpi(2),
+               time,
+               {
+                  layout  = wibox.layout.fixed.vertical,
+                  {
+                     layout = wibox.layout.fixed.horizontal,
+                     widget.textbox.colored({
+                        text  = 'T: ',
+                        color = color.red
+                     }), max, wibox.widget.textbox('/'), min,
+                     wibox.widget.textbox(imperial and '°F' or '°C')
+                  },
+                  {
+                     layout = wibox.layout.fixed.horizontal,
+                     widget.textbox.colored({
+                        text  = 'H: ',
+                        color = color.yellow
+                     }), humy
+                  },
+                  {
+                     layout = wibox.layout.fixed.horizontal,
+                     widget.textbox.colored({
+                        text  = 'R: ',
+                        color = color.blue
+                     }), rain
+                  }
+               }
+            }
+         },
          set_time = function(_, d)
-            d = d + index
+            d = d + index + 1
             if d > 7 then
                d = d - 7
             end
@@ -145,15 +183,21 @@ return function()
             icon.text = i
          end,
          set_max = function(_, t)
-            max.text = t
+            max.text = t:gsub('°[C,F]', '')
          end,
          set_min = function(_, t)
-            min.text = t
+            min.text = t:gsub('°[C,F]', '')
+         end,
+         set_rain = function(_, r)
+            rain.text = r
+         end,
+         set_humy = function(_, r)
+            humy.text = r
          end
       })
    end
 
-   for i = 1, 6, 1 do
+   for i = 1, 2, 1 do
       local w = daily(i)
       table.insert(_D, w)
       day_widgets:add(w)
@@ -299,25 +343,38 @@ return function()
 
       -- Current.
       _C.desc.text = info.description
-      _C.humy.text = 'Humidity: ' .. info.humidity .. '%'
-      _C.temp.text = info.temperature .. '°C'
-      _C.feel.text = info.feels_like .. '°C'
+      _C.humy.text = 'Humidity: ' .. info.humidity
+      _C.temp.text = info.temperature
+      _C.feel.text = info.feels_like
       _C.icon.text = icons.weather[info.icon]
 
       -- Hourly.
+      -- Widget can only hold 6 at a time, make sure they're relevant!
+      local off = 0
+      if #info.by_hour > #_H then
+         local curr_h = tonumber(os.date('%H'))
+         for i = 1, #info.by_hour - #_H, 1 do
+            if curr_h > (i * 24 / #info.by_hour) then
+               off = off + 1
+            end
+         end
+      end
       for i, h in ipairs(_H) do
-         h.time = os.date('%H')
-         h.icon = icons.weather[info.by_hour[i].icon]
-         h.temp = info.by_hour[i].temp
-         h.humy = info.by_hour[i].humidity
+         local hour = info.by_hour[i + off]
+         h.time = hour.time
+         h.icon = icons.weather[hour.icon]
+         h.temp = hour.temperature
+         h.rain = hour.rain_chance
       end
 
       -- Daily.
       for i, d in ipairs(_D) do
-         d.time = os.date('%w') + 1
+         d.time = tonumber(os.date('%w'))
          d.icon = icons.weather[info.by_day[i].icon]
-         d.max  = info.by_day[i].max .. '°C'
-         d.min  = info.by_day[i].min .. '°C'
+         d.max  = info.by_day[i].max_temp
+         d.min  = info.by_day[i].min_temp
+         d.rain = info.by_day[i].rain_chance
+         d.humy = info.by_day[i].humidity
       end
    end)
 

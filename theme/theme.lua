@@ -12,6 +12,8 @@ local color = require('theme.color')
 local asset = gfs.get_configuration_dir() .. 'theme/assets/'
 local colorscheme = color.palette
 
+local helpers = require('helpers')
+
 -- NOTE: try to keep all usages of `gears.color.recolor_image` within this file to prevent
 -- it from being executed multiple times. It will burn through your RAM at alarming speed.
 local _T = {}
@@ -22,11 +24,27 @@ local _T = {}
 -- This may have been a very smart or ridiculously stupid choice. We'll see.
 _T.colorscheme = color.path
 
+_T.solid_wallpaper = false
+if not helpers.file_exists(user.wallpaper) then
+   if user.wallpaper == nil or not user.wallpaper:match('#%x+') then
+      gears.debug.print_warning("Wallpaper: inexistent file or incorrect color format")
+      _T.wallpaper = colorscheme.bg2
+   else
+      _T.wallpaper = user.wallpaper
+   end
+   _T.solid_wallpaper = true
+end
+
 if not user.lite or user.lite == nil then
-   _T.pfp       = gears.surface.load_uncached(user.pfp or asset .. 'default/pfp.png')
-   _T.wallpaper = gears.surface.load_uncached(user.wall or asset .. 'default/wall.png')
+   _T.pfp       = gears.surface.load_uncached(helpers.file_exists(user.pfp) and user.pfp
+                                                or asset .. 'default/pfp.png')
+   if not _T.solid_wallpaper then
+      _T.wallpaper = gears.surface.load_uncached(user.wallpaper)
+   end
 else
-   _T.wallpaper = user.wall or asset .. 'default/wall.png'
+   if not _T.solid_wallpaper then
+      _T.wallpaper = user.wallpaper
+   end
 end
 
 -- Fonts

@@ -13,8 +13,10 @@ local user   = require('config.user')
 local mod    = require('binds.mod')
 local modkey = mod.modkey
 
+local preview = user.lite == nil or not user.lite
+
 return function(s)
-   if (not user.lite or user.lite == nil) then
+   if preview then
       -- Enable and customize the tag preview widget.
       bling.widget.tag_preview.enable({
          show_client_content = true,
@@ -101,35 +103,37 @@ return function(s)
             -- Generate the bar sizes once.
             self.update()
 
-            -- Show a preview of the tag if it's hovered for a second.
-            local visible, hovered = false, false
-            local timer = gears.timer({
-               timeout     = 1,
-               single_shot = true,
-               callback    = function()
-                  if not client.focus or not client.focus.fullscreen then
-                     if not visible and hovered then
-                        if #tag:clients() > 0 then
-                           visible = true
-                           awesome.emit_signal('bling::tag_preview::update', tag)
-                           awesome.emit_signal("bling::tag_preview::visibility", s, true)
+            if preview then
+               -- Show a preview of the tag if it's hovered for a second.
+               local visible, hovered = false, false
+               local timer = gears.timer({
+                  timeout     = 1,
+                  single_shot = true,
+                  callback    = function()
+                     if not client.focus or not client.focus.fullscreen then
+                        if not visible and hovered then
+                           if #tag:clients() > 0 then
+                              visible = true
+                              awesome.emit_signal('bling::tag_preview::update', tag)
+                              awesome.emit_signal("bling::tag_preview::visibility", s, true)
+                           end
                         end
                      end
                   end
-               end
-            })
-            self:connect_signal('mouse::enter', function()
-               hovered = true
-               timer:start()
-            end)
-            self:connect_signal('mouse::leave', function()
-               hovered = false
-               if visible then
-                  visible = false
-                  timer:stop()
-                  awesome.emit_signal("bling::tag_preview::visibility", s, false)
-               end
-            end)
+               })
+               self:connect_signal('mouse::enter', function()
+                  hovered = true
+                  timer:start()
+               end)
+               self:connect_signal('mouse::leave', function()
+                  hovered = false
+                  if visible then
+                     visible = false
+                     timer:stop()
+                     awesome.emit_signal("bling::tag_preview::visibility", s, false)
+                  end
+               end)
+            end
          end,
          -- Then update on callback.
          update_callback = function(self)

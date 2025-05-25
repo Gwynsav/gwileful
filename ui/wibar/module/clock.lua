@@ -96,7 +96,7 @@ return function(s)
          self:get_children_by_id('icon')[1].text = icon
       end,
       set_temp = function(self, temp)
-         self:get_children_by_id('temp')[1].text = temp .. '°C'
+         self:get_children_by_id('temp')[1].text = temp
       end
    })
    current_weather:connect_signal('mouse::enter', function(self)
@@ -108,9 +108,11 @@ return function(s)
 
    weather:connect_signal('weather::data', function(_, data)
       current_weather.visible = true
-      current_weather.icon = icons.weather[data.icon]
-      current_weather.temp = data.temperature
+      current_weather.icon    = icons.weather[data.icon]
+      current_weather.temp    = data.temperature
    end)
+
+   weather:request_data()
 
    return wibox.widget({
       layout  = wibox.layout.fixed.horizontal,

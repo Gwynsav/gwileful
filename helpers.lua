@@ -28,17 +28,37 @@ function _H.in_table(e, table)
    return false
 end
 
+function _H.exists(path)
+   if path == nil or type(path) ~= 'string' then
+      return false
+   end
+
+   return os.rename(path, path)
+end
+
 -- Check whether a file exists.
 function _H.file_exists(path)
-   return os.rename(path, path)
+   if not _H.exists(path) then return false end
+
+   local file = io.open(path)
+   if file then
+      io.close(file)
+      return true
+   end
+
+   return false
 end
 
 -- Check whether a directory exists.
 function _H.dir_exists(path)
+   if path == nil or type(path) ~= 'string' then
+      return false
+   end
+
    if path:sub(-1, -1) ~= '/' then
       path = path .. '/'
    end
-   return _H.file_exists(path)
+   return (_H.exists(path) and not _H.file_exists(path))
 end
 
 return _H

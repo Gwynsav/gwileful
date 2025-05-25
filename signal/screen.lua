@@ -2,6 +2,7 @@ local require, screen, table = require, screen, table
 
 local awful     = require('awful')
 local beautiful = require('beautiful')
+local wibox     = require('wibox')
 
 local dpi = beautiful.xresources.apply_dpi
 
@@ -33,33 +34,17 @@ screen.connect_signal('request::desktop_decoration', function(s)
 end)
 
 --- Wallpaper.
--- NOTE: `awful.wallpaper` is ideal for creating a wallpaper IF YOU
--- BENEFIT FROM IT BEING A WIDGET and not just the root window 
--- background. IF YOU JUST WISH TO SET THE ROOT WINDOW BACKGROUND, you 
--- may want to use the deprecated `gears.wallpaper` instead. This is 
--- the most common case of just wanting to set an image as wallpaper.
-
--- screen.connect_signal('request::wallpaper', function(s)
---    awful.wallpaper({
---       screen = s,
---       widget = {
---          widget = wibox.container.tile,
---          valign = 'center',
---          halign = 'center',
---          tiled  = false,
---          {
---             widget    = wibox.widget.imagebox,
---             image     = gears.surface.crop_surface({
---                surface = beautiful.wallpaper,
---                ratio   = s.geometry.width / s.geometry.height
---             }),
---             upscale   = true,
---             downscale = true
---          }
---       }
---    })
--- end)
-
--- An example of what's mentioned above. For more information, see:
--- https://awesomewm.org/apidoc/utility_libraries/gears.wallpaper.html
-require('gears').wallpaper.maximized(beautiful.wallpaper)
+if not beautiful.solid_wallpaper then
+   -- https://awesomewm.org/apidoc/utility_libraries/gears.wallpaper.html
+   require('gears').wallpaper.maximized(beautiful.wallpaper)
+else
+   screen.connect_signal('request::wallpaper', function(s)
+      awful.wallpaper({
+         screen = s,
+         widget = {
+            widget = wibox.container.background,
+            bg     = beautiful.wallpaper
+         }
+      })
+   end)
+end
