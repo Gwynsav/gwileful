@@ -45,12 +45,16 @@ Groups/projects:
 made my own icons for everything here. But still, I used them in the past and as
 reference making my own icons, so I think they're still worth a mention.
 - [Fairfax](https://www.kreativekorp.com/software/fonts/fairfaxhd/), the beautiful font
-from KreativeKorp used for UI as well as terminal, in the past.
+from KreativeKorp used for UI as well as terminal, in the past, that inspired the look of
+my own fonts currently in use in this rice.
 
 Individuals:
 - [sakuya](https://codeberg.org/moseni/bitmap-fonts). Creator of the `koishi` and `satori`
-fonts used in this rice currently, as well as help making my own icon font, used here.
-Their rice also influenced the look of mine.
+fonts used in this rice previously, as well as help making my own icon font, used here.
+These fonts are no longer being distributed and so all current and future versions of this
+rice will not provide them nor display them. All fonts used from now on are created by
+myself and may become publically available in the future. Their rice also influenced the look
+of mine.
 - [Stardust-kyun](https://github.com/Stardust-kyun/dotfiles), references and some widgets.
 - [Kasper](https://github.com/Kasper24/KwesomeDE), used some of their daemons. 
 - [Myagko](https://github.com/myagko/dotfiles), used their calendar.
