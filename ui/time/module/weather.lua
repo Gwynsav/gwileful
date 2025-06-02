@@ -18,7 +18,7 @@ return function()
    _C.icon = widget.textbox.colored({
       text  = icons.weather['day_clear'],
       font  = icons.font .. icons.size * 12,
-      color = color.bg3 .. '80'
+      color = color.bg3 .. 'A0'
    })
    _C.desc = widget.textbox.colored({
       text = 'No weather info',
@@ -102,7 +102,7 @@ return function()
       spacing = dpi(16)
    })
    local weekdays = {
-      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
    }
 
    local function daily(index)
@@ -299,6 +299,17 @@ return function()
          {
             widget = wibox.layout.stack,
             _C.icon,
+            {
+               widget = wibox.container.background,
+               bg = {
+                  type = 'linear',
+                  from = { 0, 0, 0 },
+                  to = { 0, 160, 0 },
+                  stops = {
+                     { 0, color.bg1 .. '00' }, { 0.7, color.bg1 }, { 1, color.bg1 }
+                  }
+               }
+            },
             {
                layout  = wibox.layout.fixed.vertical,
                spacing = dpi(12),

@@ -195,19 +195,14 @@ local function new()
                   retries = 0
                end
             else
-               self:emit_signal('get', json.decode(out))
+               self:get(json.decode(out))
             end
          end)
       end
    })
 
-   -- In charge of starting an attempt to fetch weather info.
-   self:connect_signal('retry', function()
-      self.timer:start()
-   end)
-
    -- Emits weather info outward.
-   self:connect_signal('get', function(_, res)
+   function self:get(res)
       if res.current_condition[1] == nil then
          gears.debug.print_warning('Failed to fetch weather info!')
          return
@@ -286,14 +281,14 @@ local function new()
 
       self:emit_signal('weather::data', data)
       retries = 0
-   end)
+   end
 
    -- This timer runs `try` every `weather.poll_wait` seconds. It's running at all times
    -- and ensures the weather info gets updated.
    gears.timer({
       timeout = self.poll_wait,
       autostart = true,
-      callback = function() self:emit_signal('retry') end
+      callback = function() self.timer:start() end
    })
 
    -- Same code as ran in the retry timer, meant for widgets to call directly.
@@ -314,7 +309,7 @@ local function new()
                      retries = 0
                   end
                else
-                  self:emit_signal('get', json.decode(out))
+                  self:get(json.decode(out))
                end
             end
          end)
