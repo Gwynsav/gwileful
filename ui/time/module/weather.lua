@@ -97,12 +97,13 @@ return function()
    -- Daily weather widgets!
    local _D = {}
    local day_widgets = wibox.widget({
-      layout  = wibox.layout.flex.horizontal,
-      visible = false,
-      spacing = dpi(16)
+      layout = wibox.layout.flex.horizontal,
+      spacing = dpi(4),
+      visible = false
    })
+
    local weekdays = {
-      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
    }
 
    local function daily(index)
@@ -136,38 +137,52 @@ return function()
 
       return wibox.widget({
          widget  = wibox.container.margin,
-         margins = { top = dpi(1), bottom = dpi(2) },
+         margins = {
+            top = dpi(4), bottom = dpi(6)
+         },
          {
-            layout  = wibox.layout.fixed.horizontal,
-            spacing = dpi(9),
-            icon,
+            widget = wibox.container.place,
+            halign = 'center',
             {
-               layout  = wibox.layout.fixed.vertical,
-               spacing = dpi(2),
-               time,
+               layout  = wibox.layout.fixed.horizontal,
+               spacing = dpi(8),
+               icon,
                {
                   layout  = wibox.layout.fixed.vertical,
+                  time,
                   {
-                     layout = wibox.layout.fixed.horizontal,
-                     widget.textbox.colored({
-                        text  = 'T: ',
-                        color = color.red
-                     }), max, wibox.widget.textbox('/'), min,
-                     wibox.widget.textbox(imperial and '°F' or '°C')
+                     widget  = wibox.container.margin,
+                     margins = { top = dpi(-1) },
+                     {
+                        layout = wibox.layout.fixed.horizontal,
+                        widget.textbox.colored({
+                           text  = 'T: ',
+                           color = color.red
+                        }), max, wibox.widget.textbox('/'), min,
+                        wibox.widget.textbox(imperial and '°F' or '°C')
+                     }
                   },
                   {
-                     layout = wibox.layout.fixed.horizontal,
-                     widget.textbox.colored({
-                        text  = 'H: ',
-                        color = color.yellow
-                     }), humy
+                     widget  = wibox.container.margin,
+                     margins = { top = dpi(-1) },
+                     {
+                        layout = wibox.layout.fixed.horizontal,
+                        widget.textbox.colored({
+                           text  = 'H: ',
+                           color = color.yellow
+                        }), humy
+                     }
                   },
                   {
-                     layout = wibox.layout.fixed.horizontal,
-                     widget.textbox.colored({
-                        text  = 'R: ',
-                        color = color.blue
-                     }), rain
+                     widget  = wibox.container.margin,
+                     margins = { top = dpi(-1) },
+                     {
+                        layout = wibox.layout.fixed.horizontal,
+                        widget.textbox.colored({
+                           text  = 'R: ',
+                           color = color.blue
+                        }), rain
+                     }
                   }
                }
             }
@@ -334,7 +349,6 @@ return function()
                },
                {
                   layout = wibox.layout.align.horizontal,
-                  expand = 'none',
                   nil,
                   {
                      layout = wibox.layout.stack,
