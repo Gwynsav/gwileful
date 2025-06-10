@@ -10,7 +10,7 @@ local color  = require(beautiful.colorscheme)
 local widget = require('widget')
 local icons  = require('theme.icons')
 
--- local net = require('signal.system.network')
+local net = require('signal.system.network')
 
 return function()
    -- Returns a grid entry, with an icon, title, and body.
@@ -63,7 +63,13 @@ return function()
          },
          buttons = {
             awful.button(nil, 1, args.on_click)
-         }
+         },
+         set_body = function(_, text)
+            body.text = text
+         end,
+         set_icon = function(_, text)
+            icon.text = text
+         end
       })
       w:connect_signal('mouse::enter', function(self)
          self.border_color = color.accent
@@ -80,10 +86,17 @@ return function()
    local network = entry({
       title = 'Network',
       body  = 'No connection available',
-      icon  = icons['net_none'],
+      icon  = icons.network['none'],
       -- on_click = function() net:toggle_networking() end
       on_click = function() end
    })
+   net:connect_signal('default_change', function(_, data)
+      network.icon = icons.network[data.icon]
+      network.body = data.name
+   end)
+   net:request_data()
+
+
    local bluetooth = entry({
       title = 'Bluetooth',
       body  = 'Powered on',

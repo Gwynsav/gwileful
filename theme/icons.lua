@@ -1,6 +1,7 @@
 local _I = {
    battery = {},
    weather = {},
+   network = {},
    layout  = {}
 }
 
@@ -43,13 +44,13 @@ _I.weather['night_snow']          = ''
 _I.weather['night_fog']           = ''
 
 -- Network.
-_I['net_wifi_high']    = ''
-_I['net_wifi_normal']  = ''
-_I['net_wifi_low']     = ''
-_I['net_wifi_none']    = ''
-_I['net_wired_normal'] = ''
-_I['net_wired_none']   = ''
-_I['net_none']         = ''
+_I.network['wifi_high']    = ''
+_I.network['wifi_normal']  = ''
+_I.network['wifi_low']     = ''
+_I.network['wifi_none']    = ''
+_I.network['wired_normal'] = ''
+_I.network['wired_none']   = ''
+_I.network['none']         = ''
 -- Bluetooth.
 _I['bluez_off']      = ''
 _I['bluez_scanning'] = ''
