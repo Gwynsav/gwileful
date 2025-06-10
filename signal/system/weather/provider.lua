@@ -213,7 +213,6 @@ self.timer = gears.timer({
    call_now = true,
    single_shot = true,
    callback = function()
-      print(shell_cmd)
       awful.spawn.easy_async_with_shell(shell_cmd, function(out) manage_output(out) end)
    end
 })
@@ -307,7 +306,6 @@ function self:request_data()
       return
    end
    if not self.timer.started then
-      print(shell_cmd)
       awful.spawn.easy_async_with_shell(shell_cmd, function(out)
          manage_output(out)
       end)

@@ -29,6 +29,17 @@ local dev_type = { ETHERNET = 1, WIFI = 2 }
 local dev_active = 100
 
 
+-- Proxies
+----------
+local proxy = {}
+
+-- Proxies for devices managed by NM.
+proxy.dev = {
+   wireless = {},
+   wired = {}
+}
+
+
 -- Auxiliary functions
 ----------------------
 local function get_proxy(iface, path)
@@ -40,28 +51,14 @@ local function get_proxy(iface, path)
    })
 end
 
-
--- Proxies
-----------
-local proxy = {}
-
 -- Main daemon proxy.
 proxy.nm = get_proxy('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager')
 
--- Proxies for devices managed by NM.
-proxy.dev = {
-   wireless = {},
-   wired = {}
-}
-
-
--- Global methods
------------------
 -- Returns an icon name and network name for the default device (`proxy.dev.default`).
 -- If the connection is wireless, the icon is representative of signal strength and the
 -- name is that of the network SSID.
 -- If the connection is wired, the name is the interface's.
-function obj:get_default_information()
+local function get_default_information()
    local data = {}
 
    if proxy.dev.default == nil then
@@ -108,7 +105,7 @@ end
 
 -- Gets all active devices and classifies them into wired or wireless. Ignores symbolic
 -- interfaces such as loopback. Also binds the default device to `proxy.dev.default`.
-function obj:get_devices()
+local function get_devices()
    local _dev = proxy.nm:GetDevices()
    for _, path in ipairs(_dev) do
       local dev_proxy = get_proxy('org.freedesktop.NetworkManager.Device', path)
@@ -134,17 +131,23 @@ function obj:get_devices()
    end
 end
 
+
+-- Global methods
+-----------------
 function obj:request_data()
-   obj:emit_signal('default_change', obj:get_default_information())
+   obj:emit_signal('default_change', get_default_information())
 end
 
+
+-- Signals
+----------
 -- Do an initial run of the devices.
-obj:get_devices()
-obj:emit_signal('default_change', obj:get_default_information())
+get_devices()
+obj:emit_signal('default_change', get_default_information())
 
 -- Of course it wouldn't be that easy, can't have documentation being accurate, can we?
 proxy.dev.default.generic:connect_signal(function()
-   obj:emit_signal('default_change', obj:get_default_information())
+   obj:emit_signal('default_change', get_default_information())
 end, 'StateChanged')
 
 -- proxy.nm:connect_signal('DeviceAdded', function()
