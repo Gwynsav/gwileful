@@ -55,7 +55,8 @@ function _p.get_proxy(iface, path)
 end
 
 -- Main daemon proxy.
-proxy.nm = _p.get_proxy('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager')
+proxy.nm =
+   _p.get_proxy('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager')
 
 -- Returns an icon name and network name for the default device (`proxy.dev.default`).
 -- If the connection is wireless, the icon is representative of signal strength and the
@@ -113,8 +114,8 @@ end
 function _p.get_devices()
    proxy.dev.wireless = helpers.clear_array(proxy.dev.wireless)
    proxy.dev.wired    = helpers.clear_array(proxy.dev.wired)
-   proxy.dev.default  = nil
 
+   -- Filters out "placeholder" devices such as loopback.
    local _dev = proxy.nm:GetDevices()
    for _, path in ipairs(_dev) do
       local dev_proxy = _p.get_proxy('org.freedesktop.NetworkManager.Device', path)
@@ -122,50 +123,53 @@ function _p.get_devices()
       -- Divide devices into wired or wireless.
       local typed_proxy
       if dev_proxy.DeviceType == dev_type.WIFI then
-         typed_proxy = _p.get_proxy('org.freedesktop.NetworkManager.Device.Wireless', path)
-         table.insert({ generic = dev_proxy, typed = typed_proxy }, proxy.dev.wireless)
+         typed_proxy =
+            _p.get_proxy('org.freedesktop.NetworkManager.Device.Wireless', path)
+         table.insert(proxy.dev.wireless, { generic = dev_proxy, typed = typed_proxy })
       elseif dev_proxy.DeviceType == dev_type.ETHERNET then
-         typed_proxy = _p.get_proxy('org.freedesktop.NetworkManager.Device.Wired', path)
-         table.insert({ generic = dev_proxy, typed = typed_proxy }, proxy.dev.wired)
-      end
-
-      -- Add an extra entry for the current default device.
-      if dev_proxy.State == dev_active then
-         local active_conn = _p.get_proxy('org.freedesktop.NetworkManager.Connection.Active',
-                                          dev_proxy.ActiveConnection)
-         if active_conn.Default then
-            -- if proxy.dev.default ~= nil then
-            --    proxy.dev.default.generic:disconnect_signal('StateChanged')
-            -- end
-            proxy.dev.default = { generic = dev_proxy, typed = typed_proxy }
-            -- proxy.dev.default.generic:connect_signal(function()
-            --    _p.handle_device_change()
-            -- end, 'StateChanged')
-         end
+         typed_proxy =
+            _p.get_proxy('org.freedesktop.NetworkManager.Device.Wired', path)
+         table.insert(proxy.dev.wired, { generic = dev_proxy, typed = typed_proxy })
       end
    end
+
+   _p.get_default()
 end
 
 function _p.get_default()
-   local _dev = proxy.nm:GetDevices()
-   for _, path in ipairs(_dev) do
-      local dev_proxy = _p.get_proxy('org.freedesktop.NetworkManager.Device', path)
-      if dev_proxy.State == dev_active then
-         local active_conn = _p.get_proxy('org.freedesktop.NetworkManager.Connection.Active',
-                                          dev_proxy.ActiveConnection)
-         if active_conn.Default then
-            local typed_proxy
-            if dev_proxy.DeviceType == dev_type.WIFI then
-               typed_proxy = _p.get_proxy('org.freedesktop.NetworkManager.Device.Wireless', path)
-            elseif dev_proxy.DeviceType == dev_type.ETHERNET then
-               typed_proxy = _p.get_proxy('org.freedesktop.NetworkManager.Device.Wired', path)
-            end
-            proxy.dev.default = { generic = dev_proxy, typed = typed_proxy }
-            return
+   -- Returns true if the device owns the default route to reach the internet.
+   -- False otherwise.
+   local function is_default(dev)
+      if dev.generic.State == dev_active then
+         local active_conn =
+            _p.get_proxy('org.freedesktop.NetworkManager.Connection.Active',
+                         dev.generic.ActiveConnection)
+         if active_conn.Default then return true end
+      end
+      return false
+   end
+
+   local default = nil
+
+   -- Check through wired devices.
+   for _, dev in ipairs(proxy.dev.wired) do
+      if is_default(dev) then
+         default = dev
+         break
+      end
+   end
+
+   -- Check through wireless devices.
+   if default == nil then
+      for _, dev in ipairs(proxy.dev.wireless) do
+         if is_default(dev) then
+            default = dev
+            break
          end
       end
    end
-   proxy.dev.default = nil
+
+   proxy.dev.default = default
 end
 
 function _p.handle_device_change()
@@ -181,12 +185,14 @@ function obj:request_data()
 end
 
 
--- Signals
-----------
--- Do an initial run of the devices.
+-- Init
+-------
 _p.get_devices()
 obj:emit_signal('default_change', _p.get_default_information())
 
+
+-- Signals
+----------
 proxy.nm:connect_signal(function()
    _p.get_default()
    obj:emit_signal('default_change', _p.get_default_information())
