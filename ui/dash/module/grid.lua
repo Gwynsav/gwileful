@@ -94,7 +94,7 @@ return function()
       network.icon = icons.network[data.icon]
       network.body = data.name
    end)
-   net:request_data()
+   net:request_default_data()
 
 
    local bluetooth = entry({

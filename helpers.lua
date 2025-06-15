@@ -28,11 +28,6 @@ function _H.in_table(e, table)
    return false
 end
 
-function _H.clear_array(table)
-   for i = 1, #table, 1 do table[i] = nil end
-   return table
-end
-
 function _H.exists(path)
    if path == nil or type(path) ~= 'string' then
       return false
